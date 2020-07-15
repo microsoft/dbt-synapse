@@ -1,10 +1,10 @@
 from dbt.adapters.sql import SQLAdapter
-from dbt.adapters.sqlserver import SQLServerConnectionManager
+from dbt.adapters.synapse import SynapseConnectionManager
 import agate
 
 
-class SQLServerAdapter(SQLAdapter):
-    ConnectionManager = SQLServerConnectionManager
+class SynapseAdapter(SQLAdapter):
+    ConnectionManager = SynapseConnectionManager
 
     @classmethod
     def date_function(cls):

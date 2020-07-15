@@ -14,7 +14,7 @@ from typing import Optional
 
 
 @dataclass
-class SQLServerCredentials(Credentials):
+class SynapseCredentials(Credentials):
     driver: str
     host: str
     database: str
@@ -37,7 +37,7 @@ class SQLServerCredentials(Credentials):
 
     @property
     def type(self):
-        return 'sqlserver'
+        return 'synapse'
 
     def _connection_keys(self):
         # return an iterator of keys to pretty-print in 'dbt debug'
@@ -46,8 +46,8 @@ class SQLServerCredentials(Credentials):
                'port', 'UID', 'authentication', 'encrypt'
 
 
-class SQLServerConnectionManager(SQLConnectionManager):
-    TYPE = 'sqlserver'
+class SynapseConnectionManager(SQLConnectionManager):
+    TYPE = 'synapse'
 
     @contextmanager
     def exception_handler(self, sql):

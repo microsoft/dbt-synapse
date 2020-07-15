@@ -34,6 +34,6 @@
     {{ return(statements[0]) }}
 {% endmacro %}
 
-{% macro sqlserver__load_csv_rows(model, agate_table) %}
+{% macro synapse__load_csv_rows(model, agate_table) %}
   {{ return(basic_load_csv_rows(model, 200, agate_table) )}}
 {% endmacro %}

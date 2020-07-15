@@ -1,5 +1,5 @@
 
-{% macro sqlserver__get_catalog(information_schemas) -%}
+{% macro synapse__get_catalog(information_schemas) -%}
 
   {%- call statement('catalog', fetch_result=True) -%}
 
