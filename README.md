@@ -69,7 +69,6 @@ brings up the Azure AD prompt so you can MFA if need be.
 ```
 authentication: ActiveDirectoryInteractive
 user: bill.gates@microsoft.com
-password: i<3opensource?
 ```
 ##### ActiveDirectory Integrated (*Windows only*)
 uses your machine's credentials (might be disabled by your AAD admins)
