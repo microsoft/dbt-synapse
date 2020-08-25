@@ -1,6 +1,12 @@
 # :construction: dbt-synapse :construction:
 
 custom [dbt](https://www.getdbt.com) adapter for [Azure Synapse](https://azure.microsoft.com/en-us/services/synapse-analytics/). Major credit due to @mikaelene and [his `sqlserver` custom adapter](https://github.com/mikaelene/dbt-sqlserver).
+Passing all tests in [dbt-integration-tests](https://github.com/fishtown-analytics/dbt-integration-tests/). 
+
+Only supports dbt 0.18 and newer!
+- dbt 0.18.x is unsupported  - development in progress
+
+Easiest install is to use pip:
 
 ## major differences b/w `dbt-synapse` and `dbt-sqlserver`
 - macros use only Azure Synapse `T-SQL`. [Relevant GitHub issue](https://github.com/MicrosoftDocs/azure-docs/issues/55713)
@@ -121,7 +127,18 @@ is turned into the relative form (minus `__dbt`'s `_backup` and `_tmp` tables)
 
 ## Changelog
 
+### v0.15.3.1
+
+#### Fixes:
+- Snapshots did not work on dbt v0.15.1 to v0.15.3
+
 ### v0.15.3
+
+#### Fixes:
+- Fix output of sql in the log files.
+- Limited the version of dbt to 0.15, since later versions are unsupported.
+
+### v0.15.2
 
 #### Fixes:
 - Fix output of sql in the log files.
