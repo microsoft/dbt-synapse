@@ -30,7 +30,6 @@
 {% macro sqlserver__create_schema(relation) -%}
   {% call statement('create_schema') -%}
     {%- set schema_unquoted = relation.without_identifier().schema -%}
-    USE [{{ relation.database }}]
     IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '{{ schema_unquoted }}')
     BEGIN
     EXEC('CREATE SCHEMA {{ schema_unquoted }}')
