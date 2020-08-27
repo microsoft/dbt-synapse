@@ -3,7 +3,7 @@ from setuptools import find_packages
 from distutils.core import setup
 
 package_name = "dbt-synapse"
-package_version = "0.18.0"
+package_version = "0.18.0rc1"
 description = """A Azure Synapse adpter plugin for dbt (data build tool)"""
 
 setup(
@@ -12,9 +12,9 @@ setup(
     description=description,
     long_description=description,
     long_description_content_type='text/markdown',
-    author="Mikael Ene",
-    author_email="mikael.ene@gmail.com",
-    url="https://github.com/mikaelene/dbt-sqlserver",
+    author="Anders Swanson",
+    author_email="swanson.anders@gmail.com",
+    url="https://github.com/swanderz/dbt-synapse",
     packages=find_packages(),
     package_data={
         'dbt': [
