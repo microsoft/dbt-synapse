@@ -3,9 +3,7 @@
   {% do drop_relation(staging_relation) %}
 {% endmacro %}
 
-
-{% macro sqlserver__snapshot_merge_sql(target, source, insert_cols) -%}
-    {%- set insert_cols_csv = insert_cols | join(', ') -%}
+{% macro sqlserver__snapshot_update_sql(target, source) -%}
 
     update {{ target }}
     set dbt_valid_to = TMP.dbt_valid_to
@@ -14,12 +12,30 @@
         and TMP.dbt_change_type = 'update'
         and {{ target }}.dbt_valid_to is null;
 
+{% endmacro %}
+
+{% macro sqlserver__snapshot_insert_sql(target, source, insert_cols) -%}
+    {%- set insert_cols_csv = insert_cols | join(', ') -%}
+
     insert into {{ target }}
-    select {{ insert_cols }}
-    from {{ source }} TMP
-        left join {{ target }} Dest on Dest.dbt_scd_id = TMP.dbt_scd_id
-    where Dest.dbt_scd_id is null
-        and TMP.dbt_change_type = 'insert';
+      select country_name,pto_total,dbt_scd_id,dbt_updated_at,dbt_valid_from,dbt_valid_to
+      from {{ source }}
+      where dbt_change_type = 'insert';
+
+{% endmacro %}
+
+{% macro sqlserver__snapshot_merge_sql(target, source, insert_cols) -%}
+
+  {% set update_sql = sqlserver__snapshot_update_sql(target, source) %}
+  {% call statement('main') %}
+      {{ update_sql }}
+  {% endcall %}
+
+  {% set insert_sql = sqlserver__snapshot_insert_sql(target, source, insert_cols) %}
+  {% call statement('main') %}
+      {{ insert_sql }}
+  {% endcall %}
+
 {% endmacro %}
 
 {% materialization snapshot, default %}
@@ -57,6 +73,10 @@
       {% set build_sql = build_snapshot_table(strategy, model['injected_sql']) %}
       {% set final_sql = create_table_as(False, target_relation, build_sql) %}
 
+       {% call statement('main') %}
+      {{ final_sql }}
+      {% endcall %}
+
   {% else %}
 
       {{ adapter.valid_snapshot_target(target_relation) }}
@@ -89,7 +109,7 @@
         {% do quoted_source_columns.append(adapter.quote(column.name)) %}
       {% endfor %}
 
-      {% set final_sql = snapshot_merge_sql(
+      {% do snapshot_merge_sql(
             target = target_relation,
             source = staging_table,
             insert_cols = quoted_source_columns
@@ -97,10 +117,6 @@
       %}
 
   {% endif %}
-
-  {% call statement('main') %}
-      {{ final_sql }}
-  {% endcall %}
 
   {% do persist_docs(target_relation, model) %}
 
