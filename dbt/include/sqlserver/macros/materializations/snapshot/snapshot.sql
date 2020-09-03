@@ -25,7 +25,7 @@
 {% endmacro %}
 
 {% macro sqlserver__snapshot_merge_sql(target, source, insert_cols) -%}
-
+  {{ log("insert_cols " ~ insert_cols)}}
   {% set update_sql = sqlserver__snapshot_update_sql(target, source) %}
   {% call statement('main') %}
       {{ update_sql }}
@@ -83,11 +83,13 @@
 
       {% set staging_table = build_snapshot_staging_table(strategy, sql, target_relation) %}
 
+      {% set nandan_table = create_table_as(False, 'ajs.nandan_fake_temp', 'select * from {{staging_table}}') %}
+
       -- this may no-op if the database does not require column expansion
       {% do adapter.expand_target_column_types(from_relation=staging_table,
                                                to_relation=target_relation) %}
 
-      {% set missing_columns = adapter.get_missing_columns(staging_table, target_relation)
+      {% set missing_columns = adapter.get_missing_columns(nandan_table, target_relation)
                                    | rejectattr('name', 'equalto', 'dbt_change_type')
                                    | rejectattr('name', 'equalto', 'DBT_CHANGE_TYPE')
                                    | rejectattr('name', 'equalto', 'dbt_unique_key')
@@ -96,7 +98,7 @@
 
       {% do create_columns(target_relation, missing_columns) %}
 
-      {% set source_columns = adapter.get_columns_in_relation(staging_table)
+      {% set source_columns = adapter.get_columns_in_relation(nandan_table)
                                    | rejectattr('name', 'equalto', 'dbt_change_type')
                                    | rejectattr('name', 'equalto', 'DBT_CHANGE_TYPE')
                                    | rejectattr('name', 'equalto', 'dbt_unique_key')
@@ -111,10 +113,12 @@
 
       {% do snapshot_merge_sql(
             target = target_relation,
-            source = staging_table,
+            source = nandan_table,
             insert_cols = quoted_source_columns
          )
       %}
+
+      {% do drop_relation(nandan_table) %}
 
   {% endif %}
 
