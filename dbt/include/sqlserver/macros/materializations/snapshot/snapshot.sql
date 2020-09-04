@@ -3,38 +3,22 @@
   {% do drop_relation(staging_relation) %}
 {% endmacro %}
 
-{% macro sqlserver__snapshot_update_sql(target, source) -%}
-
-    update {{ target }}
-    set dbt_valid_to = TMP.dbt_valid_to
-    from {{ source }} TMP
-    where {{ target }}.dbt_scd_id = TMP.dbt_scd_id
-        and TMP.dbt_change_type = 'update'
-        and {{ target }}.dbt_valid_to is null;
-
-{% endmacro %}
-
-{% macro sqlserver__snapshot_insert_sql(target, source, insert_cols) -%}
-    {%- set insert_cols_csv = insert_cols | join(', ') -%}
-
-    insert into {{ target }}
-      select country_name,pto_total,dbt_scd_id,dbt_updated_at,dbt_valid_from,dbt_valid_to
-      from {{ source }}
-      where dbt_change_type = 'insert';
-
-{% endmacro %}
 
 {% macro sqlserver__snapshot_merge_sql(target, source, insert_cols) -%}
-  {{ log("insert_cols " ~ insert_cols)}}
-  {% set update_sql = sqlserver__snapshot_update_sql(target, source) %}
-  {% call statement('main') %}
-      {{ update_sql }}
-  {% endcall %}
+      {{ log("insert_cols " ~ insert_cols)}}
+      
+      EXEC('  update {{ target }}
+          set dbt_valid_to = TMP.dbt_valid_to
+          from {{ source }} TMP
+          where {{ target }}.dbt_scd_id = TMP.dbt_scd_id
+            and TMP.dbt_change_type = ''update''
+            and {{ target }}.dbt_valid_to is null;
 
-  {% set insert_sql = sqlserver__snapshot_insert_sql(target, source, insert_cols) %}
-  {% call statement('main') %}
-      {{ insert_sql }}
-  {% endcall %}
+            insert into {{ target }}
+            select country_name,pto_total,dbt_scd_id,dbt_updated_at,dbt_valid_from,dbt_valid_to
+            from {{ source }} 
+            where dbt_change_type = ''insert'' ; ');
+
 
 {% endmacro %}
 
