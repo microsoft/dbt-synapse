@@ -22,7 +22,7 @@
 
 {% endmacro %}
 
-{% materialization snapshot, default %}
+{% materialization snapshot, adapter='sqlserver' %}
   {%- set config = model['config'] -%}
 
   {%- set target_table = model.get('alias', model.get('name')) -%}
