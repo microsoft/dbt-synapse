@@ -69,10 +69,6 @@
       {% set build_sql = build_snapshot_table(strategy, model['injected_sql']) %}
       {% set final_sql = create_table_as(False, target_relation, build_sql) %}
 
-       {% call statement('main') %}
-      {{ final_sql }}
-      {% endcall %}
-
   {% else %}
 
       {{ adapter.valid_snapshot_target(target_relation) }}
@@ -105,16 +101,18 @@
         {% do quoted_source_columns.append(adapter.quote(column.name)) %}
       {% endfor %}
 
-      {% do snapshot_merge_sql(
+      {% set final_sql = sqlserver__snapshot_merge_sql(
             target = target_relation,
             source = staging_table,
             insert_cols = quoted_source_columns
          )
       %}
 
-      {% do drop_relation(staging_table) %}
-
   {% endif %}
+
+  {% call statement('main') %}
+      {{ final_sql }}
+  {% endcall %}
 
   {% do persist_docs(target_relation, model) %}
 
