@@ -5,7 +5,8 @@
 
 
 {% macro sqlserver__snapshot_merge_sql(target, source, insert_cols) -%}
-      {{ log("insert_cols " ~ insert_cols)}}
+      {%- set insert_cols_csv = insert_cols | join(', ') -%}
+      {{ log("insert_cols_csv " ~ insert_cols_csv)}}
       
       EXEC('  update {{ target }}
           set dbt_valid_to = TMP.dbt_valid_to
@@ -15,14 +16,14 @@
             and {{ target }}.dbt_valid_to is null;
 
             insert into {{ target }}
-            select country_name,pto_total,dbt_scd_id,dbt_updated_at,dbt_valid_from,dbt_valid_to
+            select {{ insert_cols_csv }}
             from {{ source }} 
             where dbt_change_type = ''insert'' ; ');
 
 {% endmacro %}
 
 {% macro sqlserver__build_snapshot_staging_table(strategy, sql, target_relation) %}
-    {% set tmp_relation = default__make_temp_relation(target_relation) %}
+    {% set tmp_relation = default__make_temp_relation(target_relation, "pseudotmp") %}
 
     {% set select = snapshot_staging_table(strategy, sql, target_relation) %}
 
