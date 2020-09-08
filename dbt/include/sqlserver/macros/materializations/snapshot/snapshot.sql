@@ -76,9 +76,7 @@
                                    | rejectattr('name', 'equalto', 'dbt_unique_key')
                                    | rejectattr('name', 'equalto', 'DBT_UNIQUE_KEY')
                                    | list %}
-      {{ log("wwww staging_table is" ~ staging_table)}}
       {% set quoted_source_columns = [] %}
-      {{ log("wwww source columns are" ~ source_columns)}}
       {% for column in source_columns %}
         {% do quoted_source_columns.append(adapter.quote(column.name)) %}
       {% endfor %}
