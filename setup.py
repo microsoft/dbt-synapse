@@ -3,7 +3,7 @@ from setuptools import find_packages
 from distutils.core import setup
 
 package_name = "dbt-synapse"
-package_version = "0.18.0rc2"
+package_version = "0.18.0rc3"
 description = """A Azure Synapse adpter plugin for dbt (data build tool)"""
 
 setup(
@@ -25,7 +25,7 @@ setup(
         ]
     },
     install_requires=[
-        'dbt-core==0.18.0rc1',
+        'dbt-core==0.18.0',
         'pyodbc>=4.0.27',
     ]
 )
