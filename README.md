@@ -12,6 +12,28 @@ Easiest install is to use pip:
 - macros use only Azure Synapse `T-SQL`. [Relevant GitHub issue](https://github.com/MicrosoftDocs/azure-docs/issues/55713)
 - use of [Create Table as Select (CTAS)](https://docs.microsoft.com/en-us/sql/t-sql/statements/create-table-as-select-azure-sql-data-warehouse?view=aps-pdw-2016-au7) means you don't need post-hooks to create indices
 - Azure Active Directory Authentication options
+- rewrite of snapshots because Synapse doesn't support `MERGE`.
+- external table creation via details from yaml.
+  - must first create  `EXTERNAL DATA SOURCE` and `EXTERNAL FILE FORMAT`s.
+
+### example `YAML` for defining external tables
+```YAML
+sources:
+  - name: raw
+    schema: source
+    loader: ADLSblob
+    tables:
+      - name: absence_hours
+        description: |
+          from raw DW.
+        external:
+          data_source: SynapseContainer
+          location: /absence_hours_live/
+          file_format: CommaDelimited
+          reject_type: VALUE
+          reject_value: 0
+        columns:
+```
 
 
 ## status & support
@@ -21,10 +43,9 @@ Passing all tests in [dbt-integration-tests](https://github.com/fishtown-analyti
 ### outstanding work:
 - test incremental materializations more thoroughly than is done with [`dbt-integration-tests`](https://github.com/fishtown-analytics/dbt-integration-tests/).
 - Add support for `ActiveDirectoryMsi`
-- Publish as package to `pypi`
-- Use CTAS to create seeds?
-- staging external tables as sources (in progress)
+- auto-create  `EXTERNAL DATA SOURCE` and `EXTERNAL FILE FORMAT`s.
 - [officially rename the adapter from `sqlserver` to `synapse`](https://github.com/swanderz/dbt-synapse/pull/6)
+- Use CTAS to create seeds?
 
 ### `dbt` version support
 as of now, only support for dbt `0.15.3`, support for forthcoming `0.18.0` in development
