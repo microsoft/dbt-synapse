@@ -1,12 +1,7 @@
-# :construction: dbt-synapse :construction:
+# dbt-synapse
 
 custom [dbt](https://www.getdbt.com) adapter for [Azure Synapse](https://azure.microsoft.com/en-us/services/synapse-analytics/). Major credit due to @mikaelene and [his `sqlserver` custom adapter](https://github.com/mikaelene/dbt-sqlserver).
 Passing all tests in [dbt-integration-tests](https://github.com/fishtown-analytics/dbt-integration-tests/). 
-
-Only supports dbt 0.18 and newer!
-- dbt 0.18.x is unsupported  - development in progress
-
-Easiest install is to use pip:
 
 ## major differences b/w `dbt-synapse` and `dbt-sqlserver`
 - macros use only Azure Synapse `T-SQL`. [Relevant GitHub issue](https://github.com/MicrosoftDocs/azure-docs/issues/55713)
@@ -16,46 +11,13 @@ Easiest install is to use pip:
 - external table creation via details from yaml.
   - must first create  `EXTERNAL DATA SOURCE` and `EXTERNAL FILE FORMAT`s.
 
-### example `YAML` for defining external tables
-```YAML
-sources:
-  - name: raw
-    schema: source
-    loader: ADLSblob
-    tables:
-      - name: absence_hours
-        description: |
-          from raw DW.
-        external:
-          data_source: SynapseContainer
-          location: /absence_hours_live/
-          file_format: CommaDelimited
-          reject_type: VALUE
-          reject_value: 0
-        columns:
-```
-
-
-## status & support
-
-Passing all tests in [dbt-integration-tests](https://github.com/fishtown-analytics/dbt-integration-tests/). 
-
-### outstanding work:
-- test incremental materializations more thoroughly than is done with [`dbt-integration-tests`](https://github.com/fishtown-analytics/dbt-integration-tests/).
-- Add support for `ActiveDirectoryMsi`
-- auto-create  `EXTERNAL DATA SOURCE` and `EXTERNAL FILE FORMAT`s.
-- [officially rename the adapter from `sqlserver` to `synapse`](https://github.com/swanderz/dbt-synapse/pull/6)
-- Use CTAS to create seeds?
-
-### `dbt` version support
-as of now, only support for dbt `0.15.3`, support for forthcoming `0.18.0` in development
-
+## Installation
 Easiest install is to use pip (not yet registered on PyPI).
 
 First install [ODBC Driver version 17](https://www.microsoft.com/en-us/download/details.aspx?id=56567).
 
 ```bash
-pip install git+https://github.com/swanderz/dbt-synapse.git
+pip install dbt-synapse
 ```
 
 On Ubuntu make sure you have the ODBC header files before installing
@@ -63,6 +25,19 @@ On Ubuntu make sure you have the ODBC header files before installing
 ```
 sudo apt install unixodbc-dev
 ```
+
+## status & support
+as of now, only support for dbt `0.18.0`, support for forthcoming `0.18.0` in development
+
+Passing all tests in [dbt-integration-tests](https://github.com/fishtown-analytics/dbt-integration-tests/). 
+
+### outstanding work:
+- switch to [`dbt-adapter-tests`](https://github.com/fishtown-analytics/dbt-adapter-tests)
+- test incremental materializations more thoroughly than is done with [`dbt-integration-tests`](https://github.com/fishtown-analytics/dbt-integration-tests/).
+- Add support for `ActiveDirectoryMsi`
+- auto-create  `EXTERNAL DATA SOURCE` and `EXTERNAL FILE FORMAT`s.
+- [officially rename the adapter from `sqlserver` to `synapse`](https://github.com/swanderz/dbt-synapse/pull/6)
+- Use CTAS to create seeds?
 
 ## Authentication
 `SqlPassword` is the default connection method, but you can also use the following [`pyodbc`-supported ActiveDirectory methods](https://docs.microsoft.com/en-us/sql/connect/odbc/using-azure-active-directory?view=sql-server-ver15#new-andor-modified-dsn-and-connection-string-keywords)  to authenticate:
@@ -145,25 +120,32 @@ is turned into the relative form (minus `__dbt`'s `_backup` and `_tmp` tables)
 - `HASH({COLUMN})`
 - `REPLICATE`
 
-
+## example `YAML` for defining external tables
+```YAML
+sources:
+  - name: raw
+    schema: source
+    loader: ADLSblob
+    tables:
+      - name: absence_hours
+        description: |
+          from raw DW.
+        external:
+          data_source: SynapseContainer
+          location: /absence_hours_live/
+          file_format: CommaDelimited
+          reject_type: VALUE
+          reject_value: 0
+        columns:
+```
 ## Changelog
 
-### v0.15.3.1
+### v0.18.0rc2
 
 #### Fixes:
-- Snapshots did not work on dbt v0.15.1 to v0.15.3
+- added snapshot functionality
 
-### v0.15.3
-
-#### Fixes:
-- Fix output of sql in the log files.
-- Limited the version of dbt to 0.15, since later versions are unsupported.
-
-### v0.15.2
+### v0.18.0rc1
 
 #### Fixes:
-- Fix output of sql in the log files.
-- Limited the version of dbt to 0.15, since later versions are unsupported.
-
-### v0.15.2
-Initial release
+- initial release
