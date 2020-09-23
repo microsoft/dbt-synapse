@@ -60,7 +60,7 @@ class SQLServerCredentials(Credentials):
         "trusted_connection": "windows_login",
         "auth": "authentication",
         "app_id": "client_id",
-        "app_secret": "client_secret"
+        "app_secret": "client_secret",
     }
 
     @property
@@ -211,23 +211,20 @@ class SQLServerConnectionManager(SQLConnectionManager):
         # return self.add_query('COMMIT TRANSACTION', auto_begin=False)
         pass
 
-    def add_query(self, sql, auto_begin=True, bindings=None,
-                  abridge_sql_log=False):
+    def add_query(self, sql, auto_begin=True, bindings=None, abridge_sql_log=False):
 
         connection = self.get_thread_connection()
 
         if auto_begin and connection.transaction_open is False:
             self.begin()
 
-        logger.debug('Using {} connection "{}".'.format(
-            self.TYPE, connection.name))
+        logger.debug('Using {} connection "{}".'.format(self.TYPE, connection.name))
 
         with self.exception_handler(sql):
             if abridge_sql_log:
-                logger.debug('On {}:\n{}....'.format(
-                    connection.name, sql[0:512]))
+                logger.debug("On {}:\n{}....".format(connection.name, sql[0:512]))
             else:
-                logger.debug('On {}:\n{}'.format(connection.name, sql))
+                logger.debug("On {}:\n{}".format(connection.name, sql))
             pre = time.time()
 
             cursor = connection.handle.cursor()
