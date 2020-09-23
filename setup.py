@@ -2,6 +2,7 @@
 from setuptools import find_packages
 from distutils.core import setup
 
+
 package_name = "dbt-synapse"
 package_version = "0.18.0rc3"
 description = """A Azure Synapse adpter plugin for dbt (data build tool)"""
@@ -10,7 +11,6 @@ authors_list = [
     'Nandan Hegde',
     'Anders Swanson'
 ]
-
 setup(
     name=package_name,
     version=package_version,
@@ -22,15 +22,15 @@ setup(
     url="https://github.com/swanderz/dbt-synapse",
     packages=find_packages(),
     package_data={
-        'dbt': [
-            'include/sqlserver/dbt_project.yml',
-            'include/sqlserver/macros/*.sql',
-            'include/sqlserver/macros/**/*.sql',
-            'include/sqlserver/macros/**/**/*.sql',
+        "dbt": [
+            "include/sqlserver/dbt_project.yml",
+            "include/sqlserver/macros/*.sql",
+            "include/sqlserver/macros/**/*.sql",
+            "include/sqlserver/macros/**/**/*.sql",
         ]
     },
     install_requires=[
-        'dbt-core==0.18.0',
-        'pyodbc>=4.0.27',
-    ]
+        "dbt-core~=0.18.0",
+        "pyodbc>=4.0.27",
+        "azure-identity>=1.4.0"],
 )
