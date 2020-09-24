@@ -36,9 +36,12 @@
   {% endcall %}
 {% endmacro %}
 
-{% macro sqlserver__drop_schema(database_name, schema_name) -%}
+{% macro sqlserver__drop_schema(relation) -%}
   {% call statement('drop_schema') -%}
-    drop schema if exists {{ relation.without_identifier().schema }}
+      IF EXISTS (SELECT * FROM sys.schemas WHERE name = '{{ relation.without_identifier().schema }}')
+      BEGIN
+      EXEC('DROP SCHEMA {{ relation.without_identifier().schema }}')
+      END
   {% endcall %}
 {% endmacro %}
 
