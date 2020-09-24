@@ -79,12 +79,17 @@
   {{ return(load_result('check_schema_exists').table) }}
 {% endmacro %}
 
+{% macro sqlserver__create_view_as(relation, sql) -%}
+  create view {{ relation.include(database=False) }} as
+    {{ sql }}
+{% endmacro %}
+
 {# TODO Actually Implement the rename index piece #}
 {# TODO instead of deleting it...  #}
 {% macro sqlserver__rename_relation(from_relation, to_relation) -%}
   {% call statement('rename_relation') -%}
   
-    rename object {{ from_relation.schema }}.{{ from_relation.identifier }} to {{ to_relation.identifier }}
+    rename object {{ from_relation.include(database=False) }} to {{ to_relation.identifier }}
   {%- endcall %}
 {% endmacro %}
 
