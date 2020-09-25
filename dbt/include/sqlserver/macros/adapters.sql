@@ -88,7 +88,6 @@
 
 {% macro sqlserver__check_schema_exists(information_schema, schema) -%}
   {% call statement('check_schema_exists', fetch_result=True, auto_begin=False) -%}
-    --USE {{ database_name }}
     SELECT count(*) as schema_exist FROM sys.schemas WHERE name = '{{ schema }}'
   {%- endcall %}
   {{ return(load_result('check_schema_exists').table) }}
