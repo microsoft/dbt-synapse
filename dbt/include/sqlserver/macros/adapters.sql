@@ -2,7 +2,7 @@
   information_schema
 {%- endmacro %}
 
-{% macro default__get_columns_in_query(select_sql) %}
+{% macro sqlserver__get_columns_in_query(select_sql) %}
     {% call statement('get_columns_in_query', fetch_result=True, auto_begin=False) -%}
         select TOP 0 * from (
             {{ select_sql }}
