@@ -14,10 +14,10 @@ Passing all tests in [dbt-integration-tests](https://github.com/fishtown-analyti
 ## status & support
 as of now, only support for dbt `0.18.0`
 
-Passing all tests in [dbt-adapter-tests](https://github.com/fishtown-analytics/dbt-adapter-tests), except for those related to the `incremental` and `ephemeral` materializations.
+Passing all tests in [dbt-adapter-tests](https://github.com/fishtown-analytics/dbt-adapter-tests), except `test_dbt_ephemeral_data_tests`
 
 ### outstanding work:
-- support `incremental` and `ephemeral` materializations
+-  `ephemeral` materializations
 - auto-create  `EXTERNAL DATA SOURCE` and `EXTERNAL FILE FORMAT`s.
 - [officially rename the adapter from `sqlserver` to `synapse`](https://github.com/swanderz/dbt-synapse/pull/6)
 - Use CTAS to create seeds?
