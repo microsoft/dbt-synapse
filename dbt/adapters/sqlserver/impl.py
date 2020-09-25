@@ -49,7 +49,7 @@ class SQLServerAdapter(SQLAdapter):
         # default. A lot of searching has lead me to believe that the
         # '+ interval' syntax used in postgres/redshift is relatively common
         # and might even be the SQL standard's intention.
-        return f"DATEADD({interval},{number},{add_to})'"
+        return f"DATEADD({interval},{number},{add_to})"
 
     def get_rows_different_sql(
         self,
