@@ -1,6 +1,11 @@
 from dbt.adapters.sql import SQLAdapter
 from dbt.adapters.sqlserver import SQLServerConnectionManager
+from dbt.adapters.base.relation import BaseRelation
 import agate
+from typing import (
+    Optional, Tuple, Callable, Iterable, Type, Dict, Any, List, Mapping,
+    Iterator, Union, Set
+)
 
 
 class SQLServerAdapter(SQLAdapter):
