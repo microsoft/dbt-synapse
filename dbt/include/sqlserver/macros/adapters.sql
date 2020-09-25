@@ -50,7 +50,7 @@
   {%- endfor %}
 
   {% call statement('drop_schema') -%}
-      IF EXISTS (SELECT * FROM sys.schemas WHERE name = '{{ relation.without_identifier().schema }}')
+      IF EXISTS (SELECT * FROM sys.schemas WHERE name = '{{ relation.schema }}')
       BEGIN
       EXEC('DROP SCHEMA {{ relation.without_identifier().schema }}')
       END
@@ -86,7 +86,7 @@
       end
 {% endmacro %}
 
-{% macro sqlserver__check_schema_exists(database, schema) -%}
+{% macro sqlserver__check_schema_exists(information_schema, schema) -%}
   {% call statement('check_schema_exists', fetch_result=True, auto_begin=False) -%}
     --USE {{ database_name }}
     SELECT count(*) as schema_exist FROM sys.schemas WHERE name = '{{ schema }}'
