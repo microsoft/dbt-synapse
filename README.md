@@ -12,17 +12,16 @@ Passing all tests in [dbt-integration-tests](https://github.com/fishtown-analyti
   - must first create  `EXTERNAL DATA SOURCE` and `EXTERNAL FILE FORMAT`s.
 
 ## status & support
-as of now, only support for dbt `0.18.0`, support for forthcoming `0.18.0` in development
+as of now, only support for dbt `0.18.0`
 
-Passing all tests in [dbt-integration-tests](https://github.com/fishtown-analytics/dbt-integration-tests/). 
+Passing all tests in [dbt-adapter-tests](https://github.com/fishtown-analytics/dbt-adapter-tests), except for those related to the `incremental` and `ephemeral` materializations.
 
 ### outstanding work:
-- switch to [`dbt-adapter-tests`](https://github.com/fishtown-analytics/dbt-adapter-tests)
-- test incremental materializations more thoroughly than is done with [`dbt-integration-tests`](https://github.com/fishtown-analytics/dbt-integration-tests/).
-- Add support for `ActiveDirectoryMsi`
+- support `incremental` and `ephemeral` materializations
 - auto-create  `EXTERNAL DATA SOURCE` and `EXTERNAL FILE FORMAT`s.
 - [officially rename the adapter from `sqlserver` to `synapse`](https://github.com/swanderz/dbt-synapse/pull/6)
 - Use CTAS to create seeds?
+- Add support for `ActiveDirectoryMsi`
 
 ## Installation
 Easiest install is to use pip (not yet registered on PyPI).
