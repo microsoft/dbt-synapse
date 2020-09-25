@@ -39,6 +39,7 @@ class SQLServerAdapter(SQLAdapter):
     def timestamp_add_sql(
         self, add_to: str, number: int = 1, interval: str = "hour"
     ) -> str:
+        # note: 'interval' is not supported for T-SQL
         # for backwards compatibility, we're compelled to set some sort of
         # default. A lot of searching has lead me to believe that the
         # '+ interval' syntax used in postgres/redshift is relatively common
@@ -52,7 +53,10 @@ class SQLServerAdapter(SQLAdapter):
         column_names: Optional[List[str]] = None,
         except_operator: str = "EXCEPT",
     ) -> str:
-        """Generate SQL for a query that returns a single row with a two
+
+        """
+        note: using is not supported on Synapse so COLUMNS_EQUAL_SQL is adjsuted
+        Generate SQL for a query that returns a single row with a two
         columns: the number of rows that are different between the two
         relations and the number of mismatched rows.
         """
