@@ -2,6 +2,15 @@
   information_schema
 {%- endmacro %}
 
+{% macro default__get_columns_in_query(select_sql) %}
+    {% call statement('get_columns_in_query', fetch_result=True, auto_begin=False) -%}
+        select TOP 0 * from (
+            {{ select_sql }}
+        ) as __dbt_sbq
+    {% endcall %}
+    {{ return(load_result('get_columns_in_query').table.columns | map(attribute='name') | list) }}
+{% endmacro %}
+
 {% macro sqlserver__list_relations_without_caching(schema_relation) %}
   {% call statement('list_relations_without_caching', fetch_result=True) -%}
     select
