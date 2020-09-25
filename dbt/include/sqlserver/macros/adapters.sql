@@ -52,7 +52,7 @@
   {% call statement('drop_schema') -%}
       IF EXISTS (SELECT * FROM sys.schemas WHERE name = '{{ relation.schema }}')
       BEGIN
-      EXEC('DROP SCHEMA {{ relation.without_identifier().schema }}')
+      EXEC('DROP SCHEMA {{ relation.schema }}')
       END
   {% endcall %}
 {% endmacro %}
