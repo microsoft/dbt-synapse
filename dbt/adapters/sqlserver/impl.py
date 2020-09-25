@@ -51,6 +51,21 @@ class SQLServerAdapter(SQLAdapter):
         # and might even be the SQL standard's intention.
         return f"DATEADD({interval},{number},{add_to})"
 
+    def string_add_sql(
+        self, add_to: str, value: str, location='append',
+    ) -> str:
+        """
+        `+` is T-SQL's string concatenation operator
+        """
+        if location == 'append':
+            return f"{add_to} + '{value}'"
+        elif location == 'prepend':
+            return f"'{value}' + {add_to}"
+        else:
+            raise RuntimeException(
+                f'Got an unexpected location value of "{location}"'
+            )
+
     def get_rows_different_sql(
         self,
         relation_a: BaseRelation,
