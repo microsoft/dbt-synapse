@@ -1,124 +1,162 @@
-# dbt-sqlserver
-[dbt](https://www.getdbt.com) adapter for sql server.
+# dbt-synapse
 
-Passing all tests in [dbt-integration-tests](https://github.com/fishtown-analytics/dbt-integration-tests/). 
+custom [dbt](https://www.getdbt.com) adapter for [Azure Synapse](https://azure.microsoft.com/en-us/services/synapse-analytics/). Major credit due to @mikaelene and [his `sqlserver` custom adapter](https://github.com/mikaelene/dbt-sqlserver).
 
-Only supports dbt 0.14 and newer!
-- For dbt 0.14.x use dbt-sqlserver 0.14.x
-- For dbt 0.15.x use dbt-sqlserver 0.15.x
+## major differences b/w `dbt-synapse` and `dbt-sqlserver`
+- macros use only Azure Synapse `T-SQL`. [Relevant GitHub issue](https://github.com/MicrosoftDocs/azure-docs/issues/55713)
+- use of [Create Table as Select (CTAS)](https://docs.microsoft.com/en-us/sql/t-sql/statements/create-table-as-select-azure-sql-data-warehouse?view=aps-pdw-2016-au7) means you don't need post-hooks to create indices
+- Azure Active Directory Authentication options
+- rewrite of snapshots because Synapse doesn't support `MERGE`.
+- external table creation via details from yaml.
+  - must first create  `EXTERNAL DATA SOURCE` and `EXTERNAL FILE FORMAT`s.
 
-Easiest install is to use pip:
+## status & support
+as of now, only support for dbt `0.18.0`
 
-    pip install dbt-sqlserver
+Passing all tests in [dbt-adapter-tests](https://github.com/fishtown-analytics/dbt-adapter-tests), except `test_dbt_ephemeral_data_tests`
 
+### outstanding work:
+-  `ephemeral` materializations (workaround for non-recursive CTEs)
+- auto-create  `EXTERNAL DATA SOURCE` and `EXTERNAL FILE FORMAT`s.
+- [officially rename the adapter from `sqlserver` to `synapse`](https://github.com/swanderz/dbt-synapse/pull/6)
+- Use CTAS to create seeds?
+- Add support for `ActiveDirectoryMsi`
+
+## Installation
+Easiest install is to use pip (not yet registered on PyPI).
+
+First install [ODBC Driver version 17](https://www.microsoft.com/en-us/download/details.aspx?id=56567).
+
+```bash
+pip install dbt-synapse
+```
 On Ubuntu make sure you have the ODBC header files before installing
-    
-    sudo apt install unixodbc-dev
- 
-## Configure your profile
-Configure your dbt profile for using SQL Server authentication or Integrated Security:
-##### SQL Server authentication 
-      type: sqlserver
-      driver: 'ODBC Driver 17 for SQL Server' (The ODBC Driver installed on your system)
-      server: server-host-name or ip
-      port: 1433
-      user: username
-      password: password
-      database: databasename
-      schema: schemaname
 
-##### Integrated Security
-      type: sqlserver
-      driver: 'ODBC Driver 17 for SQL Server'
-      server: server-host-name or ip
-      port: 1433
-      user: username
-      schema: schemaname
-      windows_login: True
+```
+sudo apt install unixodbc-dev
+```
 
-## Supported features
+## Authentication
+the following is needed for every target definition for both SQL Server and Azure SQL.  The sections below details how to connect to SQL Server and Azure SQL specifically.
+```
+type: sqlserver
+driver: 'ODBC Driver 17 for SQL Server' (The ODBC Driver installed on your system)
+server: server-host-name or ip
+port: 1433
+schema: schemaname
+```
+### standard SQL Server authentication
+SQL Server credentials are supported for on-prem as well as cloud, and it is the default authentication method for `dbt-sqlsever`
+```
+user: username
+password: password
+```
+### Azure SQL-specific auth
+The following [`pyodbc`-supported ActiveDirectory methods](https://docs.microsoft.com/en-us/sql/connect/odbc/using-azure-active-directory?view=sql-server-ver15#new-andor-modified-dsn-and-connection-string-keywords) are available to authenticate to Azure SQL:
+- ActiveDirectory Password
+- ActiveDirectory Interactive
+- ActiveDirectory Integrated
+- Service Principal (a.k.a. AAD Application)
+- ~~ActiveDirectory MSI~~ (not implemented)
 
-### Materializations
-- Table: 
-    - Will be materialized as columns store index by default (requires SQL Server 2017 as least). To override:
+#### ActiveDirectory Password 
+Definitely not ideal, but available
+```
+authentication: ActiveDirectoryPassword
+user: bill.gates@microsoft.com
+password: i<3opensource?
+```
+#### ActiveDirectory Interactive (*Windows only*)
+brings up the Azure AD prompt so you can MFA if need be.
+```
+authentication: ActiveDirectoryInteractive
+user: bill.gates@microsoft.com
+```
+#### ActiveDirectory Integrated (*Windows only*)
+uses your machine's credentials (might be disabled by your AAD admins)
+```
+authentication: ActiveDirectoryIntegrated
+```
+##### Service Principal
+`client_*` and `app_*` can be used interchangeably
+```
+tenant_id: ActiveDirectoryIntegrated
+client_id: clientid
+client_secret: ActiveDirectoryIntegrated
+```
+
+## Table Materializations
+CTAS allows you to materialize tables with indices and distributions at creation time, which obviates the need for post-hooks to set indices.
+
+### Example
+You can also configure `index` and `dist` in `dbt_project.yml`.
+#### `models/stage/absence.sql
+```
 {{
-  config(
-    as_columnstore = false,
-  )
+    config(
+        index='HEAP',
+        dist='ROUND_ROBIN'
+        )
 }}
-- View
-- Incremental
-- Ephemeral
 
-### Seeds
+select *
+from ...
+```
 
-### Hooks
+is turned into the relative form (minus `__dbt`'s `_backup` and `_tmp` tables)
 
-### Custom schemas
+```SQL
+  CREATE TABLE ajs_stg.absence_hours
+    WITH(
+      DISTRIBUTION = ROUND_ROBIN,
+      HEAP
+      )
+    AS (SELECT * FROM ajs_stg.absence_hours__dbt_tmp_temp_view)
+```
+#### Indices
+- `CLUSTERED COLUMNSTORE INDEX` (default)
+- `HEAP`
+- `CLUSTERED INDEX ({COLUMN})`
+  
+#### Distributions
+- `ROUND_ROBIN` (default)
+- `HASH({COLUMN})`
+- `REPLICATE`
 
-### Sources
-
-
-### Testing & documentation
-- Schema test supported
-- Data tests supported from dbt 0.14.1
-- Docs
-
-### Snapshots
-- Timestamp
-- Check
-
-But, columns in source table can not have any constraints. If for example any column has a NOT NULL constraint, an error will be thrown.
-
-### Indexes
-There is now possible to define a regular sql server index on a table. 
-This is best used when the default clustered columnstore index materialisation is not suitable. 
-One reason would be that you need a large table that usually is queried one row at a time.
-
-Clusterad and non-clustered index are supported:
-- create_clustered_index(columns, unique=False)
-- create_nonclustered_index(columns, includes=False)
-- drop_all_indexes_on_table(): Drops current indexex on a table. Only meaningfull if model is incremental.
-
-
-Example of applying Unique clustered index on two columns, Ordinary index on one column, Ordinary index on one column with another column included
-
-    {{
-        config({
-            "as_columnstore": false, 
-            "materialized": 'table',
-            "post-hook": [
-                "{{ create_clustered_index(columns = ['row_id', 'row_id_complement'], unique=True) }}",
-                "{{ create_nonclustered_index(columns = ['modified_date']) }}",
-                "{{ create_nonclustered_index(columns = ['row_id'], includes = ['modified_date']) }}",
-            ]
-        })
-    }}
-
-
+## example `YAML` for defining external tables
+```YAML
+sources:
+  - name: raw
+    schema: source
+    loader: ADLSblob
+    tables:
+      - name: absence_hours
+        description: |
+          from raw DW.
+        external:
+          data_source: SynapseContainer
+          location: /absence_hours_live/
+          file_format: CommaDelimited
+          reject_type: VALUE
+          reject_value: 0
+        columns:
+```
 ## Changelog
 
-### v0.15.2
+### v0.18.0.1
+- pull AD auth directly from `dbt-sqlserver` (https://github.com/swanderz/dbt-synapse/pull/13)
+- hotfix for broken `create_view()` macro (https://github.com/swanderz/dbt-synapse/pull/14)
+- get `dbt-adapter-tests` up and running (https://github.com/swanderz/dbt-synapse/pull/16)
+  - make `sqlserver__drop_schema()` also drop all tables and views associated with schema
+  - introduce `sqlserver__get_columns_in_query()` for use with testing
+  - align macro args with `dbt-base`
+
+### v0.18.0rc2
 
 #### Fixes:
-- Fixes an issue with clustered columnstore index not beeing created.
+- added snapshot functionality
 
-
-### v0.15.1
-#### New Features:
-- Ability to define an index in a poosthook
+### v0.18.0rc1
 
 #### Fixes:
-- Previously when a model run was interupted unfinished models prevented the next run and you had to manually delete them. This is now fixed so that unfinished models will be deleted on next run.
-
-### v0.15.0.1
-Fix release for v0.15.0
-#### Fixes:
-- Setting the port had no effect. Issue #9
-- Unable to generate docs. Issue #12
-
-### v0.15.0
-Requires dbt v0.15.0 or greater
-
-### pre v0.15.0
-Requires dbt v0.14.x
+- initial release
