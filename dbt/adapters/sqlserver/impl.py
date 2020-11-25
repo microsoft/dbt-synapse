@@ -39,6 +39,10 @@ class SQLServerAdapter(SQLAdapter):
     @classmethod
     def convert_time_type(cls, agate_table, col_idx):
         return "datetime"
+        
+    def get_compiler(self):
+        from dbt.adapters.sqlserver import TSQLCompiler
+        return TSQLCompiler(self.config)
 
     # Methods used in adapter tests
     def timestamp_add_sql(
