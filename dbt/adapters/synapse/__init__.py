@@ -10,5 +10,5 @@ Plugin = AdapterPlugin(
     adapter=SynapseAdapter,
     credentials=SynapseCredentials,
     include_path=synapse.PACKAGE_PATH,
-    dependencies=['sqlserver'])
+    dependencies=['sqlserver']
 )
