@@ -74,7 +74,7 @@ class SynapseCredentials(SQLServerCredentials):
         )
 
 
-class SynapseConnectionManager(SynapseConnectionManager):
+class SynapseConnectionManager(SQLServerConnectionManager):
     TYPE = "synapse"
 
     @classmethod
