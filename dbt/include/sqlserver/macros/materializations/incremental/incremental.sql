@@ -10,7 +10,7 @@
 
 {%- endmacro %}
 
-{% materialization incremental, adapter='sqlserver' -%}
+{% materialization incremental, adapter='synapse' -%}
   {%- set unique_key = config.get('unique_key') -%}
 
   {%- set identifier = model['alias'] -%}

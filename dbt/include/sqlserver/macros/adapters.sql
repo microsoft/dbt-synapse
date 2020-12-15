@@ -1,8 +1,8 @@
-{% macro sqlserver__information_schema_name(database) -%}
+{% macro synapse__information_schema_name(database) -%}
   information_schema
 {%- endmacro %}
 
-{% macro sqlserver__get_columns_in_query(select_sql) %}
+{% macro synapse__get_columns_in_query(select_sql) %}
     {% call statement('get_columns_in_query', fetch_result=True, auto_begin=False) -%}
         select TOP 0 * from (
             {{ select_sql }}
@@ -11,7 +11,7 @@
     {{ return(load_result('get_columns_in_query').table.columns | map(attribute='name') | list) }}
 {% endmacro %}
 
-{% macro sqlserver__list_relations_without_caching(schema_relation) %}
+{% macro synapse__list_relations_without_caching(schema_relation) %}
   {% call statement('list_relations_without_caching', fetch_result=True) -%}
     select
       table_catalog as [database],
@@ -28,7 +28,7 @@
   {{ return(load_result('list_relations_without_caching').table) }}
 {% endmacro %}
  
-{% macro sqlserver__list_schemas(database) %}
+{% macro synapse__list_schemas(database) %}
   {% call statement('list_schemas', fetch_result=True, auto_begin=False) -%}
     select  name as [schema]
     from sys.schemas
@@ -36,7 +36,7 @@
   {{ return(load_result('list_schemas').table) }}
 {% endmacro %}
 
-{% macro sqlserver__create_schema(relation) -%}
+{% macro synapse__create_schema(relation) -%}
   {% call statement('create_schema') -%}
     IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '{{ relation.without_identifier().schema }}')
     BEGIN
@@ -45,7 +45,7 @@
   {% endcall %}
 {% endmacro %}
 
-{% macro sqlserver__drop_schema(relation) -%}
+{% macro synapse__drop_schema(relation) -%}
   {%- set tables_in_schema_query %}
       SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
       WHERE TABLE_SCHEMA = '{{ relation.schema }}'
@@ -66,8 +66,8 @@
   {% endcall %}
 {% endmacro %}
 
-{# TODO make this function just a wrapper of sqlserver__drop_relation_script #}
-{% macro sqlserver__drop_relation(relation) -%}
+{# TODO make this function just a wrapper of synapse__drop_relation_script #}
+{% macro synapse__drop_relation(relation) -%}
   {% if relation.type == 'view' -%}
    {% set object_id_type = 'V' %}
    {% elif relation.type == 'table'%}
@@ -82,7 +82,7 @@
   {%- endcall %}
 {% endmacro %}
 
-{% macro sqlserver__drop_relation_script(relation) -%}
+{% macro synapse__drop_relation_script(relation) -%}
   {% if relation.type == 'view' -%}
    {% set object_id_type = 'V' %}
    {% elif relation.type == 'table'%}
@@ -95,28 +95,28 @@
       end
 {% endmacro %}
 
-{% macro sqlserver__check_schema_exists(information_schema, schema) -%}
+{% macro synapse__check_schema_exists(information_schema, schema) -%}
   {% call statement('check_schema_exists', fetch_result=True, auto_begin=False) -%}
     SELECT count(*) as schema_exist FROM sys.schemas WHERE name = '{{ schema }}'
   {%- endcall %}
   {{ return(load_result('check_schema_exists').table) }}
 {% endmacro %}
 
-{% macro sqlserver__create_view_as(relation, sql) -%}
+{% macro synapse__create_view_as(relation, sql) -%}
   create view {{ relation.include(database=False) }} as
     {{ sql }}
 {% endmacro %}
 
 {# TODO Actually Implement the rename index piece #}
 {# TODO instead of deleting it...  #}
-{% macro sqlserver__rename_relation(from_relation, to_relation) -%}
+{% macro synapse__rename_relation(from_relation, to_relation) -%}
   {% call statement('rename_relation') -%}
   
     rename object {{ from_relation.include(database=False) }} to {{ to_relation.identifier }}
   {%- endcall %}
 {% endmacro %}
 
-{% macro sqlserver__create_clustered_columnstore_index(relation) -%}
+{% macro synapse__create_clustered_columnstore_index(relation) -%}
   {%- set cci_name = relation.schema ~ '_' ~ relation.identifier ~ '_cci' -%}
   {%- set relation_name = relation.schema ~ '_' ~ relation.identifier -%}
   {%- set full_relation = relation.schema ~ '.' ~ relation.identifier -%}
@@ -129,7 +129,7 @@
     ON {{full_relation}}
 {% endmacro %}
 
-{% macro sqlserver__create_table_as(temporary, relation, sql) -%}
+{% macro synapse__create_table_as(temporary, relation, sql) -%}
    {%- set index = config.get('index', default="CLUSTERED COLUMNSTORE INDEX") -%}
    {%- set dist = config.get('dist', default="ROUND_ROBIN") -%}
    {% set tmp_relation = relation.incorporate(
@@ -137,9 +137,9 @@
    type='view')-%}
    {%- set temp_view_sql = sql.replace("'", "''") -%}
 
-   {{ sqlserver__drop_relation_script(tmp_relation) }}
+   {{ synapse__drop_relation_script(tmp_relation) }}
 
-   {{ sqlserver__drop_relation_script(relation) }}
+   {{ synapse__drop_relation_script(relation) }}
 
    EXEC('create view {{ tmp_relation.schema }}.{{ tmp_relation.identifier }} as
     {{ temp_view_sql }}
@@ -152,11 +152,11 @@
       )
     AS (SELECT * FROM {{ tmp_relation.schema }}.{{ tmp_relation.identifier }})
 
-   {{ sqlserver__drop_relation_script(tmp_relation) }}
+   {{ synapse__drop_relation_script(tmp_relation) }}
 
 {% endmacro %}
 
-{% macro sqlserver__insert_into_from(to_relation, from_relation) -%}
+{% macro synapse__insert_into_from(to_relation, from_relation) -%}
   {%- set full_to_relation = to_relation.schema ~ '.' ~ to_relation.identifier -%}
   {%- set full_from_relation = from_relation.schema ~ '.' ~ from_relation.identifier -%}
 
@@ -164,11 +164,11 @@
 
 {% endmacro %}
 
-{% macro sqlserver__current_timestamp() -%}
+{% macro synapse__current_timestamp() -%}
   getdate()
 {%- endmacro %}
 
-{% macro sqlserver__get_columns_in_relation(relation) -%}
+{% macro synapse__get_columns_in_relation(relation) -%}
   {% call statement('get_columns_in_relation', fetch_result=True) %}
       SELECT
           column_name,
@@ -194,7 +194,7 @@
   {{ return(sql_convert_columns_in_relation(table)) }}
 {% endmacro %}
 
-{% macro sqlserver__make_temp_relation(base_relation, suffix) %}
+{% macro synapse__make_temp_relation(base_relation, suffix) %}
     {% set tmp_identifier = '#' ~  base_relation.identifier ~ suffix %}
     {% set tmp_relation = base_relation.incorporate(
                                 path={"identifier": tmp_identifier}) -%}
@@ -202,7 +202,7 @@
     {% do return(tmp_relation) %}
 {% endmacro %}
 
-{% macro sqlserver__snapshot_string_as_time(timestamp) -%}
+{% macro synapse__snapshot_string_as_time(timestamp) -%}
     {%- set result = "CONVERT(DATETIME2, '" ~ timestamp ~ "')" -%}
     {{ return(result) }}
 {%- endmacro %}

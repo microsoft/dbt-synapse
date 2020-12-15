@@ -1,5 +1,5 @@
 target:
-  type: sqlserver
+  type: synapse
   driver: "ODBC Driver 17 for SQL Server"
   schema: "dbt_test_{{ var('_dbt_random_suffix') }}"
   host: "{{ env_var('DBT_SYNAPSE_SERVER') }}"

@@ -27,5 +27,9 @@ setup(
             "include/sqlserver/macros/**/**/*.sql",
         ]
     },
-    install_requires=["dbt-core~=0.18.0", "pyodbc>=4.0.27", "azure-identity>=1.4.0"],
+    install_requires=[
+        "dbt-sqlserver~=0.18.0",
+        "pyodbc>=4.0.27",
+        "azure-identity>=1.4.0"
+    ],
 )

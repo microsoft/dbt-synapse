@@ -39,7 +39,7 @@ sudo apt install unixodbc-dev
 ## Authentication
 the following is needed for every target definition for both SQL Server and Azure SQL.  The sections below details how to connect to SQL Server and Azure SQL specifically.
 ```
-type: sqlserver
+type: synapse
 driver: 'ODBC Driver 17 for SQL Server' (The ODBC Driver installed on your system)
 server: server-host-name or ip
 port: 1433

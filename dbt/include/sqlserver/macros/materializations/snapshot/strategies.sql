@@ -1,4 +1,4 @@
-{% macro sqlserver__snapshot_hash_arguments(args) %}
+{% macro synapse__snapshot_hash_arguments(args) %}
     CONVERT(VARCHAR(32), HashBytes('MD5', {% for arg in args %}
         coalesce(cast({{ arg }} as varchar ), '') {% if not loop.last %} + '|' + {% endif %}
     {% endfor %}), 2)
@@ -29,7 +29,7 @@
         )
     {%- endset %}
 
-    {% set scd_id_expr = sqlserver__snapshot_hash_arguments([primary_key, updated_at]) %}
+    {% set scd_id_expr = synapse__snapshot_hash_arguments([primary_key, updated_at]) %}
 
     {% do return({
         "unique_key": primary_key,
