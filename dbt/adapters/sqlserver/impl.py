@@ -1,44 +1,14 @@
-from dbt.adapters.sql import SQLAdapter
-from dbt.adapters.sqlserver import SQLServerConnectionManager
+from dbt.adapters.sqlserver import SQLServerAdapter
+from dbt.adapters.synapse import SynapseConnectionManager
 from dbt.adapters.base.relation import BaseRelation
-import agate
 from typing import (
     Optional, Tuple, Callable, Iterable, Type, Dict, Any, List, Mapping,
     Iterator, Union, Set
 )
 
 
-class SQLServerAdapter(SQLAdapter):
-    ConnectionManager = SQLServerConnectionManager
-
-    @classmethod
-    def date_function(cls):
-        return "getdate()"
-
-    @classmethod
-    def convert_text_type(cls, agate_table, col_idx):
-        column = agate_table.columns[col_idx]
-        lens = (len(d.encode("utf-8")) for d in column.values_without_nulls())
-        max_len = max(lens) if lens else 64
-        length = max_len if max_len > 16 else 16
-        return "varchar({})".format(length)
-
-    @classmethod
-    def convert_datetime_type(cls, agate_table, col_idx):
-        return "datetime"
-
-    @classmethod
-    def convert_boolean_type(cls, agate_table, col_idx):
-        return "bit"
-
-    @classmethod
-    def convert_number_type(cls, agate_table, col_idx):
-        decimals = agate_table.aggregate(agate.MaxPrecision(col_idx))
-        return "float" if decimals else "int"
-
-    @classmethod
-    def convert_time_type(cls, agate_table, col_idx):
-        return "datetime"
+class SynapseAdapter(SQLServerAdapter):
+    ConnectionManager = SynapseConnectionManager
 
     # Methods used in adapter tests
     def timestamp_add_sql(
