@@ -6,31 +6,14 @@ import time
 import struct
 
 import dbt.exceptions
+import dbt.adapters.sqlserver.connections as sqlserverconn
 from dbt.adapters.sqlserver import SQLServerConnectionManager
 from dbt.adapters.sqlserver import SQLServerCredentials
-from azure.identity import DefaultAzureCredential
 
 from dbt.logger import GLOBAL_LOGGER as logger
 
 from dataclasses import dataclass
 from typing import Optional
-
-
-def create_token(tenant_id, client_id, client_secret):
-    # bc DefaultAzureCredential will look in env variables
-    os.environ["AZURE_TENANT_ID"] = tenant_id
-    os.environ["AZURE_CLIENT_ID"] = client_id
-    os.environ["AZURE_CLIENT_SECRET"] = client_secret
-
-    token = DefaultAzureCredential().get_token("https://database.windows.net//.default")
-    # convert to byte string interspersed with the 1-byte
-    # TODO decide which is cleaner?
-    # exptoken=b''.join([bytes({i})+bytes(1) for i in bytes(token.token, "UTF-8")])
-    exptoken = bytes(1).join([bytes(i, "UTF-8") for i in token.token]) + bytes(1)
-    # make c object with bytestring length prefix
-    tokenstruct = struct.pack("=i", len(exptoken)) + exptoken
-
-    return tokenstruct
 
 
 @dataclass
@@ -159,7 +142,9 @@ class SynapseConnectionManager(SQLServerConnectionManager):
                     client_id = getattr(credentials, "client_id", None)
                     client_secret = getattr(credentials, "client_secret", None)
 
-                    cls.TOKEN = create_token(tenant_id, client_id, client_secret)
+                    cls.TOKEN = sqlserverconn.create_token(
+                        tenant_id, client_id, client_secret
+                    )
 
                 handle = pyodbc.connect(
                     con_str_concat, attrs_before={1256: cls.TOKEN}, autocommit=True
