@@ -105,29 +105,10 @@ declare @drop_remaining_indexes_last nvarchar(max) = (
 
 
 {% macro create_clustered_index(columns, unique=False) -%}
-
-{{ log("Creating clustered index...") }}
-
-create
-{% if unique -%}
-unique
-{% endif %}
-clustered index
-    {{ this.table }}__clustered_index_on_{{ columns|join("_") }}
-      on {{ this }} ({{ '[' + columns|join("], [") + ']' }})
-
+  {{ return(create_clustered_index(columns, unique=False)) }}
 {%- endmacro %}
 
 
 {% macro create_nonclustered_index(columns, includes=False) %}
-
-{{ log("Creating nonclustered index...") }}
-
-create nonclustered index
-    {{ this.table }}__index_on_{{ columns|join("_") }}
-      on {{ this }} ({{ '[' + columns|join("], [") + ']' }})
-      {% if includes -%}
-        include ({{ '[' + includes|join("], [") + ']' }})
-      {% endif %}
-
+  {{ return(create_nonclustered_index(columns, includes=False)) }}
 {% endmacro %}
