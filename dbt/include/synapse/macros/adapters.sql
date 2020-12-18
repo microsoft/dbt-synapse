@@ -1,5 +1,5 @@
 {% macro synapse__information_schema_name(database) -%}
-  information_schema
+  {{ return(sqlserver__information_schema_name(database)) }}
 {%- endmacro %}
 
 {% macro synapse__get_columns_in_query(select_sql) %}
@@ -12,28 +12,11 @@
 {% endmacro %}
 
 {% macro synapse__list_relations_without_caching(schema_relation) %}
-  {% call statement('list_relations_without_caching', fetch_result=True) -%}
-    select
-      table_catalog as [database],
-      table_name as [name],
-      table_schema as [schema],
-      case when table_type = 'BASE TABLE' then 'table'
-           when table_type = 'VIEW' then 'view'
-           else table_type
-      end as table_type
-    from information_schema.tables
-    where table_schema like '{{ schema_relation.schema }}'
-      and table_catalog like '{{ schema_relation.database }}'
-  {% endcall %}
-  {{ return(load_result('list_relations_without_caching').table) }}
+  {{ return(sqlserver__list_relations_without_caching(schema_relation)) }}
 {% endmacro %}
  
 {% macro synapse__list_schemas(database) %}
-  {% call statement('list_schemas', fetch_result=True, auto_begin=False) -%}
-    select  name as [schema]
-    from sys.schemas
-  {% endcall %}
-  {{ return(load_result('list_schemas').table) }}
+  {{ return(sqlserver__list_schemas(database)) }}
 {% endmacro %}
 
 {% macro synapse__create_schema(relation) -%}
@@ -46,60 +29,20 @@
 {% endmacro %}
 
 {% macro synapse__drop_schema(relation) -%}
-  {%- set tables_in_schema_query %}
-      SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
-      WHERE TABLE_SCHEMA = '{{ relation.schema }}'
-  {% endset %}
-  {% set tables_to_drop = run_query(tables_in_schema_query).columns[0].values() %}
-  {% for table in tables_to_drop %}
-    {%- set schema_relation = adapter.get_relation(database=relation.database,
-                                               schema=relation.schema,
-                                               identifier=table) -%}
-    {% do drop_relation(schema_relation) %}
-  {%- endfor %}
-
-  {% call statement('drop_schema') -%}
-      IF EXISTS (SELECT * FROM sys.schemas WHERE name = '{{ relation.schema }}')
-      BEGIN
-      EXEC('DROP SCHEMA {{ relation.schema }}')
-      END
-  {% endcall %}
+  {{ return(sqlserver__drop_schema(relation)) }}
 {% endmacro %}
 
 {# TODO make this function just a wrapper of synapse__drop_relation_script #}
 {% macro synapse__drop_relation(relation) -%}
-  {% if relation.type == 'view' -%}
-   {% set object_id_type = 'V' %}
-   {% elif relation.type == 'table'%}
-   {% set object_id_type = 'U' %}
-   {%- else -%} invalid target name
-   {% endif %}
-  {% call statement('drop_relation', auto_begin=False) -%}
-    if object_id ('{{ relation.include(database=False) }}','{{ object_id_type }}') is not null
-      begin
-      drop {{ relation.type }} {{ relation.include(database=False) }}
-      end
-  {%- endcall %}
+  {{ return(sqlserver__drop_relation(relation)) }}
 {% endmacro %}
 
 {% macro synapse__drop_relation_script(relation) -%}
-  {% if relation.type == 'view' -%}
-   {% set object_id_type = 'V' %}
-   {% elif relation.type == 'table'%}
-   {% set object_id_type = 'U' %}
-   {%- else -%} invalid target name
-   {% endif %}
-  if object_id ('{{ relation.include(database=False) }}','{{ object_id_type }}') is not null
-      begin
-      drop {{ relation.type }} {{ relation.include(database=False) }}
-      end
+  {{ return(sqlserver__drop_relation_script(relation)) }}
 {% endmacro %}
 
 {% macro synapse__check_schema_exists(information_schema, schema) -%}
-  {% call statement('check_schema_exists', fetch_result=True, auto_begin=False) -%}
-    SELECT count(*) as schema_exist FROM sys.schemas WHERE name = '{{ schema }}'
-  {%- endcall %}
-  {{ return(load_result('check_schema_exists').table) }}
+  {{ return(sqlserver__check_schema_exists(information_schema, schema)) }}
 {% endmacro %}
 
 {% macro synapse__create_view_as(relation, sql) -%}
@@ -157,15 +100,11 @@
 {% endmacro %}
 
 {% macro synapse__insert_into_from(to_relation, from_relation) -%}
-  {%- set full_to_relation = to_relation.schema ~ '.' ~ to_relation.identifier -%}
-  {%- set full_from_relation = from_relation.schema ~ '.' ~ from_relation.identifier -%}
-
-  SELECT * INTO {{full_to_relation}} FROM {{full_from_relation}}
-
+  {{ return(sqlserver__insert_into_from(to_relation, from_relation)) }}
 {% endmacro %}
 
 {% macro synapse__current_timestamp() -%}
-  getdate()
+  {{ return(sqlserver__current_timestamp()) }}
 {%- endmacro %}
 
 {% macro synapse__get_columns_in_relation(relation) -%}
@@ -195,14 +134,9 @@
 {% endmacro %}
 
 {% macro synapse__make_temp_relation(base_relation, suffix) %}
-    {% set tmp_identifier = '#' ~  base_relation.identifier ~ suffix %}
-    {% set tmp_relation = base_relation.incorporate(
-                                path={"identifier": tmp_identifier}) -%}
-
-    {% do return(tmp_relation) %}
+  {{ return(sqlserver__make_temp_relation(base_relation, suffix)) }}
 {% endmacro %}
 
 {% macro synapse__snapshot_string_as_time(timestamp) -%}
-    {%- set result = "CONVERT(DATETIME2, '" ~ timestamp ~ "')" -%}
-    {{ return(result) }}
+  {{ return(sqlserver__snapshot_string_as_time(timestamp)) }}
 {%- endmacro %}
