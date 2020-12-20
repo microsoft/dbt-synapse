@@ -1,6 +1,7 @@
 {% macro sqlserver__basic_load_csv_rows(model, batch_size, agate_table) %}
     {% set cols_sql = get_seed_column_quoted_csv(model, agate_table.column_names) %}
     {% set bindings = [] %}
+
     {% set statements = [] %}
 
     {% for chunk in agate_table.rows | batch(batch_size) %}
