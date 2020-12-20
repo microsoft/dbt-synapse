@@ -1,7 +1,6 @@
 {% macro sqlserver__basic_load_csv_rows(model, batch_size, agate_table) %}
     {% set cols_sql = get_seed_column_quoted_csv(model, agate_table.column_names) %}
     {% set bindings = [] %}
-    
     {% set statements = [] %}
 
     {% for chunk in agate_table.rows | batch(batch_size) %}
@@ -16,10 +15,10 @@
             {% for row in chunk -%}
                 {{'SELECT'+' '}}
                 {%- for column in agate_table.column_names -%}
-                    {# TSQL catch 22:
-                        strings must be single-quoted &
-                        single-quotes inside of strings must be doubled
-                     #}
+                    {# TSQL catch 22: #}
+                        {# strings must be single-quoted & #}
+                        {# single-quotes inside of strings must be doubled #}
+                    
                     {% set col_type = agate_table.columns[column].data_type | string %}
                     {%- if "text.Text" in col_type -%}
                       '{{str_replace(row[column]) if row[column]}}'
