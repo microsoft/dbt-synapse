@@ -95,6 +95,28 @@ client_id: clientid
 client_secret: ActiveDirectoryIntegrated
 ```
 
+##### CLI
+The authentication of the Azure command line interface (CLI) can be used by
+first logging in with:
+
+```bash
+az login
+```
+
+And setting `authentication` in `profiles.yml` to:
+
+```
+authentication: CLI
+```
+
+An alternative route for using a service principal is:
+
+```
+az login --service-principal --username $CLIENTID --password $SECRET --tenant $TENANTID
+```
+
+Source: https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli#sign-in-using-a-service-principal
+
 ## Table Materializations
 CTAS allows you to materialize tables with indices and distributions at creation time, which obviates the need for post-hooks to set indices.
 
