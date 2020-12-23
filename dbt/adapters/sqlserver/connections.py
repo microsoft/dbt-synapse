@@ -260,10 +260,7 @@ class SQLServerConnectionManager(SQLConnectionManager):
 
             logger.debug(f"Using connection string: {con_str_display}")
 
-            if type_auth != "ServicePrincipal":
-                handle = pyodbc.connect(con_str_concat, autocommit=True)
-
-            elif type_auth in AZURE_AUTH_FUNCTIONS.keys():
+            if type_auth in AZURE_AUTH_FUNCTIONS.keys():
                 if cls.TOKEN is None:
                     azure_auth_function = AZURE_CREDENTIAL_SCOPE[type_auth]
                     token = azure_auth_function(credentials)
@@ -271,11 +268,19 @@ class SQLServerConnectionManager(SQLConnectionManager):
                         token
                     )
 
-                handle = pyodbc.connect(
-                    con_str_concat,
-                    attrs_before={1256: cls.TOKEN},
-                    autocommit=True,
-                )
+                # Source:
+                # https://docs.microsoft.com/en-us/sql/connect/odbc/using-azure-active-directory?view=sql-server-ver15#authenticating-with-an-access-token
+                SQL_COPT_SS_ACCESS_TOKEN = 1256
+
+                attrs_before = {SQL_COPT_SS_ACCESS_TOKEN: cls.TOKEN}
+            else:
+                attrs_before = {}
+
+            handle = pyodbc.connect(
+                con_str_concat,
+                attrs_before=attrs_before,
+                autocommit=True,
+            )
 
             connection.state = "open"
             connection.handle = handle
