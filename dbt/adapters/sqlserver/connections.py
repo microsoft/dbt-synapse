@@ -4,6 +4,7 @@ import pyodbc
 import os
 import time
 import struct
+from itertools import chain, repeat
 
 import dbt.exceptions
 from dbt.adapters.base import Credentials
@@ -18,6 +19,24 @@ from typing import Optional
 
 
 AZURE_CREDENTIAL_SCOPE = "https://database.windows.net//.default"
+
+
+def convert_bytes_to_mswindows_byte_string(value: bytes) -> bytes:
+    """
+    Convert bytes to a Microsoft windows byte string.
+
+    Parameters
+    ----------
+    value : bytes
+        The bytes.
+
+    Returns
+    -------
+    out : bytes
+        The Microsoft byte string.
+    """
+    encoded_bytes = bytes(chain.from_iterable(zip(value, repeat(0))))
+    return struct.pack("<i", len(encoded_bytes)) + encoded_bytes
 
 
 def get_cli_access_token() -> AccessToken:
