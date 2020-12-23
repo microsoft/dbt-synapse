@@ -57,23 +57,28 @@ def get_cli_access_token() -> AccessToken:
     return AzureCliCredential().get_token(AZURE_CREDENTIAL_SCOPE)
 
 
-def create_token(tenant_id, client_id, client_secret):
+def get_sp_access_token(
+    tenant_id: str, client_id: str, client_secret: str
+) -> AccessToken:
+    """
+    Get an Azure access token using the SP credentials.
+
+    Parameters
+    ----------
+    tenant_id : str
+        The tenant id.
+    client_id : str
+        The client id.
+    client_secret :
+        The client secret.
+    """
     # bc DefaultAzureCredential will look in env variables
     os.environ["AZURE_TENANT_ID"] = tenant_id
     os.environ["AZURE_CLIENT_ID"] = client_id
     os.environ["AZURE_CLIENT_SECRET"] = client_secret
 
     token = DefaultAzureCredential().get_token(AZURE_CREDENTIAL_SCOPE)
-    # convert to byte string interspersed with the 1-byte
-    # TODO decide which is cleaner?
-    # exptoken=b''.join([bytes({i})+bytes(1) for i in bytes(token.token, "UTF-8")])
-    exptoken = bytes(1).join([bytes(i, "UTF-8") for i in token.token]) + bytes(
-        1
-    )
-    # make c object with bytestring length prefix
-    tokenstruct = struct.pack("=i", len(exptoken)) + exptoken
-
-    return tokenstruct
+    return token
 
 
 @dataclass
@@ -243,8 +248,11 @@ class SQLServerConnectionManager(SQLConnectionManager):
                     client_id = getattr(credentials, "client_id", None)
                     client_secret = getattr(credentials, "client_secret", None)
 
-                    cls.TOKEN = create_token(
+                    token = get_sp_access_token(
                         tenant_id, client_id, client_secret
+                    )
+                    cls.TOKEN = convert_bytes_to_mswindows_byte_string(
+                        bytes(token.token, "UTF-8")
                     )
 
                 handle = pyodbc.connect(
