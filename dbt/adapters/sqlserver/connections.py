@@ -202,8 +202,9 @@ class SQLServerConnectionManager(SQLConnectionManager):
             con_str.append(f"DRIVER={{{credentials.driver}}}")
 
             if "\\" in credentials.host:
-                # if there is a backslash \ in the host name the host is a sql-server named instance
-                # in this case then port number has to be omitted
+                # if there is a backslash \ in the host name the host is a
+                # sql-server named instance in this case then port number has
+                # to be omitted
                 con_str.append(f"SERVER={credentials.host}")
             else:
                 con_str.append(f"SERVER={credentials.host},{credentials.port}")
