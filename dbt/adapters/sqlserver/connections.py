@@ -262,7 +262,7 @@ class SQLServerConnectionManager(SQLConnectionManager):
 
             if type_auth in AZURE_AUTH_FUNCTIONS.keys():
                 if cls.TOKEN is None:
-                    azure_auth_function = AZURE_CREDENTIAL_SCOPE[type_auth]
+                    azure_auth_function = AZURE_AUTH_FUNCTIONS[type_auth]
                     token = azure_auth_function(credentials)
                     cls.TOKEN = convert_access_token_to_mswindows_byte_string(
                         token
