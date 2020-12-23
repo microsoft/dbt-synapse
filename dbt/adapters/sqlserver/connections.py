@@ -22,11 +22,15 @@ def create_token(tenant_id, client_id, client_secret):
     os.environ["AZURE_CLIENT_ID"] = client_id
     os.environ["AZURE_CLIENT_SECRET"] = client_secret
 
-    token = DefaultAzureCredential().get_token("https://database.windows.net//.default")
+    token = DefaultAzureCredential().get_token(
+        "https://database.windows.net//.default"
+    )
     # convert to byte string interspersed with the 1-byte
     # TODO decide which is cleaner?
     # exptoken=b''.join([bytes({i})+bytes(1) for i in bytes(token.token, "UTF-8")])
-    exptoken = bytes(1).join([bytes(i, "UTF-8") for i in token.token]) + bytes(1)
+    exptoken = bytes(1).join([bytes(i, "UTF-8") for i in token.token]) + bytes(
+        1
+    )
     # make c object with bytestring length prefix
     tokenstruct = struct.pack("=i", len(exptoken)) + exptoken
 
@@ -74,7 +78,7 @@ class SQLServerCredentials(Credentials):
         # raise NotImplementedError
         if self.windows_login is True:
             self.authentication = "Windows Login"
-    
+
         return (
             "server",
             "database",
@@ -84,7 +88,7 @@ class SQLServerCredentials(Credentials):
             "client_id",
             "authentication",
             "encrypt",
-            "trust_cert"
+            "trust_cert",
         )
 
 
@@ -175,22 +179,19 @@ class SQLServerConnectionManager(SQLConnectionManager):
             if not getattr(credentials, "trust_cert", False):
                 con_str.append(f"TrustServerCertificate=yes")
 
+            con_str_concat = ";".join(con_str)
 
-                
-
-            con_str_concat = ';'.join(con_str)
-            
             index = []
             for i, elem in enumerate(con_str):
-                if 'pwd=' in elem.lower():
+                if "pwd=" in elem.lower():
                     index.append(i)
-                    
-            if len(index) !=0 :
-                con_str[index[0]]="PWD=***"
 
-            con_str_display = ';'.join(con_str)
-            
-            logger.debug(f'Using connection string: {con_str_display}')
+            if len(index) != 0:
+                con_str[index[0]] = "PWD=***"
+
+            con_str_display = ";".join(con_str)
+
+            logger.debug(f"Using connection string: {con_str_display}")
 
             if type_auth != "ServicePrincipal":
                 handle = pyodbc.connect(con_str_concat, autocommit=True)
@@ -203,10 +204,14 @@ class SQLServerConnectionManager(SQLConnectionManager):
                     client_id = getattr(credentials, "client_id", None)
                     client_secret = getattr(credentials, "client_secret", None)
 
-                    cls.TOKEN = create_token(tenant_id, client_id, client_secret)
+                    cls.TOKEN = create_token(
+                        tenant_id, client_id, client_secret
+                    )
 
                 handle = pyodbc.connect(
-                    con_str_concat, attrs_before={1256: cls.TOKEN}, autocommit=True
+                    con_str_concat,
+                    attrs_before={1256: cls.TOKEN},
+                    autocommit=True,
                 )
 
             connection.state = "open"
@@ -235,22 +240,28 @@ class SQLServerConnectionManager(SQLConnectionManager):
         # return self.add_query('COMMIT TRANSACTION', auto_begin=False)
         pass
 
-    def add_query(self, sql, auto_begin=True, bindings=None, abridge_sql_log=False):
+    def add_query(
+        self, sql, auto_begin=True, bindings=None, abridge_sql_log=False
+    ):
 
         connection = self.get_thread_connection()
 
         if auto_begin and connection.transaction_open is False:
             self.begin()
 
-        logger.debug('Using {} connection "{}".'.format(self.TYPE, connection.name))
+        logger.debug(
+            'Using {} connection "{}".'.format(self.TYPE, connection.name)
+        )
 
         with self.exception_handler(sql):
             if abridge_sql_log:
-                logger.debug("On {}: {}....".format(connection.name, sql[0:512]))
+                logger.debug(
+                    "On {}: {}....".format(connection.name, sql[0:512])
+                )
             else:
                 logger.debug("On {}: {}".format(connection.name, sql))
             pre = time.time()
-            
+
             cursor = connection.handle.cursor()
 
             # pyodbc does not handle a None type binding!
