@@ -96,14 +96,13 @@ client_secret: ActiveDirectoryIntegrated
 ```
 
 ##### CLI
-The authentication of the Azure command line interface (CLI) can be used by
-first logging in with:
+Use the authentication of the Azure command line interface (CLI). First log in:
 
 ```bash
 az login
 ```
 
-And setting `authentication` in `profiles.yml` to:
+Then, set `authentication` in `profiles.yml` to `CLI`:
 
 ```
 authentication: CLI
@@ -114,6 +113,8 @@ An alternative route for using a service principal is:
 ```
 az login --service-principal --username $CLIENTID --password $SECRET --tenant $TENANTID
 ```
+
+This avoids storing a secret as plain text in `profiles.yml`.
 
 Source: https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli#sign-in-using-a-service-principal
 
