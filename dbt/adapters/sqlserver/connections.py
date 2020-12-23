@@ -4,7 +4,7 @@ import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from itertools import chain, repeat
-from typing import Callable, Mapping, Optional
+from typing import Any, Callable, Mapping, Optional
 
 import dbt.exceptions
 import pyodbc
@@ -54,7 +54,7 @@ def convert_access_token_to_mswindows_byte_string(token: AccessToken) -> bytes:
     return convert_bytes_to_mswindows_byte_string(value)
 
 
-def get_cli_access_token() -> AccessToken:
+def get_cli_access_token(credentials: str) -> AccessToken:
     """
     Get an Azure access token using the CLI credentials
 
@@ -69,25 +69,29 @@ def get_cli_access_token() -> AccessToken:
     out : AccessToken
         Access token.
     """
+    _ = credentials
     token = AzureCliCredential().get_token(AZURE_CREDENTIAL_SCOPE)
     return token
 
 
-def get_sp_access_token(
-    tenant_id: str, client_id: str, client_secret: str
-) -> AccessToken:
+def get_sp_access_token(credentials: Any) -> AccessToken:
     """
     Get an Azure access token using the SP credentials.
 
     Parameters
     ----------
-    tenant_id : str
-        The tenant id.
-    client_id : str
-        The client id.
-    client_secret :
-        The client secret.
+    credentials : Any
+        Credentials.
+
+    Returns
+    -------
+    out : AccessToken
+        The access token.
     """
+    tenant_id = getattr(credentials, "tenant_id", None)
+    client_id = getattr(credentials, "client_id", None)
+    client_secret = getattr(credentials, "client_secret", None)
+
     # bc DefaultAzureCredential will look in env variables
     os.environ["AZURE_TENANT_ID"] = tenant_id
     os.environ["AZURE_CLIENT_ID"] = client_id
@@ -97,7 +101,7 @@ def get_sp_access_token(
     return token
 
 
-AZURE_AUTH_FUNCTIONS: Mapping[str, Callable[[AccessToken]]] = {
+AZURE_AUTH_FUNCTIONS: Mapping[str, Callable[[Any], AccessToken]] = {
     "ServicePrincipal": get_sp_access_token,
     "CLI": get_cli_access_token,
 }
@@ -259,17 +263,10 @@ class SQLServerConnectionManager(SQLConnectionManager):
             if type_auth != "ServicePrincipal":
                 handle = pyodbc.connect(con_str_concat, autocommit=True)
 
-            elif type_auth == "ServicePrincipal":
-
-                # create token if it does not exist
+            elif type_auth in AZURE_AUTH_FUNCTIONS.keys():
                 if cls.TOKEN is None:
-                    tenant_id = getattr(credentials, "tenant_id", None)
-                    client_id = getattr(credentials, "client_id", None)
-                    client_secret = getattr(credentials, "client_secret", None)
-
-                    token = get_sp_access_token(
-                        tenant_id, client_id, client_secret
-                    )
+                    azure_auth_function = AZURE_CREDENTIAL_SCOPE[type_auth]
+                    token = azure_auth_function(credentials)
                     cls.TOKEN = convert_access_token_to_mswindows_byte_string(
                         token
                     )
