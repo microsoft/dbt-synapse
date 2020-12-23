@@ -262,7 +262,6 @@ class SQLServerConnectionManager(SQLConnectionManager):
             if len(index) != 0:
                 con_str[index[0]] = "PWD=***"
 
-            __import__("ipdb").set_trace()
             con_str_display = ";".join(con_str)
 
             logger.debug(f"Using connection string: {con_str_display}")
