@@ -8,12 +8,33 @@ import struct
 import dbt.exceptions
 from dbt.adapters.base import Credentials
 from dbt.adapters.sql import SQLConnectionManager
+from azure.core.credentials import AccessToken
 from azure.identity import DefaultAzureCredential
 
 from dbt.logger import GLOBAL_LOGGER as logger
 
 from dataclasses import dataclass
 from typing import Optional
+
+
+def get_cli_access_token() -> AccessToken:
+    """
+    Get an Azure access token using the CLI credentials
+
+    First login with:
+
+    ```bash
+    az login
+    ```
+
+    Returns
+    -------
+    out : AccessToken
+        Access token.
+    """
+    return AzureCliCredential().get_token(
+        "https://database.windows.net/.default"
+    )
 
 
 def create_token(tenant_id, client_id, client_secret):
