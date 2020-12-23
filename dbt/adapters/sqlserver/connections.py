@@ -10,7 +10,7 @@ import dbt.exceptions
 from dbt.adapters.base import Credentials
 from dbt.adapters.sql import SQLConnectionManager
 from azure.core.credentials import AccessToken
-from azure.identity import DefaultAzureCredential
+from azure.identity import AzureCliCredential, DefaultAzureCredential
 
 from dbt.logger import GLOBAL_LOGGER as logger
 
