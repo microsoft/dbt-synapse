@@ -17,6 +17,9 @@ from dataclasses import dataclass
 from typing import Optional
 
 
+AZURE_CREDENTIAL_SCOPE = "https://database.windows.net//.default"
+
+
 def get_cli_access_token() -> AccessToken:
     """
     Get an Azure access token using the CLI credentials
@@ -32,9 +35,7 @@ def get_cli_access_token() -> AccessToken:
     out : AccessToken
         Access token.
     """
-    return AzureCliCredential().get_token(
-        "https://database.windows.net/.default"
-    )
+    return AzureCliCredential().get_token(AZURE_CREDENTIAL_SCOPE)
 
 
 def create_token(tenant_id, client_id, client_secret):
@@ -43,9 +44,7 @@ def create_token(tenant_id, client_id, client_secret):
     os.environ["AZURE_CLIENT_ID"] = client_id
     os.environ["AZURE_CLIENT_SECRET"] = client_secret
 
-    token = DefaultAzureCredential().get_token(
-        "https://database.windows.net//.default"
-    )
+    token = DefaultAzureCredential().get_token(AZURE_CREDENTIAL_SCOPE)
     # convert to byte string interspersed with the 1-byte
     # TODO decide which is cleaner?
     # exptoken=b''.join([bytes({i})+bytes(1) for i in bytes(token.token, "UTF-8")])
