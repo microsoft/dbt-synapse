@@ -18,6 +18,61 @@ from azure.identity import AzureCliCredential, DefaultAzureCredential
 AZURE_CREDENTIAL_SCOPE = "https://database.windows.net//.default"
 
 
+@dataclass
+class SQLServerCredentials(Credentials):
+    driver: str
+    host: str
+    database: str
+    schema: str
+    port: Optional[int] = 1433
+    UID: Optional[str] = None
+    PWD: Optional[str] = None
+    windows_login: Optional[bool] = False
+    tenant_id: Optional[str] = None
+    client_id: Optional[str] = None
+    client_secret: Optional[str] = None
+    # "sql", "ActiveDirectoryPassword" or "ActiveDirectoryInteractive", or
+    # "ServicePrincipal"
+    authentication: Optional[str] = "sql"
+    encrypt: Optional[bool] = True
+    trust_cert: Optional[bool] = True
+
+    _ALIASES = {
+        "user": "UID",
+        "username": "UID",
+        "pass": "PWD",
+        "password": "PWD",
+        "server": "host",
+        "trusted_connection": "windows_login",
+        "auth": "authentication",
+        "app_id": "client_id",
+        "app_secret": "client_secret",
+        "TrustServerCertificate": "trust_cert",
+    }
+
+    @property
+    def type(self):
+        return "sqlserver"
+
+    def _connection_keys(self):
+        # return an iterator of keys to pretty-print in 'dbt debug'
+        # raise NotImplementedError
+        if self.windows_login is True:
+            self.authentication = "Windows Login"
+
+        return (
+            "server",
+            "database",
+            "schema",
+            "port",
+            "UID",
+            "client_id",
+            "authentication",
+            "encrypt",
+            "trust_cert",
+        )
+
+
 def convert_bytes_to_mswindows_byte_string(value: bytes) -> bytes:
     """
     Convert bytes to a Microsoft windows byte string.
@@ -105,61 +160,6 @@ AZURE_AUTH_FUNCTIONS: Mapping[str, Callable[[Any], AccessToken]] = {
     "ServicePrincipal": get_sp_access_token,
     "CLI": get_cli_access_token,
 }
-
-
-@dataclass
-class SQLServerCredentials(Credentials):
-    driver: str
-    host: str
-    database: str
-    schema: str
-    port: Optional[int] = 1433
-    UID: Optional[str] = None
-    PWD: Optional[str] = None
-    windows_login: Optional[bool] = False
-    tenant_id: Optional[str] = None
-    client_id: Optional[str] = None
-    client_secret: Optional[str] = None
-    # "sql", "ActiveDirectoryPassword" or "ActiveDirectoryInteractive", or
-    # "ServicePrincipal"
-    authentication: Optional[str] = "sql"
-    encrypt: Optional[bool] = True
-    trust_cert: Optional[bool] = True
-
-    _ALIASES = {
-        "user": "UID",
-        "username": "UID",
-        "pass": "PWD",
-        "password": "PWD",
-        "server": "host",
-        "trusted_connection": "windows_login",
-        "auth": "authentication",
-        "app_id": "client_id",
-        "app_secret": "client_secret",
-        "TrustServerCertificate": "trust_cert",
-    }
-
-    @property
-    def type(self):
-        return "sqlserver"
-
-    def _connection_keys(self):
-        # return an iterator of keys to pretty-print in 'dbt debug'
-        # raise NotImplementedError
-        if self.windows_login is True:
-            self.authentication = "Windows Login"
-
-        return (
-            "server",
-            "database",
-            "schema",
-            "port",
-            "UID",
-            "client_id",
-            "authentication",
-            "encrypt",
-            "trust_cert",
-        )
 
 
 class SQLServerConnectionManager(SQLConnectionManager):
@@ -256,6 +256,7 @@ class SQLServerConnectionManager(SQLConnectionManager):
             if len(index) != 0:
                 con_str[index[0]] = "PWD=***"
 
+            __import__("ipdb").set_trace()
             con_str_display = ";".join(con_str)
 
             logger.debug(f"Using connection string: {con_str_display}")
