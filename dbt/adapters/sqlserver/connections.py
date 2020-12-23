@@ -39,6 +39,24 @@ def convert_bytes_to_mswindows_byte_string(value: bytes) -> bytes:
     return struct.pack("<i", len(encoded_bytes)) + encoded_bytes
 
 
+def convert_access_token_to_mswindows_byte_string(token: AccessToken) -> bytes:
+    """
+    Convert an access token to a Microsoft windows byte string.
+
+    Parameters
+    ----------
+    token : AccessToken
+        The token.
+
+    Returns
+    -------
+    out : bytes
+        The Microsoft byte string.
+    """
+    value = bytes(token.token, "UTF-8")
+    return convert_bytes_to_mswindows_byte_string(value)
+
+
 def get_cli_access_token() -> AccessToken:
     """
     Get an Azure access token using the CLI credentials
@@ -252,8 +270,8 @@ class SQLServerConnectionManager(SQLConnectionManager):
                     token = get_sp_access_token(
                         tenant_id, client_id, client_secret
                     )
-                    cls.TOKEN = convert_bytes_to_mswindows_byte_string(
-                        bytes(token.token, "UTF-8")
+                    cls.TOKEN = convert_access_token_to_mswindows_byte_string(
+                        token
                     )
 
                 handle = pyodbc.connect(
