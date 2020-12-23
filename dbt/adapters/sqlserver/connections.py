@@ -54,7 +54,8 @@ def get_cli_access_token() -> AccessToken:
     out : AccessToken
         Access token.
     """
-    return AzureCliCredential().get_token(AZURE_CREDENTIAL_SCOPE)
+    token = AzureCliCredential().get_token(AZURE_CREDENTIAL_SCOPE)
+    return token
 
 
 def get_sp_access_token(
