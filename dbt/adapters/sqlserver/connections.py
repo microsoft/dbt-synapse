@@ -4,7 +4,7 @@ import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from itertools import chain, repeat
-from typing import Optional
+from typing import Callable, Mapping, Optional
 
 import dbt.exceptions
 import pyodbc
@@ -95,6 +95,12 @@ def get_sp_access_token(
 
     token = DefaultAzureCredential().get_token(AZURE_CREDENTIAL_SCOPE)
     return token
+
+
+AZURE_AUTH_FUNCTIONS: Mapping[str, Callable[[AccessToken]]] = {
+    "ServicePrincipal": get_sp_access_token,
+    "CLI": get_cli_access_token,
+}
 
 
 @dataclass
