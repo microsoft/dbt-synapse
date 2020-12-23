@@ -19,7 +19,7 @@ AZURE_CREDENTIAL_SCOPE = "https://database.windows.net//.default"
 
 
 @dataclass
-class SQLServerCredentials(Credentials):
+class SQLServerCredentials():
     driver: str
     host: str
     database: str
@@ -148,14 +148,10 @@ def get_sp_access_token(credentials: SQLServerCredentials) -> AccessToken:
     out : AccessToken
         The access token.
     """
-    tenant_id = getattr(credentials, "tenant_id", None)
-    client_id = getattr(credentials, "client_id", None)
-    client_secret = getattr(credentials, "client_secret", None)
-
     # bc DefaultAzureCredential will look in env variables
-    os.environ["AZURE_TENANT_ID"] = tenant_id
-    os.environ["AZURE_CLIENT_ID"] = client_id
-    os.environ["AZURE_CLIENT_SECRET"] = client_secret
+    os.environ["AZURE_TENANT_ID"] = credentials.tenant_id
+    os.environ["AZURE_CLIENT_ID"] = credentials.client_id
+    os.environ["AZURE_CLIENT_SECRET"] = credentials.client_secret
 
     token = DefaultAzureCredential().get_token(AZURE_CREDENTIAL_SCOPE)
     return token
