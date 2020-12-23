@@ -4,7 +4,7 @@ import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from itertools import chain, repeat
-from typing import Any, Callable, Mapping, Optional
+from typing import Callable, Mapping, Optional
 
 import dbt.exceptions
 import pyodbc
@@ -109,7 +109,7 @@ def convert_access_token_to_mswindows_byte_string(token: AccessToken) -> bytes:
     return convert_bytes_to_mswindows_byte_string(value)
 
 
-def get_cli_access_token(credentials: str) -> AccessToken:
+def get_cli_access_token(credentials: SQLServerCredentials) -> AccessToken:
     """
     Get an Azure access token using the CLI credentials
 
@@ -118,6 +118,11 @@ def get_cli_access_token(credentials: str) -> AccessToken:
     ```bash
     az login
     ```
+
+    Parameters
+    ----------
+    credentials: SQLServerConnectionManager
+        The credentials.
 
     Returns
     -------
@@ -129,13 +134,13 @@ def get_cli_access_token(credentials: str) -> AccessToken:
     return token
 
 
-def get_sp_access_token(credentials: Any) -> AccessToken:
+def get_sp_access_token(credentials: SQLServerCredentials) -> AccessToken:
     """
     Get an Azure access token using the SP credentials.
 
     Parameters
     ----------
-    credentials : Any
+    credentials : SQLServerCredentials
         Credentials.
 
     Returns
@@ -156,7 +161,8 @@ def get_sp_access_token(credentials: Any) -> AccessToken:
     return token
 
 
-AZURE_AUTH_FUNCTIONS: Mapping[str, Callable[[Any], AccessToken]] = {
+AZURE_AUTH_FUNCTION_TYPE = Callable[[SQLServerCredentials], AccessToken]
+AZURE_AUTH_FUNCTIONS: Mapping[str, AZURE_AUTH_FUNCTION_TYPE] = {
     "ServicePrincipal": get_sp_access_token,
     "CLI": get_cli_access_token,
 }
