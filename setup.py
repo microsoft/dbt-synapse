@@ -14,9 +14,9 @@ authors_list = ["Nandan Hegde", "Anders Swanson"]
 
 
 # get this from a separate file
-def _dbt_synapse_version():
+def _dbt_sqlserver_version():
     _version_path = os.path.join(
-        this_directory, 'dbt', 'adapters', 'synapse', '__version__.py'
+        this_directory, 'dbt', 'adapters', 'sqlserver', '__version__.py'
     )
     _version_pattern = r'''version\s*=\s*["'](.+)["']'''
     with open(_version_path) as f:
@@ -26,7 +26,7 @@ def _dbt_synapse_version():
         return match.group(1)
 
 
-package_version = _dbt_synapse_version()
+package_version = _dbt_sqlserver_version()
 description = """An Azure Synapse adpter plugin for dbt (data build tool)"""
 
 dbt_version = '0.18.1'
