@@ -1,6 +1,6 @@
 {% macro sqlserver__snapshot_hash_arguments(args) %}
     CONVERT(VARCHAR(32), HashBytes('MD5', {% for arg in args %}
-        coalesce(cast({{ arg }} as varchar ), '') {% if not loop.last %} + '|' + {% endif %}
+        coalesce(CONVERT(varchar, {{ arg }}, 121), '') {% if not loop.last %} + '|' + {% endif %}
     {% endfor %}), 2)
 {% endmacro %}
 
@@ -22,7 +22,11 @@
         {% for col in check_cols %}
             {{ snapshotted_rel }}.{{ col }} != {{ current_rel }}.{{ col }}
             or
-            ({{ snapshotted_rel }}.{{ col }} is null) and not ({{ current_rel }}.{{ col }} is null)
+            (
+                (({{ snapshotted_rel }}.{{ col }} is null) and not ({{ current_rel }}.{{ col }} is null))
+                or
+                ((not {{ snapshotted_rel }}.{{ col }} is null) and ({{ current_rel }}.{{ col }} is null))
+            )
             {%- if not loop.last %} or {% endif %}
 
         {% endfor %}
