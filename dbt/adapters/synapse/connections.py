@@ -24,7 +24,7 @@ AZURE_CREDENTIAL_SCOPE = "https://database.windows.net//.default"
 
 
 @dataclass
-class SQLServerCredentials(Credentials):
+class SynapseCredentials(SQLServerCredentials):
     driver: str
     host: str
     database: str
