@@ -4,19 +4,19 @@ from distutils.core import setup
 import os
 import re
 
-
 this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, 'README.md')) as f:
     long_description = f.read()
 
 
 package_name = "dbt-synapse"
+authors_list = ["Nandan Hegde", "Anders Swanson"]
 
 
 # get this from a separate file
-def _dbt_synapse_version():
+def _dbt_sqlserver_version():
     _version_path = os.path.join(
-        this_directory, 'dbt', 'adapters', 'synapse', '__version__.py'
+        this_directory, 'dbt', 'adapters', 'sqlserver', '__version__.py'
     )
     _version_pattern = r'''version\s*=\s*["'](.+)["']'''
     with open(_version_path) as f:
@@ -26,10 +26,10 @@ def _dbt_synapse_version():
         return match.group(1)
 
 
-package_version = _dbt_synapse_version()
-description = """A Azure Synapse adpter plugin for dbt (data build tool)"""
+package_version = _dbt_sqlserver_version()
+description = """An Azure Synapse adpter plugin for dbt (data build tool)"""
 
-dbt_version = '0.18.0'
+dbt_version = '0.18.1'
 # the package version should be the dbt version, with maybe some things on the
 # ends of it. (0.18.1 vs 0.18.1a1, 0.18.1.1, ...)
 if not package_version.startswith(dbt_version):
@@ -38,8 +38,6 @@ if not package_version.startswith(dbt_version):
         f'dbt_version={dbt_version}'
     )
 
-
-authors_list = ["Nandan Hegde", "Anders Swanson"]
 setup(
     name=package_name,
     version=package_version,
