@@ -20,6 +20,10 @@ from typing import Optional
 class SynapseCredentials(SQLServerCredentials):
     encrypt: Optional[bool] = True
     trust_cert: Optional[bool] = True
+    
+    @property
+    def type(self):
+        return "synapse"
 
 
 class SynapseConnectionManager(SQLServerConnectionManager):
