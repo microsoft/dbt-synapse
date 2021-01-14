@@ -57,7 +57,7 @@ setup(
         ]
     },
     install_requires=[
-        "dbt-sqlserver",
+        "dbt-sqlserver @ git+https://github.com/dbt-msft/dbt-sqlserver.git@v0.19.0rc1#egg=dbt-sqlserver",
     ],
-    dependency_links=['-e git+https://github.com/dbt-msft/dbt-sqlserver.git'],
+    dependency_links=['git+https://github.com/dbt-msft/dbt-sqlserver.git@v0.19.0rc1'],
 )
