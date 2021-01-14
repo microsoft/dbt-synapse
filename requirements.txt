@@ -1,4 +1,4 @@
-https://github.com/dbt-msft/dbt-sqlserver.git@v0.19.0rc1
+git+https://github.com/dbt-msft/dbt-sqlserver.git@v0.19.0rc1
 black~=20.8b1
 pytest-dbt-adapter~=0.4.0
 tox==3.2.0
