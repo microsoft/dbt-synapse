@@ -29,7 +29,7 @@ def _dbt_synapse_version():
 package_version = _dbt_synapse_version()
 description = """An Azure Synapse adpter plugin for dbt (data build tool)"""
 
-dbt_version = '0.19.0-rc1'
+dbt_version = '0.19.0'
 # the package version should be the dbt version, with maybe some things on the
 # ends of it. (0.18.1 vs 0.18.1a1, 0.18.1.1, ...)
 if not package_version.startswith(dbt_version):
@@ -57,7 +57,7 @@ setup(
         ]
     },
     install_requires=[
-        "dbt-sqlserver @ git+https://github.com/dbt-msft/dbt-sqlserver.git@v0.19.0rc1#egg=dbt-sqlserver",
+        "dbt-sqlserver @ git+https://github.com/dbt-msft/dbt-sqlserver.git@v0.19.0rc2#egg=dbt-sqlserver",
     ],
-    dependency_links=['git+https://github.com/dbt-msft/dbt-sqlserver.git@v0.19.0rc1'],
+    dependency_links=['git+https://github.com/dbt-msft/dbt-sqlserver.git@v0.19.0rc2'],
 )
