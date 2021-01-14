@@ -1,6 +1,8 @@
-{% macro sqlserver__basic_load_csv_rows(model, batch_size, agate_table) %}
+{% macro synapse__basic_load_csv_rows(model, batch_size, agate_table) %}
+
     {# Synapse does not support the TSQL's normal Table Value Constructor of #}
     {# INSERT INTO Dest_Table (cols) SELECT cols FROM Ref_Table #}
+
     {% set cols_sql = get_seed_column_quoted_csv(model, agate_table.column_names) %}
     {% set bindings = [] %}
 
@@ -45,6 +47,6 @@
     {{ return(statements[0]) }}
 {% endmacro %}
 
-{% macro sqlserver__load_csv_rows(model, agate_table) %}
-  {{ return(sqlserver__basic_load_csv_rows(model, 200, agate_table) )}}
+{% macro synapse__load_csv_rows(model, agate_table) %}
+  {{ return(synapse__basic_load_csv_rows(model, 200, agate_table) )}}
 {% endmacro %}

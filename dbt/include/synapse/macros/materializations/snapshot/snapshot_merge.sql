@@ -1,4 +1,4 @@
-{% macro sqlserver__snapshot_merge_sql(target, source, insert_cols) -%}
+{% macro synapse__snapshot_merge_sql(target, source, insert_cols) -%}
       {%- set insert_cols_csv = insert_cols | join(', ') -%}
       
       EXEC('

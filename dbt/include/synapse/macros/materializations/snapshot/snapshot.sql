@@ -1,10 +1,9 @@
-{% macro sqlserver__post_snapshot(staging_relation) %}
-  -- Clean up the snapshot temp table
-  {% do drop_relation(staging_relation) %}
+{% macro synapse__post_snapshot(staging_relation) %}
+  {{ return(sqlserver__post_snapshot(staging_relation)) }}
 {% endmacro %}
 
 
-{% macro sqlserver__build_snapshot_staging_table(strategy, sql, target_relation) %}
+{% macro synapse__build_snapshot_staging_table(strategy, sql, target_relation) %}
     {% set tmp_relation = default__make_temp_relation(target_relation, "pseudotmp") %}
 
     {% set select = snapshot_staging_table(strategy, sql, target_relation) %}
@@ -16,7 +15,7 @@
     {% do return(tmp_relation) %}
 {% endmacro %}
 
-{% materialization snapshot, adapter='sqlserver' %}
+{% materialization snapshot, adapter='synapse' %}
   {%- set config = model['config'] -%}
 
   {%- set target_table = model.get('alias', model.get('name')) -%}
@@ -55,7 +54,7 @@
 
       {{ adapter.valid_snapshot_target(target_relation) }}
 
-      {% set staging_table = sqlserver__build_snapshot_staging_table(strategy, sql, target_relation) %}
+      {% set staging_table = synapse__build_snapshot_staging_table(strategy, sql, target_relation) %}
 
       -- this may no-op if the database does not require column expansion
       {% do adapter.expand_target_column_types(from_relation=staging_table,
@@ -81,7 +80,7 @@
         {% do quoted_source_columns.append(adapter.quote(column.name)) %}
       {% endfor %}
 
-      {% set final_sql = sqlserver__snapshot_merge_sql(
+      {% set final_sql = synapse__snapshot_merge_sql(
             target = target_relation,
             source = staging_table,
             insert_cols = quoted_source_columns
