@@ -18,7 +18,10 @@ jobs:
             apt-get install -y git
       - run:
           name: Test
-          command: tox -e integration-synapse
+          command: |
+            pip install -r requirements.txt
+            pip install .
+            python -m pytest -v test/integration/synapse.dbtspec
 
 workflows:
   main:
