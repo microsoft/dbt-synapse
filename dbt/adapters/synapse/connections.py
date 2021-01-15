@@ -1,9 +1,16 @@
 
+import time
+
+from contextlib import contextmanager
+import pyodbc
+
 from dataclasses import dataclass
 
+import dbt.exceptions
 from dbt.adapters.sqlserver import (SQLServerConnectionManager,
                                     SQLServerCredentials)
 from dbt.contracts.connection import AdapterResponse
+from dbt.logger import GLOBAL_LOGGER as logger
 
 @dataclass
 class SynapseCredentials(SQLServerCredentials):
@@ -71,7 +78,7 @@ class SynapseConnectionManager(SQLServerConnectionManager):
 
             logger.debug(
                 "SQL status: {} in {:0.2f} seconds".format(
-                    self.get_status(cursor), (time.time() - pre)
+                    self.get_response(cursor), (time.time() - pre)
                 )
             )
 
