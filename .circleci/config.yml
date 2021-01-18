@@ -10,12 +10,14 @@ jobs:
     executor: python/default 
     steps:
       - checkout
-      - run:
-          # ONLY UNTIL NEW RC OF UPSTREAM
-          name: TEMP install git
-          command: |
-            apt-get update
-            apt-get install -y git
+      # - run:
+      #     # ONLY UNTIL NEW RC OF UPSTREAM
+      #     name: TEMP install git
+      #     command: |
+      #       apt-get update
+      #       apt-get install -y git
+      - python/install-packages:
+          pkg-manager: pip
       - run:
           name: Test
           command: tox -e integration-synapse
