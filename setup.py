@@ -47,7 +47,7 @@ setup(
     license="MIT",
     author=", ".join(authors_list),
     author_email="swanson.anders@gmail.com",
-    url="https://github.com/dbt-msft/dbt-synapse",
+    url="nothing",
     packages=find_packages(),
     package_data={
         "dbt": [
