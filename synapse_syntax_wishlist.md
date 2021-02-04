@@ -1,7 +1,7 @@
 # Synapse Syntax Wish List
 
 ## goal
-maximize the amount of TSQL syntax across:
+maximize the amount of common TSQL syntax across:
   - SQL Server 2016+
   - Azure SQL
   - Azure Synapse dedicated pool (ASDP)
