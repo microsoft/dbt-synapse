@@ -1,7 +1,5 @@
 # Synapse Syntax Wish List
 
-## background
-
 ## goal
 maximize the amount of TSQL syntax across:
   - SQL Server 2016+
@@ -16,7 +14,7 @@ In doing this, Azure Data platform delivers:
   - overall DW dev experience via ASDP (and dbt), and
   - open-source developer experience by reducing the amount of necessaary code to work with all Azure SQL products.
 
-### rationale
+## rationale
 
 The syntactical difference between ANSI SQL PostgreSQL and TSQL is a barrier to entry for new customers to Azure.
 
@@ -44,8 +42,6 @@ The difference has brought the dev team [all](https://stackoverflow.com/question
 #### Azure SQL
 
 ```sql
-create table dbo.ceo (id int, naame nvarchar(30), nerd_cred int)
-
 insert into dbo.ceo (id, name, nerd_cred) values
 (1, 'Bill Gates', 9),
 (2, 'Steve Ballmer', 5),
@@ -55,8 +51,6 @@ insert into dbo.ceo (id, name, nerd_cred) values
 #### Synapse
 
 ```sql
-create table dbo.ceo (id int, naame nvarchar(30), nerd_cred int)
-
 insert into dbo.ceo (id, name, nerd_cred)
 SELECT 1, 'Bill Gates', 9 UNION ALL
 SELECT 2, 'Steve Ballmer', 5 UNION ALL
@@ -91,18 +85,43 @@ This is already in public preview, but would love know when it becomes `GA`. Whe
            ');
 {% endmacro %}
 ```
+## dropping a view
+### `DROP [TABLE/VIEW/SCHEMA/INDEX] ... IF EXISTS`
 
-### `DROP [] ... IF EXISTS`
+[relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/40068358-temporary-table-get-colunms-informations) ("suggested" 2016, "started" 2018 "planned" 2019)
 
 
-### `OPENROWSET()` vs `CREATE EXTERNAL TABLE()`
 
-This is painful because
+This one is a lower priority because IMHO, using the first statement enables all the products including SQL Server <2016. Though, the simplicity of the ssecond statement is alluring.
+#### Azure Synapse & SQL Server <2016
+```sql
+-- 
+if object_id ('dbo.clippy','V') is not null
+  begin
+  DROP VIEW dbo.clippy
+  end
+```
+#### Azure SQL & SQL Server >=201
+```sql
+DROP VIEW dbo.clippy IF EXISTS
+```
+## Access data from blob
+### `OPENROWSET()` vs `CREATE EXTERNAL TABLE()` vs `COPY INTO`
+[relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/42118774-openrowset-for-dedicated-pools)
+
+These API dicrepancies are painfully confusing.
+
+ because there's two processess that are 80% similar but distinct in different ways.
+
+ASDP supports external tables of type 
 
 
 ## Other Differences
 
 ### `tempdb.INFORMATION_SCHEMA.COLUMNS`
+
+[relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/40068358-temporary-table-get-colunms-informations) (suggested  Mar 31, 2020)
+
 
 This introduces challenges for the macro `get_columns_from_relation()`. Basically `get_columns_from_relation` works fine for normal relations becuase we have the normal `INFORMATION_SCHEMA.COLUMNS`. But when the relation is a temp table nothing is returned. 
 
