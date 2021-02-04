@@ -18,7 +18,7 @@ In doing this, Azure Data platform delivers:
 
 The syntactical difference between ANSI SQL PostgreSQL and TSQL is a barrier to entry for new customers to Azure.
 
-Additionally, the intra-TSQL syntax differences are barriers to entry for users coming to ASDP from on-prem SQL Server. Making matters worse, there is no document or cheatsheet published that details the differences and includes workarounds.
+Additionally, the intra-TSQL syntax differences are barriers to entry for users coming to ASDP from on-prem SQL Server. Making matters worse, [there is no document](https://github.com/MicrosoftDocs/azure-docs/issues/55713) or cheatsheet published that details the differences and includes workarounds.
 
 Fortunately for dbt users, the dbt-msft adapters, already handle these syntactic features. This means that a dbt project created in Azure SQL can be "migrated" to work on Azure Synapse by changing literally a single YAML parameter (provided the raw source tables already exist).
 
@@ -59,7 +59,7 @@ SELECT 3, 'Satyla Nadella', 7;
 
 ### `MERGE`
 
-[Uservoice Idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/13520394--in-preview-merge-statement-support)
+[relevant Uservoice Idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/13520394--in-preview-merge-statement-support)
 
 This is already in public preview, but would love know when it becomes `GA`. When it does, we can drop [`synapse__snapshot_merge_sql`](dbt/include/synapse/macros/materializations/snapshot/snapshot_merge.sql) macro with it's `UPDATE->INSERT` workdaround and rely on [the global project's implementation](https://github.com/fishtown-analytics/dbt/blob/1060035838650a30e86989cbf2693db7720ff002/core/dbt/include/global_project/macros/materializations/snapshot/snapshot_merge.sql#L7-L25)
 
@@ -150,7 +150,7 @@ This isn't very pretty, but at least this will dbt users have a frictionless exp
 
 As of now,  dbt data tests that are defined with CTEs fail, as the user-defined data test is itself wrapped into another CTE when executed. There's a way to fix this, but it isn't pretty. See [#25](https://github.com/dbt-msft/dbt-synapse/issues/25)
 
-To clarify, this isn't an ask for recursive CTEs, just nested ones
+To clarify, this isn't an ask for recursive CTEs, just nested ones. Here's [an issue opened on the SQL docs repo](https://github.com/MicrosoftDocs/sql-docs/issues/5698)
 
 ### can't be done in ASDP
 ```sql
