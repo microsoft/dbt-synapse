@@ -141,3 +141,19 @@ The current theory for the best work around is what's sugggested in in [this Sta
 
 This isn't very pretty, but at least this will dbt users have a frictionless experience moving their dbt projects between TSQL products.
 
+## nested CTEs
+
+As of now,  dbt data tests that are defined with CTEs fail, as the user-defined data test is itself wrapped into another CTE when executed. There's a way to fix this, but it isn't pretty. See [#25](https://github.com/dbt-msft/dbt-synapse/issues/25)
+
+To clarify, this isn't an ask for recursive CTEs, just nested ones
+
+### can't be done in ASDP
+```sql
+WITH dbt__CTE__INTERNAL_test AS (
+    WITH cte_test AS (
+        SELECT * FROM "dbo"."clippy"
+    )
+    SELECT TOP 0 * FROM cte_test
+)
+SELECT COUNT(*) FROM dbt__CTE__INTERNAL_test
+```
