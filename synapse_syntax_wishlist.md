@@ -90,8 +90,6 @@ This is already in public preview, but would love know when it becomes `GA`. Whe
 
 [relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/40068358-temporary-table-get-colunms-informations) ("suggested" 2016, "started" 2018 "planned" 2019)
 
-
-
 This one is a lower priority because IMHO, using the first statement enables all the products including SQL Server <2016. Though, the simplicity of the ssecond statement is alluring.
 #### Azure Synapse & SQL Server <2016
 ```sql
@@ -109,16 +107,23 @@ DROP VIEW dbo.clippy IF EXISTS
 ### `OPENROWSET()` vs `CREATE EXTERNAL TABLE()` vs `COPY INTO`
 [relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/42118774-openrowset-for-dedicated-pools)
 
-These API dicrepancies are painfully confusing.
+These API dicrepancies are painfully confusing in that it's a grab bag of nouns. The asks are:
+- can there be common patterns for creating external tables across these TSQL products?
+- can Synapse support `RDBMS` External tables and Azure SQL support `HADOOP` External Tables?
 
- because there's two processess that are 80% similar but distinct in different ways.
+The impact on the dbt-msft project is how it affects `dbt-external-tables`, which currently supports rows 1 & 4 of the table below.
 
-ASDP supports external tables of type 
+| product   | table type            | type                            | statement                                     | requires explicit columns | objects required                                                      |
+|-----------|-----------------------|---------------------------------|-----------------------------------------------|---------------------------|-----------------------------------------------------------------------|
+| Azure SQL | true external         | RDBMS (i.e.   another database) | CREATE EXTERNAL   TABLE                       | yes                       | External   Datasource, Scoped Database Credential                     |
+| Azure SQL | materialized external | RDBMS (i.e. another database)   | INSERT INTO … OPENROWSET                      | yes                       | all defined in statement                                              |
+| Azure SQL | materialized external | HADOOP?                         | INSERT...SELECT * FROM   OPENROWSET(BULK...)  | no                        | External File Format, External Datasource, Scoped Database Credential |
+| ASDP      | true   external       | HADOOP (i.e. blob or datalake)  | CREATE EXTERNAL TABLE                         | yes                       | External Datasource, External File Format, Scoped Database Credential |
+| ASDP      | materialized external | HADOOP?                         | COPY INTO [blob   path]                       | no                        | all   defined in statement                                            |
 
+# Other Differences
 
-## Other Differences
-
-### `tempdb.INFORMATION_SCHEMA.COLUMNS`
+## `tempdb.INFORMATION_SCHEMA.COLUMNS`
 
 [relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/40068358-temporary-table-get-colunms-informations) (suggested  Mar 31, 2020)
 
