@@ -37,7 +37,7 @@ One final benefit is that closer API alignment would drastically reduce the code
 
 This is critical for the `dbt seed` command which loads a local csv into the the database.
 
-The difference has brought the dev team [all](https://stackoverflow.com/questions/65625384/why-does-inserting-empty-string-into-date-column-produce-1900-01-01) kinds of problems
+The difference has brought the dev team [all](https://stackoverflow.com/questions/65625384/why-does-inserting-empty-string-into-date-column-produce-1900-01-01) [kinds](https://github.com/dbt-msft/dbt-synapse/issues/36) of problems
 
 #### Azure SQL
 
