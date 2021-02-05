@@ -124,26 +124,36 @@
 {%- endmacro %}
 
 {% macro synapse__get_columns_in_relation(relation) -%}
+  {# hack because tempdb has no infoschema see: #}
+  {# https://stackoverflow.com/questions/63800841/get-column-names-of-temp-table-in-azure-synapse-dw #}
+  {% if relation.identifier.startswith("#") %}
+    {% set tmp_tbl_hack = relation.incorporate(
+      path={"identifier": relation.identifier.replace("#", "") ~ '_tmp_tbl_hack'},
+      type='table')-%}
+
+    {% do  drop_relation(tmp_tbl_hack) %}
+    {% set sql_create %}
+        SELECT TOP(1) * 
+        INTO {{tmp_tbl_hack}}
+        FROM {{relation}}
+    {% endset %}
+    {% call statement() -%} {{ sql_create }} {%- endcall %}
+
+    {% set output = get_columns_in_relation(tmp_tbl_hack) %}
+    {% do  drop_relation(tmp_tbl_hack) %}
+    {{ return(output) }}
+  {% endif %}
+
   {% call statement('get_columns_in_relation', fetch_result=True) %}
-      SELECT
-          column_name,
-          data_type,
-          character_maximum_length,
-          numeric_precision,
-          numeric_scale
-      FROM
-          (select
-              ordinal_position,
-              column_name,
-              data_type,
-              character_maximum_length,
-              numeric_precision,
-              numeric_scale
-          from INFORMATION_SCHEMA.COLUMNS
-          where table_name = '{{ relation.identifier }}'
-            and table_schema = '{{ relation.schema }}') cols
-
-
+    select
+        column_name,
+        data_type,
+        character_maximum_length,
+        numeric_precision,
+        numeric_scale
+    from INFORMATION_SCHEMA.COLUMNS
+    where table_name = '{{ relation.identifier }}'
+      and table_schema = '{{ relation.schema }}'
   {% endcall %}
   {% set table = load_result('get_columns_in_relation').table %}
   {{ return(sql_convert_columns_in_relation(table)) }}
