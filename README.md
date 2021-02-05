@@ -9,7 +9,7 @@ To get additional functionality, check out:
 
 ## major differences b/w `dbt-synapse` and `dbt-sqlserver`
 - macros use only Azure Synapse `T-SQL`. [Relevant GitHub issue](https://github.com/MicrosoftDocs/azure-docs/issues/55713)
-- use of [Create Table as Select (CTAS)](https://docs.microsoft.com/en-us/sql/t-sql/statements/create-table-as-select-azure-sql-data-warehouse?view=aps-pdw-2016-au7) means you don't need post-hooks to create indices
+- use of [Create Table as Select (CTAS)](https://docs.microsoft.com/en-us/sql/t-sql/statements/create-table-as-select-azure-sql-data-warehouse?view=aps-pdw-2016-au7) means you don't need post-hooks to create indices (see Table Materializations section below for more info)
 - rewrite of snapshots because Synapse doesn't support `MERGE`.
 
 ## status & support
