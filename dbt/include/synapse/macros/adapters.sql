@@ -113,7 +113,6 @@
 {% macro synapse__get_columns_in_relation(relation) -%}
   {% call statement('get_columns_in_relation', fetch_result=True) %}
     select
-        ordinal_position,
         column_name,
         data_type,
         character_maximum_length,
