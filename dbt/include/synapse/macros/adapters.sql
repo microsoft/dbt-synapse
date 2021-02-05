@@ -112,25 +112,16 @@
 
 {% macro synapse__get_columns_in_relation(relation) -%}
   {% call statement('get_columns_in_relation', fetch_result=True) %}
-      SELECT
-          column_name,
-          data_type,
-          character_maximum_length,
-          numeric_precision,
-          numeric_scale
-      FROM
-          (select
-              ordinal_position,
-              column_name,
-              data_type,
-              character_maximum_length,
-              numeric_precision,
-              numeric_scale
-          from INFORMATION_SCHEMA.COLUMNS
-          where table_name = '{{ relation.identifier }}'
-            and table_schema = '{{ relation.schema }}') cols
-
-
+    select
+        ordinal_position,
+        column_name,
+        data_type,
+        character_maximum_length,
+        numeric_precision,
+        numeric_scale
+    from INFORMATION_SCHEMA.COLUMNS
+    where table_name = '{{ relation.identifier }}'
+      and table_schema = '{{ relation.schema }}') cols
   {% endcall %}
   {% set table = load_result('get_columns_in_relation').table %}
   {{ return(sql_convert_columns_in_relation(table)) }}
