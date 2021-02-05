@@ -113,6 +113,8 @@ These API dicrepancies are painfully confusing in that it's a grab bag of nouns.
 
 The impact on the dbt-msft project is how it affects `dbt-external-tables`, which currently supports rows 1 & 4 of the table below.
 
+There are huge UX gains left on the table with such disparate syntax across products. We'll add more specific samples later
+
 | product   | table type            | type                            | statement                                     | requires explicit columns | objects required                                                      |
 |-----------|-----------------------|---------------------------------|-----------------------------------------------|---------------------------|-----------------------------------------------------------------------|
 | Azure SQL | true external         | RDBMS (i.e.   another database) | CREATE EXTERNAL   TABLE                       | yes                       | External   Datasource, Scoped Database Credential                     |
