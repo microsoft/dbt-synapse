@@ -33,7 +33,7 @@ One final benefit is that closer API alignment would drastically reduce the code
 # Syntax Differences
 
 
-### [Table Valued Constructor](https://docs.microsoft.com/en-us/sql/t-sql/queries/table-value-constructor-transact-sql)
+## 1) [Table Valued Constructor](https://docs.microsoft.com/en-us/sql/t-sql/queries/table-value-constructor-transact-sql)
 
 This is critical for the `dbt seed` command which loads a local csv into the the database.
 
@@ -57,9 +57,9 @@ SELECT 2, 'Steve Ballmer', 5 UNION ALL
 SELECT 3, 'Satyla Nadella', 7;
 ```
 
-### `MERGE`
+## 2) `MERGE`
 
-[relevant Uservoice Idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/13520394--in-preview-merge-statement-support)
+> [relevant Uservoice Idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/13520394--in-preview-merge-statement-support)
 
 This is already in public preview, but would love know when it becomes `GA`. When it does, we can drop [`synapse__snapshot_merge_sql`](dbt/include/synapse/macros/materializations/snapshot/snapshot_merge.sql) macro with it's `UPDATE->INSERT` workdaround and rely on [the global project's implementation](https://github.com/fishtown-analytics/dbt/blob/1060035838650a30e86989cbf2693db7720ff002/core/dbt/include/global_project/macros/materializations/snapshot/snapshot_merge.sql#L7-L25)
 
@@ -85,10 +85,12 @@ This is already in public preview, but would love know when it becomes `GA`. Whe
            ');
 {% endmacro %}
 ```
-## dropping a view
-### `DROP [TABLE/VIEW/SCHEMA/INDEX] ... IF EXISTS`
 
-[relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/40068358-temporary-table-get-colunms-informations) ("suggested" 2016, "started" 2018 "planned" 2019)
+
+## 3) Drop ... if exists
+###  `DROP [TABLE/VIEW/SCHEMA/INDEX] ... IF EXISTS`
+
+> [relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/40068358-temporary-table-get-colunms-informations) ("suggested" 2016, "started" 2018 "planned" 2019)
 
 This one is a lower priority because IMHO, using the first statement enables all the products including SQL Server <2016. Though, the simplicity of the ssecond statement is alluring.
 #### Azure Synapse & SQL Server <2016
@@ -103,9 +105,9 @@ if object_id ('dbo.clippy','V') is not null
 ```sql
 DROP VIEW dbo.clippy IF EXISTS
 ```
-## Access data from blob
+## 4) Accessing data from blob or an external table
 ### `OPENROWSET()` vs `CREATE EXTERNAL TABLE()` vs `COPY INTO`
-[relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/42118774-openrowset-for-dedicated-pools)
+> [relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/42118774-openrowset-for-dedicated-pools)
 
 These API dicrepancies are painfully confusing in that it's a grab bag of nouns. The asks are:
 - can there be common patterns for creating external tables across these TSQL products?
@@ -125,9 +127,9 @@ There are huge UX gains left on the table with such disparate syntax across prod
 
 # Other Differences
 
-## `tempdb.INFORMATION_SCHEMA.COLUMNS`
+## 1) `tempdb.INFORMATION_SCHEMA.COLUMNS`
 
-[relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/40068358-temporary-table-get-colunms-informations) (suggested  Mar 31, 2020)
+> [relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/40068358-temporary-table-get-colunms-informations) (suggested  Mar 31, 2020)
 
 
 This introduces challenges for the macro `get_columns_from_relation()`. Basically `get_columns_from_relation` works fine for normal relations becuase we have the normal `INFORMATION_SCHEMA.COLUMNS`. But when the relation is a temp table nothing is returned. 
@@ -148,7 +150,7 @@ The current theory for the best work around is what's sugggested in in [this Sta
 
 This isn't very pretty, but at least this will dbt users have a frictionless experience moving their dbt projects between TSQL products.
 
-## nested CTEs
+## 2) nested CTEs
 
 As of now,  dbt data tests that are defined with CTEs fail, as the user-defined data test is itself wrapped into another CTE when executed. There's a way to fix this, but it isn't pretty. See [#25](https://github.com/dbt-msft/dbt-synapse/issues/25)
 
