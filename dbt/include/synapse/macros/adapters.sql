@@ -124,6 +124,25 @@
 {%- endmacro %}
 
 {% macro synapse__get_columns_in_relation(relation) -%}
+  {# hack because tempdb has no infoschema see: #}
+  {# https://stackoverflow.com/questions/63800841/get-column-names-of-temp-table-in-azure-synapse-dw #}
+  {% if relation.identifier.startswith("#") %}
+    {% set select_star %} SELECT TOP(1) * FROM {{relation}} {% endset %}
+
+    {% set tmp_tbl_hack = relation.incorporate(
+      path={"identifier": relation.identifier.replace("#", "") ~ '_tmp_tbl_hack'},
+      type='table')-%}
+
+    {% do  drop_relation(tmp_tbl_hack) %}
+
+    {% set sql_create = create_table_as(False, tmp_tbl_hack, select_star) %}
+    {% call statement() -%} {{ sql_create }} {%- endcall %}
+
+    {% set output = get_columns_in_relation(tmp_tbl_hack) %}
+    {% do  drop_relation(tmp_tbl_hack) %}
+    {{ return(output) }}
+  {% endif %}
+
   {% call statement('get_columns_in_relation', fetch_result=True) %}
     select
         column_name,
