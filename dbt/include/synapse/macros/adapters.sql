@@ -127,15 +127,16 @@
   {# hack because tempdb has no infoschema see: #}
   {# https://stackoverflow.com/questions/63800841/get-column-names-of-temp-table-in-azure-synapse-dw #}
   {% if relation.identifier.startswith("#") %}
-    {% set select_star %} SELECT TOP(1) * FROM {{relation}} {% endset %}
-
     {% set tmp_tbl_hack = relation.incorporate(
       path={"identifier": relation.identifier.replace("#", "") ~ '_tmp_tbl_hack'},
       type='table')-%}
 
     {% do  drop_relation(tmp_tbl_hack) %}
-
-    {% set sql_create = create_table_as(False, tmp_tbl_hack, select_star) %}
+    {% set sql_create %}
+        SELECT TOP(1) * 
+        INTO {{tmp_tbl_hack}}
+        FROM {{relation}}
+    {% endset %}
     {% call statement() -%} {{ sql_create }} {%- endcall %}
 
     {% set output = get_columns_in_relation(tmp_tbl_hack) %}
