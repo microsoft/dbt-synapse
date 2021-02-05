@@ -1,14 +1,16 @@
 # dbt-synapse
 
-custom [dbt](https://www.getdbt.com) adapter for [Azure Synapse](https://azure.microsoft.com/en-us/services/synapse-analytics/). Major credit due to @mikaelene and [his `sqlserver` custom adapter](https://github.com/mikaelene/dbt-sqlserver).
+custom [dbt](https://www.getdbt.com) adapter for [Azure Synapse](https://azure.microsoft.com/en-us/services/synapse-analytics/). Major credit due to [@mikaelene](https://github.com/mikaelene) and [his `dbt-sqlserver` custom adapter](https://github.com/mikaelene/dbt-sqlserver).
+
+## related packages
+To get additional functionality, check out:
+- [fishtown-analytics/dbt-external-tables](https://github.com/fishtown-analytics/dbt-external-tables) which allows for easy staging of blob sources defined in `YAML`, and
+- [dbt-msft/tsql-utils](https://github.com/dbt-msft/tsql-utils) enables `dbt-synapse` to use [dbt-utils](https://github.com/fishtown-analytics/dbt-utils): the much-loved, extremely-useful collection of dbt macros.
 
 ## major differences b/w `dbt-synapse` and `dbt-sqlserver`
 - macros use only Azure Synapse `T-SQL`. [Relevant GitHub issue](https://github.com/MicrosoftDocs/azure-docs/issues/55713)
 - use of [Create Table as Select (CTAS)](https://docs.microsoft.com/en-us/sql/t-sql/statements/create-table-as-select-azure-sql-data-warehouse?view=aps-pdw-2016-au7) means you don't need post-hooks to create indices
-- Azure Active Directory Authentication options
 - rewrite of snapshots because Synapse doesn't support `MERGE`.
-- external table creation via details from yaml.
-  - must first create  `EXTERNAL DATA SOURCE` and `EXTERNAL FILE FORMAT`s.
 
 ## status & support
 as of now, only support for dbt `0.18.0`
@@ -16,11 +18,9 @@ as of now, only support for dbt `0.18.0`
 Passing all tests in [dbt-adapter-tests](https://github.com/fishtown-analytics/dbt-adapter-tests), except `test_dbt_ephemeral_data_tests`
 
 ### outstanding work:
--  `ephemeral` materializations (workaround for non-recursive CTEs)
-- auto-create  `EXTERNAL DATA SOURCE` and `EXTERNAL FILE FORMAT`s.
-- [officially rename the adapter from `sqlserver` to `synapse`](https://github.com/swanderz/dbt-synapse/pull/6)
-- Use CTAS to create seeds?
-- Add support for `ActiveDirectoryMsi`
+-  `ephemeral` materializations (workaround for non-recursive CTEs) see [#25](https://github.com/dbt-msft/dbt-synapse/issues/25)
+- officially rename the adapter from `sqlserver` to `synapse` see [#40](https://github.com/swanderz/dbt-synapse/pull/6)
+- Make seed creation more fault-tolerant [#36](https://github.com/dbt-msft/dbt-synapse/issues/36)
 
 ## Installation
 Easiest install is to use pip (not yet registered on PyPI).
@@ -29,11 +29,6 @@ First install [ODBC Driver version 17](https://www.microsoft.com/en-us/download/
 
 ```bash
 pip install dbt-synapse
-```
-On Ubuntu make sure you have the ODBC header files before installing
-
-```
-sudo apt install unixodbc-dev
 ```
 
 ## Authentication
@@ -78,24 +73,6 @@ is turned into the relative form (minus `__dbt`'s `_backup` and `_tmp` tables)
 - `HASH({COLUMN})`
 - `REPLICATE`
 
-## example `YAML` for defining external tables
-```YAML
-sources:
-  - name: raw
-    schema: source
-    loader: ADLSblob
-    tables:
-      - name: absence_hours
-        description: |
-          from raw DW.
-        external:
-          data_source: SynapseContainer
-          location: /absence_hours_live/
-          file_format: CommaDelimited
-          reject_type: VALUE
-          reject_value: 0
-        columns:
-```
 # Changelog
 
 See [CHANGELOG.md](CHANGELOG.md)
