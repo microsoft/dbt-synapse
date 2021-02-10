@@ -173,15 +173,12 @@ This isn't very pretty, but at least this will dbt users have a frictionless exp
 
 Don't have to explain this one too much, it's covered clearly in [the docs](https://docs.microsoft.com/en-us/sql/t-sql/queries/with-common-table-expression-transact-sql?view=sql-server-ver15#features-and-limitations-of-common-table-expressions-in--and-). And there's also [documented workarounds](https://dwgeek.com/azure-synapse-recursive-query-alternative-example.html/)
 
-To clarify, this isn't an ask for recursive CTEs, just nested ones. Here's [an issue opened on the SQL docs repo](https://github.com/MicrosoftDocs/sql-docs/issues/5698)
+## 3) external tables of type: `RDBMS`
+> [relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/39848365-support-rdbms-type-for-create-external-data-sour) (suggested: Mar 2020)
 
-### can't be done in ASDP
-```sql
-WITH dbt__CTE__INTERNAL_test AS (
-    WITH cte_test AS (
-        SELECT * FROM "dbo"."clippy"
-    )
-    SELECT TOP 0 * FROM cte_test
-)
-SELECT COUNT(*) FROM dbt__CTE__INTERNAL_test
-```
+
+The limitation of only allowing 8 persistent connections at 100 DWU requires us to have downstream Azure SQL marts that we expose to end-users. We're using RDBMS/"Elastic Query" External Tables in these Azure SQL dbs to get data from the ASDP.
+
+However, we also often want to ingest from various applications' transactional databases. An Elastic Query connection from ASDP to these transactional db's would save the work of having to set up ADF pipelines and introduce an intermediary blob layer between the db's.
+
+The other benefit would be more streamlined syntax b/w the Azure SQL products.
