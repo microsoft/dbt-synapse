@@ -125,6 +125,23 @@ There are huge UX gains left on the table with such disparate syntax across prod
 | ASDP      | true   external       | HADOOP (i.e. blob or datalake)  | CREATE EXTERNAL TABLE                         | yes                       | External Datasource, External File Format, Scoped Database Credential |
 | ASDP      | materialized external | HADOOP?                         | COPY INTO [blob   path]                       | no                        | all   defined in statement                                            |
 
+## 4) nested CTEs
+
+As of now,  dbt data tests that are defined with CTEs fail, as the user-defined data test is itself wrapped into another CTE when executed. There's a way to fix this, but it isn't pretty. See [#25](https://github.com/dbt-msft/dbt-synapse/issues/25)
+
+To clarify, this isn't an ask for recursive CTEs, just nested ones. Here's [an issue opened on the SQL docs repo](https://github.com/MicrosoftDocs/sql-docs/issues/5698)
+
+### can't be done in ASDP
+```sql
+WITH dbt__CTE__INTERNAL_test AS (
+    WITH cte_test AS (
+        SELECT * FROM "dbo"."clippy"
+    )
+    SELECT TOP 0 * FROM cte_test
+)
+SELECT COUNT(*) FROM dbt__CTE__INTERNAL_test
+```
+
 # Other Differences
 
 ## 1) `tempdb.INFORMATION_SCHEMA.COLUMNS`
@@ -150,9 +167,11 @@ The current theory for the best work around is what's sugggested in in [this Sta
 
 This isn't very pretty, but at least this will dbt users have a frictionless experience moving their dbt projects between TSQL products.
 
-## 2) nested CTEs
+## 2) recursive CTEs
 
-As of now,  dbt data tests that are defined with CTEs fail, as the user-defined data test is itself wrapped into another CTE when executed. There's a way to fix this, but it isn't pretty. See [#25](https://github.com/dbt-msft/dbt-synapse/issues/25)
+> [relevant Uservoice idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/14876727-support-for-recursive-cte) (suggested: Oct 2016, under review: May 2018)
+
+Don't have to explain this one too much, it's covered clearly in [the docs](https://docs.microsoft.com/en-us/sql/t-sql/queries/with-common-table-expression-transact-sql?view=sql-server-ver15#features-and-limitations-of-common-table-expressions-in--and-). And there's also [documented workarounds](https://dwgeek.com/azure-synapse-recursive-query-alternative-example.html/)
 
 To clarify, this isn't an ask for recursive CTEs, just nested ones. Here's [an issue opened on the SQL docs repo](https://github.com/MicrosoftDocs/sql-docs/issues/5698)
 
