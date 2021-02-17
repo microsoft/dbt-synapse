@@ -1,5 +1,19 @@
 # Changelog
 
+## v.0.19.0
+
+### BREAKING CHANGES
+
+- you must change your profile so that `type=synapse` instead of `type=sqlserver`. The reason is that now `dbt-synapse` now fully inheirits from `dbt-sqlserver` rather than being a fork. The benefit now is that you can have `dbt-sqlserver` and `dbt-synapse` coexist in the same environment.
+
+### New features:
+- Brings support for
+  - dbt v0.19.0 ([release notes](https://github.com/fishtown-analytics/dbt/releases/tag/v0.19.0)) and
+  - dbt-sqlserver v0.19.0.1 & v0.19.0 ([release](https://github.com/dbt-msft/dbt-sqlserver/releases/tag/v0.19.0.1) [notes](https://github.com/dbt-msft/dbt-sqlserver/releases/tag/v0.19.0))
+
+## Under the hood
+- the snapshot materialization, except for the [`MERGE` workaround](dbt/include/synapse/macros/materializations/snapshot/snapshot_merge.sql), now depends entirely on dbt-core's global project. Made possible due to tempdb.INFO_SCHEMA workaround [#42](https://github.com/dbt-msft/dbt-synapse/pull/42)
+
 ## v0.18.1
 ### New Features:
 Adds support for:
