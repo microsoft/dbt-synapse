@@ -1,6 +1,4 @@
-
 from dataclasses import dataclass
-
 from dbt.adapters.sqlserver import (SQLServerConnectionManager,
                                     SQLServerCredentials)
 
