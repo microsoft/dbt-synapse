@@ -57,6 +57,6 @@ setup(
         ]
     },
     install_requires=[
-        "dbt-sqlserver==0.19.0",
+        "dbt-sqlserver==0.19.0.1",
     ]
 )
