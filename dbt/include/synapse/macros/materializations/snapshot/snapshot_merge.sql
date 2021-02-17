@@ -7,7 +7,7 @@
           set dbt_valid_to = TMP.dbt_valid_to
           from {{ source }} TMP
           where {{ target }}.dbt_scd_id = TMP.dbt_scd_id
-            and TMP.dbt_change_type = ''update''
+            and TMP.dbt_change_type in (''update'', ''delete'')
             and {{ target }}.dbt_valid_to is null;
 
             insert into {{ target }} (

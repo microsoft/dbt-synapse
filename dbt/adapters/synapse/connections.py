@@ -1,9 +1,6 @@
-
 from dataclasses import dataclass
-
 from dbt.adapters.sqlserver import (SQLServerConnectionManager,
                                     SQLServerCredentials)
-
 
 @dataclass
 class SynapseCredentials(SQLServerCredentials):
@@ -15,4 +12,3 @@ class SynapseCredentials(SQLServerCredentials):
 class SynapseConnectionManager(SQLServerConnectionManager):
     TYPE = "synapse"
     TOKEN = None
-
