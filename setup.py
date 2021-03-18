@@ -54,6 +54,7 @@ setup(
             "include/synapse/dbt_project.yml",
             "include/synapse/macros/*.sql",
             "include/synapse/macros/**/*.sql",
+            "include/sqlserver/macros/**/**/*.sql",
         ]
     },
     install_requires=[
