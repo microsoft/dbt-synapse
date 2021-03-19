@@ -10,7 +10,7 @@ with open(os.path.join(this_directory, 'README.md')) as f:
 
 
 package_name = "dbt-synapse"
-authors_list = ["Nandan Hegde", "Anders Swanson"]
+authors_list = ["Nandan Hegde", "Chaerin Lee", "Alieu Sanneh", "Anders Swanson"]
 
 
 # get this from a separate file
@@ -49,14 +49,9 @@ setup(
     author_email="swanson.anders@gmail.com",
     url="https://github.com/dbt-msft/dbt-synapse",
     packages=find_packages(),
-    package_data={
-        "dbt": [
-            "include/synapse/dbt_project.yml",
-            "include/synapse/macros/*.sql",
-            "include/synapse/macros/**/*.sql",
-        ]
-    },
+    include_package_data=True,
     install_requires=[
-        "dbt-sqlserver==0.19.0.1",
+        "dbt-sqlserver~=0.19.0",
+        "agate>=1.6,<1.6.2"
     ]
 )
