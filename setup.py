@@ -52,5 +52,6 @@ setup(
     include_package_data=True,
     install_requires=[
         "dbt-sqlserver~=0.19.0",
+        "agate>=1.6,<1.6.2"
     ]
 )

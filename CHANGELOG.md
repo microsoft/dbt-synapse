@@ -9,6 +9,7 @@
 ### Under the hood
 
 - `dbt-synapse` will allow all patches to `dbt-sqlserver` version 0.19
+- Per issue with `pyICU` package ([fishtown-analytics/dbt/#3161](https://github.com/fishtown-analytics/dbt/pull/3161)), temporarily pin agate to between `1.6.0` and `1.6.2`, inclusive, until `dbt` `0.19.1` is released.
 ## v.0.19.0
 
 ### BREAKING CHANGES
