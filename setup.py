@@ -49,14 +49,7 @@ setup(
     author_email="swanson.anders@gmail.com",
     url="https://github.com/dbt-msft/dbt-synapse",
     packages=find_packages(),
-    package_data={
-        "dbt": [
-            "include/synapse/dbt_project.yml",
-            "include/synapse/macros/*.sql",
-            "include/synapse/macros/**/*.sql",
-            "include/sqlserver/macros/**/**/*.sql",
-        ]
-    },
+    include_package_data=True,
     install_requires=[
         "dbt-sqlserver==0.19.0.1",
     ]
