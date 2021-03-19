@@ -16,7 +16,7 @@
   - dbt v0.19.0 ([release notes](https://github.com/fishtown-analytics/dbt/releases/tag/v0.19.0)) and
   - dbt-sqlserver v0.19.0.1 & v0.19.0 ([release](https://github.com/dbt-msft/dbt-sqlserver/releases/tag/v0.19.0.1) [notes](https://github.com/dbt-msft/dbt-sqlserver/releases/tag/v0.19.0))
 
-## Under the hood
+### Under the hood
 - the snapshot materialization, except for the [`MERGE` workaround](dbt/include/synapse/macros/materializations/snapshot/snapshot_merge.sql), now depends entirely on dbt-core's global project. Made possible due to tempdb.INFO_SCHEMA workaround [#42](https://github.com/dbt-msft/dbt-synapse/pull/42)
 - make the adapter inheirit from `dbt-sqlserver` [#32](https://github.com/dbt-msft/dbt-synapse/pull/32) [#33](https://github.com/dbt-msft/dbt-synapse/pull/33) thanks [@jtcohen6](https://github.com/jtcohen6) [@chaerinlee1](https://github.com/chaerinlee1)
 - the snapshot materialization, now depends entirely on dbt-core's global project. See dbt-sqlserver release notes for more info [#44](https://github.com/dbt-msft/dbt-synapse/pull/44)
