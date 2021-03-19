@@ -5,6 +5,10 @@
 ### Fixes
 
 - Resolves bug where snapshot and seeds materializations weren't working correctly [#45](https://github.com/dbt-msft/dbt-synapse/pull/45) thanks [@alieus]
+
+### Under the hood
+
+- `dbt-synapse` will allow all patches to `dbt-sqlserver` version 0.19
 ## v.0.19.0
 
 ### BREAKING CHANGES
