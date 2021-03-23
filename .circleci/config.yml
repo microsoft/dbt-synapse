@@ -6,7 +6,7 @@ orbs:
 jobs:
   build-and-test:
     docker: 
-      - image: dataders/pyodbc:1.2
+      - image: dbtmsft/msodbc_py:0.5
     executor: python/default 
     steps:
       - checkout
