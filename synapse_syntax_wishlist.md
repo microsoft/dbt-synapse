@@ -35,6 +35,9 @@ One final benefit is that closer API alignment would drastically reduce the code
 
 ## 1) [Table Valued Constructor](https://docs.microsoft.com/en-us/sql/t-sql/queries/table-value-constructor-transact-sql)
 
+
+> [relevant Uservoice Idea](https://feedback.azure.com/forums/307516-azure-synapse-analytics/suggestions/43031034-add-support-for-the-table-value-constructor)
+
 This is critical for the `dbt seed` command which loads a local csv into the the database.
 
 The difference has brought the dev team [all](https://stackoverflow.com/questions/65625384/why-does-inserting-empty-string-into-date-column-produce-1900-01-01) [kinds](https://github.com/dbt-msft/dbt-synapse/issues/36) of problems
