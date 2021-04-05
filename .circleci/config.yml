@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   python: circleci/python@1.1.0
+  azure-cli: circleci/azure-cli@1.1.0
 
 jobs:
   build-and-test:
@@ -12,9 +13,22 @@ jobs:
       - checkout
       - python/install-packages:
           pkg-manager: pip
+      - azure-cli/install
+      - azure-cli/login-with-user:
+          azure-username: DBT_AZURE_USERNAME
+          azure-password: DBT_AZURE_PASSWORD
+          alternate-tenant: true
+          azure-tenant: DBT_AZURE_TENANT
+      - run:
+          name: resume Synapse pool/db
+          command: az synapse sql pool resume --name $DBT_SYNAPSE_DB --workspace-name $DBT_SYNAPSE_SERVER --resource-group dbt-msft
       - run:
           name: Test
           command: tox -e integration-synapse
+      - run:
+          name: pause Synapse pool/db
+          command: az synapse sql pool resume --name $DBT_SYNAPSE_DB --workspace-name $DBT_SYNAPSE_SERVER --resource-group dbt-msft
+
 
 workflows:
   main:
