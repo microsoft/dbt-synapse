@@ -4,8 +4,7 @@ target:
   schema: "dbt_test_{{ var('_dbt_random_suffix') }}"
   host: "{{ env_var('DBT_SYNAPSE_SERVER') }}.sql.azuresynapse.net"
   database: "{{ env_var('DBT_SYNAPSE_DB') }}"
-  username: "{{ env_var('DBT_SYNAPSE_UID') }}"
-  password: "{{ env_var('DBT_SYNAPSE_PWD') }}"
+  authentication: CLI
   encrypt: no
   trust_cert: yes
   port: 1433
