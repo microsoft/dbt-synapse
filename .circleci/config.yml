@@ -14,11 +14,10 @@ jobs:
       - python/install-packages:
           pkg-manager: pip
       - azure-cli/install
-      - azure-cli/login-with-user:
-          azure-username: DBT_AZURE_USERNAME
-          azure-password: DBT_AZURE_PASSWORD
-          alternate-tenant: true
-          azure-tenant: DBT_AZURE_TENANT
+      - azure-cli/login-with-service-principal:
+          azure-sp: DBT_AZURE_SP_NAME
+          azure-sp-password: DBT_AZURE_SP_SECRET
+          azure-sp-tenant: DBT_AZURE_TENANT
       - run:
           name: resume Synapse pool/db
           command: az synapse sql pool resume --name $DBT_SYNAPSE_DB --workspace-name $DBT_SYNAPSE_SERVER --resource-group dbt-msft
