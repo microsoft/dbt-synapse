@@ -27,6 +27,7 @@ jobs:
       - run:
           name: pause Synapse pool/db
           command: az synapse sql pool resume --name $DBT_SYNAPSE_DB --workspace-name $DBT_SYNAPSE_SERVER --resource-group dbt-msft
+          when: always
 
 
 workflows:
