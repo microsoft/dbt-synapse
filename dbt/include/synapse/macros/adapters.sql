@@ -50,7 +50,6 @@
   {{ return(sqlserver__drop_schema(relation)) }}
 {% endmacro %}
 
-{# TODO make this function just a wrapper of synapse__drop_relation_script #}
 {% macro synapse__drop_relation(relation) -%}
   {% call statement('drop_relation', auto_begin=False) -%}
     {{ synapse__drop_relation_script(relation) }}
