@@ -1,5 +1,10 @@
 # Changelog
 
+## v.0.19.1
+
+### Under the hood
+
+- make CI testing auto-start and auto-pause Synapse cluster to save $$$ [#47](https://github.com/dbt-msft/dbt-synapse/pull/47)
 ## v.0.19.0.1
 
 ### Fixes

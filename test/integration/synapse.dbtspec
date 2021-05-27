@@ -2,14 +2,13 @@ target:
   type: synapse
   driver: "ODBC Driver 17 for SQL Server"
   schema: "dbt_test_{{ var('_dbt_random_suffix') }}"
-  host: "{{ env_var('DBT_SYNAPSE_SERVER') }}"
+  host: "{{ env_var('DBT_SYNAPSE_SERVER') }}.sql.azuresynapse.net"
   database: "{{ env_var('DBT_SYNAPSE_DB') }}"
-  username: "{{ env_var('DBT_SYNAPSE_UID') }}"
-  password: "{{ env_var('DBT_SYNAPSE_PWD') }}"
+  authentication: CLI
   encrypt: no
   trust_cert: yes
   port: 1433
-  threads: 1
+  threads: 8
 sequences:
   test_dbt_empty: empty
   test_dbt_base: base
