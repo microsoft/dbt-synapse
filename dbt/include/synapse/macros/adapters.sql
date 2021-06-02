@@ -12,11 +12,29 @@
 {% endmacro %}
 
 {% macro synapse__list_relations_without_caching(schema_relation) %}
-  {{ return(sqlserver__list_relations_without_caching(schema_relation)) }}
+  {% call statement('list_relations_without_caching', fetch_result=True) -%}
+    select
+      table_catalog as [database],
+      table_name as [name],
+      table_schema as [schema],
+      case when table_type = 'BASE TABLE' then 'table'
+           when table_type = 'VIEW' then 'view'
+           else table_type
+      end as table_type
+
+    from information_schema.tables
+    where table_schema like '{{ schema_relation.schema }}'
+      and table_catalog like '{{ schema_relation.database }}'
+  {% endcall %}
+  {{ return(load_result('list_relations_without_caching').table) }}
 {% endmacro %}
  
 {% macro synapse__list_schemas(database) %}
-  {{ return(sqlserver__list_schemas(database)) }}
+  {% call statement('list_schemas', fetch_result=True, auto_begin=False) -%}
+    select  name as [schema]
+    from sys.schemas
+  {% endcall %}
+  {{ return(load_result('list_schemas').table) }}
 {% endmacro %}
 
 {% macro synapse__create_schema(relation) -%}
@@ -29,32 +47,26 @@
 {% endmacro %}
 
 {% macro synapse__drop_schema(relation) -%}
-    {%- set tables_in_schema_query %}
-      SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
-      WHERE TABLE_SCHEMA = '{{ relation.schema }}'
-  {% endset %}
-  {% set tables_to_drop = run_query(tables_in_schema_query).columns[0].values() %}
-  {% for table in tables_to_drop %}
-    {%- set schema_relation = adapter.get_relation(database=relation.database,
-                                               schema=relation.schema,
-                                               identifier=table) -%}
-    {% do drop_relation(schema_relation) %}
-  {%- endfor %}
-
-  {% call statement('drop_schema') -%}
-      IF EXISTS (SELECT * FROM sys.schemas WHERE name = '{{ relation.schema }}')
-      BEGIN
-      EXEC('DROP SCHEMA {{ relation.schema }}')
-      END  {% endcall %}
+  {{ return(sqlserver__drop_schema(relation)) }}
 {% endmacro %}
 
-{# TODO make this function just a wrapper of synapse__drop_relation_script #}
 {% macro synapse__drop_relation(relation) -%}
-  {{ return(sqlserver__drop_relation(relation)) }}
+  {% call statement('drop_relation', auto_begin=False) -%}
+    {{ synapse__drop_relation_script(relation) }}
+  {%- endcall %}
 {% endmacro %}
 
 {% macro synapse__drop_relation_script(relation) -%}
-  {{ return(sqlserver__drop_relation_script(relation)) }}
+  {% if relation.type == 'view' -%}
+    {% set object_id_type = 'V' %}
+  {% elif relation.type == 'table'%}
+    {% set object_id_type = 'U' %}
+  {%- else -%} invalid target name
+  {% endif %}
+  if object_id ('{{ relation.include(database=False) }}','{{ object_id_type }}') is not null
+    begin
+    drop {{ relation.type }} {{ relation.include(database=False) }}
+    end
 {% endmacro %}
 
 {% macro synapse__check_schema_exists(information_schema, schema) -%}
