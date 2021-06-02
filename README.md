@@ -67,6 +67,7 @@ is turned into the relative form (minus `__dbt`'s `_backup` and `_tmp` tables)
 - `CLUSTERED COLUMNSTORE INDEX` (default)
 - `HEAP`
 - `CLUSTERED INDEX ({COLUMN})`
+- `CLUSTERED COLUMNSTORE INDEX ORDER({{COLUMN}})` # see [docs](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/performance-tuning-ordered-cci) for performance suggestions
   
 #### Distributions
 - `ROUND_ROBIN` (default)
