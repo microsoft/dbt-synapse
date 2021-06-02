@@ -1,14 +1,10 @@
 # Changelog
 
-## v.0.19.2
-
-### Under the hood
-- override new functionality in dbt-sqlserver [dbt-sqlserver #126](https://github.com/dbt-msft/dbt-sqlserver/pull/126) that allows for cross-database queries. Azure Synapse does not support this, so `sqlserver__` adapter macros that were previously used by dbt-synapse had to be re-implemented as `synapse__` macros. [#49](https://github.com/dbt-msft/dbt-synapse/pull/49)
-
 ## v.0.19.1
 
 ### Under the hood
 
+- override new functionality in dbt-sqlserver [dbt-sqlserver #126](https://github.com/dbt-msft/dbt-sqlserver/pull/126) that allows for cross-database queries. Azure Synapse does not support this, so `sqlserver__` adapter macros that were previously used by dbt-synapse had to be re-implemented as `synapse__` macros. [#49](https://github.com/dbt-msft/dbt-synapse/pull/49)
 - make CI testing auto-start and auto-pause Synapse cluster to save $$$ [#47](https://github.com/dbt-msft/dbt-synapse/pull/47)
 ## v.0.19.0.1
 
