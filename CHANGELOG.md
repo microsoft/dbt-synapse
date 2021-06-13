@@ -1,5 +1,12 @@
 # Changelog
 
+## v.0.19.2
+
+### Under the hood
+
+- fix bug introduced `v0.19.1` where the new macros in [dbt-sqlserver#126](https://github.com/dbt-msft/dbt-sqlserver/pull/126) were still being used somehow
+- no longer pin `agate<1.6.2` because it now done as part of [dbt 0.19.1](https://github.com/fishtown-analytics/dbt/releases/tag/v0.19.1)
+
 ## v.0.19.1
 
 ### Under the hood
