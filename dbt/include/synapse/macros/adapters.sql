@@ -1,7 +1,3 @@
-{% macro synapse__information_schema_name(database) -%}
-  {{ return(sqlserver__information_schema_name(database)) }}
-{%- endmacro %}
-
 {% macro synapse__get_columns_in_query(select_sql) %}
     {% call statement('get_columns_in_query', fetch_result=True, auto_begin=False) -%}
         select TOP 0 * from (
@@ -46,10 +42,6 @@
   {% endcall %}
 {% endmacro %}
 
-{% macro synapse__drop_schema(relation) -%}
-  {{ return(sqlserver__drop_schema(relation)) }}
-{% endmacro %}
-
 {% macro synapse__drop_relation(relation) -%}
   {% call statement('drop_relation', auto_begin=False) -%}
     {{ synapse__drop_relation_script(relation) }}
@@ -69,9 +61,6 @@
     end
 {% endmacro %}
 
-{% macro synapse__check_schema_exists(information_schema, schema) -%}
-  {{ return(sqlserver__check_schema_exists(information_schema, schema)) }}
-{% endmacro %}
 
 {% macro synapse__create_view_as(relation, sql) -%}
   create view {{ relation.include(database=False) }} as
@@ -127,14 +116,6 @@
 
 {% endmacro %}
 
-{% macro synapse__insert_into_from(to_relation, from_relation) -%}
-  {{ return(sqlserver__insert_into_from(to_relation, from_relation)) }}
-{% endmacro %}
-
-{% macro synapse__current_timestamp() -%}
-  {{ return(sqlserver__current_timestamp()) }}
-{%- endmacro %}
-
 {% macro synapse__get_columns_in_relation(relation) -%}
   {# hack because tempdb has no infoschema see: #}
   {# https://stackoverflow.com/questions/63800841/get-column-names-of-temp-table-in-azure-synapse-dw #}
@@ -170,11 +151,3 @@
   {% set table = load_result('get_columns_in_relation').table %}
   {{ return(sql_convert_columns_in_relation(table)) }}
 {% endmacro %}
-
-{% macro synapse__make_temp_relation(base_relation, suffix) %}
-  {{ return(sqlserver__make_temp_relation(base_relation, suffix)) }}
-{% endmacro %}
-
-{% macro synapse__snapshot_string_as_time(timestamp) -%}
-  {{ return(sqlserver__snapshot_string_as_time(timestamp)) }}
-{%- endmacro %}
