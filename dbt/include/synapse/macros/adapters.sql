@@ -145,8 +145,15 @@
 
     {% do  drop_relation(tmp_tbl_hack) %}
     {% set sql_create %}
+        CREATE TABLE {{ tmp_tbl_hack }}
+        WITH(
+          -- Always use a round-robin heap, since columns with types like varbinaries
+          -- cannot be part of a clustered column store, which is the default index
+          DISTRIBUTION = ROUND_ROBIN,
+          HEAP
+        )
+        AS
         SELECT TOP(1) * 
-        INTO {{tmp_tbl_hack}}
         FROM {{relation}}
     {% endset %}
     {% call statement() -%} {{ sql_create }} {%- endcall %}
