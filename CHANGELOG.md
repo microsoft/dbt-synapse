@@ -1,5 +1,9 @@
 # Changelog
 
+## v.0.20.0
+
+### Under the hood
+- Fix a bug where snapshots on tables with non-indexable datatypes would throw the error `"The statement failed. Column 'XXXXX' has a data type that cannot participate in a columnstore index. (35343) (SQLExecDirectW)"`
 ## v.0.19.2
 
 ### Under the hood
