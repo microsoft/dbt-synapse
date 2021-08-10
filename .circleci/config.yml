@@ -26,7 +26,7 @@ jobs:
           command: tox -e integration-synapse
       - run:
           name: pause Synapse pool/db
-          command: az synapse sql pool resume --name $DBT_SYNAPSE_DB --workspace-name $DBT_SYNAPSE_SERVER --resource-group dbt-msft
+          command: az synapse sql pool pause --name $DBT_SYNAPSE_DB --workspace-name $DBT_SYNAPSE_SERVER --resource-group dbt-msft
           when: always
 
 
