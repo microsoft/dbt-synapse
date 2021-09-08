@@ -1,5 +1,15 @@
 # Changelog
 
+## v.0.20.0
+
+### Features
+
+- brings compatibility with dbt-core `v0.20.0`
+### Under the hood
+
+- Fix a bug where snapshots on tables with non-indexable datatypes would throw the error `"The statement failed. Column 'XXXXX' has a data type that cannot participate in a columnstore index. (35343) (SQLExecDirectW)"` [#56](https://github.com/dbt-msft/dbt-synapse/pull/56) thanks [MarvinSchenkel](https://github.com/MarvinSchenkel)
+- 10+ `synapse__` macros no longer have to be defined as they're now auto-defined as part of the `v0.20.0` upgrade. Code footprint is now >37 lines smaller!
+
 ## v.0.19.2
 
 ### Under the hood
