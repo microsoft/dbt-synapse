@@ -71,7 +71,7 @@
 {# TODO instead of deleting it...  #}
 {% macro synapse__rename_relation(from_relation, to_relation) -%}
   {% call statement('rename_relation') -%}
-  
+
     rename object {{ from_relation.include(database=False) }} to {{ to_relation.identifier }}
   {%- endcall %}
 {% endmacro %}
@@ -157,4 +157,19 @@
   {% endcall %}
   {% set table = load_result('get_columns_in_relation').table %}
   {{ return(sql_convert_columns_in_relation(table)) }}
+{% endmacro %}
+
+{% macro synapse__alter_column_type(relation, column_name, new_column_type) %}
+
+  {%- set tmp_column = column_name + "__dbt_alter" -%}
+
+  {% call statement('alter_column_type') -%}
+
+    alter {{ relation.type }} {{ relation }} add {{ tmp_column }} {{ new_column_type }};
+    update {{ relation }} set {{ tmp_column }} = {{ column_name }};
+    alter {{ relation.type }} {{ relation }} drop column {{ column_name }};
+    exec sp_rename '{{ relation | replace('"', '') }}.{{ tmp_column }}', '{{ column_name }}', 'column'
+
+  {%- endcall -%}
+
 {% endmacro %}
