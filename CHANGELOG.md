@@ -1,5 +1,11 @@
 # Changelog
 
+## v.0.21
+
+### Fixes
+
+- Resolves bug for running incremental models where the macro `alter_column_type` had incorrect syntax
+
 ## v.0.20.0
 
 ### Features
