@@ -1,5 +1,6 @@
 from dbt.adapters.synapse.connections import SynapseConnectionManager
 from dbt.adapters.synapse.connections import SynapseCredentials
+from dbt.adapters.synapse.relation import SynapseRelation
 from dbt.adapters.synapse.impl import SynapseAdapter
 
 from dbt.adapters.base import AdapterPlugin
