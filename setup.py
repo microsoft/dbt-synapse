@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from setuptools import find_namespace_packages, setup
+from setuptools import find_namespace_packages
 import os
 import re
 
