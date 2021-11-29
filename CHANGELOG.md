@@ -1,5 +1,11 @@
 # Changelog
 
+## v.0.21.0rc1
+
+Please see the following upstream release notes:
+- [dbt-core v0.21.0](https://github.com/dbt-labs/dbt-core/releases/tag/v0.21.0)
+- [dbt-sqlserver v0.21.0rc1](https://github.com/dbt-msft/dbt-sqlserver/releases/tag/v0.21.0rc1)
+
 ## v.0.20.0
 
 ### Features

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-from setuptools import find_packages
-from distutils.core import setup
+from setuptools import find_namespace_packages, setup
 import os
 import re
 
@@ -29,7 +28,7 @@ def _dbt_synapse_version():
 package_version = _dbt_synapse_version()
 description = """An Azure Synapse adpter plugin for dbt (data build tool)"""
 
-dbt_version = '0.20'
+dbt_version = '0.21'
 # the package version should be the dbt version, with maybe some things on the
 # ends of it. (0.18.1 vs 0.18.1a1, 0.18.1.1, ...)
 if not package_version.startswith(dbt_version):
@@ -48,9 +47,9 @@ setup(
     author=", ".join(authors_list),
     author_email="swanson.anders@gmail.com",
     url="https://github.com/dbt-msft/dbt-synapse",
-    packages=find_packages(),
+    packages=find_namespace_packages(include=['dbt', 'dbt.*']),
     include_package_data=True,
     install_requires=[
-        "dbt-sqlserver~=0.20.0"
+        "dbt-sqlserver~=0.21.0"
     ]
 )
