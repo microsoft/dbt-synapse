@@ -50,6 +50,6 @@ setup(
     packages=find_namespace_packages(include=['dbt', 'dbt.*']),
     include_package_data=True,
     install_requires=[
-        "dbt-sqlserver==0.21.0rc2"
+        "dbt-sqlserver~=0.21.0"
     ]
 )
