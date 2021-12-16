@@ -1,3 +1,17 @@
+{% macro synapse__create_clustered_columnstore_index(relation) -%}
+  {%- set cci_name = relation.schema ~ '_' ~ relation.identifier ~ '_cci' -%}
+  {%- set relation_name = relation.schema ~ '_' ~ relation.identifier -%}
+  {%- set full_relation = relation.schema ~ '.' ~ relation.identifier -%}
+  if object_id ('{{relation_name}}.{{cci_name}}','U') is not null
+      begin
+      drop index {{relation_name}}.{{cci_name}}
+      end
+
+  CREATE CLUSTERED COLUMNSTORE INDEX {{cci_name}}
+    ON {{full_relation}}
+{% endmacro %}
+
+
 {# most of this code is from https://github.com/jacobm001/dbt-mssql/blob/master/dbt/include/mssql/macros/indexes.sql        #}
 
 {% macro drop_xml_indexes() -%}

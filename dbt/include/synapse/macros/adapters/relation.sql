@@ -1,0 +1,26 @@
+{% macro synapse__drop_relation(relation) -%}
+  {% call statement('drop_relation', auto_begin=False) -%}
+    {{ synapse__drop_relation_script(relation) }}
+  {%- endcall %}
+{% endmacro %}
+
+{% macro synapse__drop_relation_script(relation) -%}
+  {% if relation.type == 'view' -%}
+    {% set object_id_type = 'V' %}
+  {% elif relation.type == 'table'%}
+    {% set object_id_type = 'U' %}
+  {%- else -%} invalid target name
+  {% endif %}
+  if object_id ('{{ relation.include(database=False) }}','{{ object_id_type }}') is not null
+    begin
+    drop {{ relation.type }} {{ relation.include(database=False) }}
+    end
+{% endmacro %}
+
+
+{% macro synapse__rename_relation(from_relation, to_relation) -%}
+  {% call statement('rename_relation') -%}
+  
+    rename object {{ from_relation.include(database=False) }} to {{ to_relation.identifier }}
+  {%- endcall %}
+{% endmacro %}
