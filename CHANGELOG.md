@@ -4,7 +4,7 @@
 
 ### Fixes
 
-- re-implement sqlserver's test materialization logic because Synapse adapter can't find it today
+- re-implement sqlserver's test materialization logic because Synapse adapter can't find it today [#74](https://github.com/dbt-msft/dbt-synapse/pull/74)
 
 ## v.1.0.0
 
