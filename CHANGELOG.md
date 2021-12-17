@@ -1,5 +1,17 @@
 # Changelog
 
+## v.1.0.1
+
+### Fixes
+
+- re-implement sqlserver's test materialization logic because Synapse adapter can't find it today
+
+## v.1.0.0
+
+Please see the following upstream release notes:
+- [dbt-core v1.0.0](https://github.com/dbt-labs/dbt-core/releases/tag/v1.0.0)
+- [dbt-sqlserver v1.0.0](https://github.com/dbt-msft/dbt-sqlserver/releases/tag/v1.0.0)
+
 ## v.0.21.0rc1
 
 Please see the following upstream release notes:
