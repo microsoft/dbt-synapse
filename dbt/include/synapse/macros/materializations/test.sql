@@ -1,7 +1,5 @@
 {%- materialization test, adapter='synapse' -%}
 
-  {{ log("anders are you there??", info=True) }}
-
   {% set relations = [] %}
 
   {% set identifier = model['alias'] %}
