@@ -1,5 +1,5 @@
 pytest-dbt-adapter~=0.6.0
-pytest==6.2.5
+pytest==7.1.2
 tox==3.25.0
 twine==4.0.0
 wheel==0.37.1
