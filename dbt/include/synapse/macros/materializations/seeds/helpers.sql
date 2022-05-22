@@ -23,7 +23,7 @@
                     {# TSQL catch 22: #}
                         {# strings must be single-quoted & #}
                         {# single-quotes inside of strings must be doubled #}
-                    
+
                     {% set col_type = agate_table.columns[column].data_type | string %}
                     {%- if "text.Text" in col_type -%}
                       '{{str_replace(row[column]) if row[column]}}'
