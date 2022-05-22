@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.2
+
+Re-release of v1.0.1 with fixed package.
+
 ## v.1.0.1
 
 ### Fixes
