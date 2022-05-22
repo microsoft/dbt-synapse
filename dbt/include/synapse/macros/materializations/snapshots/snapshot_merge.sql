@@ -1,6 +1,6 @@
 {% macro synapse__snapshot_merge_sql(target, source, insert_cols) -%}
       {%- set insert_cols_csv = insert_cols | join(', ') -%}
-      
+
       EXEC('
            BEGIN TRANSACTION
            update {{ target }}
@@ -14,8 +14,8 @@
                   {{ insert_cols_csv }}
                   )
             select {{ insert_cols_csv }}
-            from {{ source }} 
-            where dbt_change_type = ''insert'' ; 
+            from {{ source }}
+            where dbt_change_type = ''insert'' ;
            COMMIT TRANSACTION;
            ');
 

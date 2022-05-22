@@ -17,7 +17,7 @@
           HEAP
         )
         AS
-        SELECT TOP(1) * 
+        SELECT TOP(1) *
         FROM {{relation}}
     {% endset %}
     {% call statement() -%} {{ sql_create }} {%- endcall %}
