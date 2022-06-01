@@ -1,7 +1,7 @@
 pytest-dbt-adapter~=0.6.0
 pytest==6.2.5
 tox==3.25.0
-twine==4.0.0
+twine==4.0.1
 wheel==0.37.1
 pre-commit==2.19.0
 aiohttp==3.8.1
