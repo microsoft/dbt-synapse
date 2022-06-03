@@ -37,8 +37,8 @@ def _profile_ci_azure_auto():
         **_all_profiles_base(),
         **{
             "authentication": "auto",
-            "host": os.getenv("DBT_AZURESQL_SERVER"),
-            "database": os.getenv("DBT_AZURESQL_DB"),
+            "host": f"{os.getenv('DBT_SYNAPSE_SERVER')}.sql.azuresynapse.net",
+            "database": os.getenv("DBT_SYNAPSE_DB"),
         },
     }
 
