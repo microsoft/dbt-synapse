@@ -15,7 +15,7 @@ jobs:
         python_version: ["3.7", "3.8", "3.9"]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/${{ github.repository }}:${{ matrix.python_version }}
+      image: ghcr.io/dbt-sqlserver:${{ matrix.python_version }}
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
