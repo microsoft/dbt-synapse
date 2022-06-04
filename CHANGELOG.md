@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.0.rc1
+
+- Bump dependencies dbt-sqlserver and dbt-core to 1.1.0
+- New testing framework
+
 ## v1.0.2
 
 Re-release of v1.0.1 with fixed package.
