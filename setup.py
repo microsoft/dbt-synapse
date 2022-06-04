@@ -29,7 +29,7 @@ def _dbt_synapse_version():
 package_version = _dbt_synapse_version()
 description = """An Azure Synapse adapter plugin for dbt (data build tool)"""
 
-dbt_version = "1.0"
+dbt_version = "1.1.0"
 # the package version should be the dbt version, with maybe some things on the
 # ends of it. (0.18.1 vs 0.18.1a1, 0.18.1.1, ...)
 if not package_version.startswith(dbt_version):
@@ -66,7 +66,7 @@ setup(
     url="https://github.com/dbt-msft/dbt-synapse",
     packages=find_namespace_packages(include=["dbt", "dbt.*"]),
     include_package_data=True,
-    install_requires=["dbt-sqlserver~=1.0.0"],
+    install_requires=["dbt-sqlserver==1.1.0.rc1"],
     cmdclass={
         "verify": VerifyVersionCommand,
     },

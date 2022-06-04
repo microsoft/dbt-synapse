@@ -36,18 +36,10 @@ linecheck: ## Checks for all Python lines 100 characters or more
 	@\
 	find dbt -type f -name "*.py" -exec grep -I -r -n '.\{100\}' {} \;
 
-.PHONY: unit
-unit: ## Runs unit tests.
+.PHONY: functional
+functional: ## Runs functional tests.
 	@\
-	tox -e integration-synapse
-
-.PHONY: test
-test: ## Runs unit tests and code checks against staged changes.
-	@\
-	tox -e integration-synapse; \
-	pre-commit run black-check --hook-stage manual | grep -v "INFO"; \
-	pre-commit run flake8-check --hook-stage manual | grep -v "INFO"; \
-	pre-commit run mypy-check --hook-stage manual | grep -v "INFO"
+	tox -- -v tests/functional
 
 .PHONY: clean
 	@echo "cleaning repo"
