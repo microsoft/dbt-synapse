@@ -7,6 +7,8 @@ on:  # yamllint disable-line rule:truthy
   pull_request_target:
     types: [labeled]
 
+concurrency: dbt-synapse
+
 jobs:
   integration-tests-azure:
     name: Integration tests on Azure
@@ -18,7 +20,7 @@ jobs:
         python_version: ["3.7", "3.8", "3.9"]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/dbt-sqlserver:${{ matrix.python_version }}
+      image: ghcr.io/dbt-msft/dbt-sqlserver:${{ matrix.python_version }}
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
