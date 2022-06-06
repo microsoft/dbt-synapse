@@ -1,79 +1,68 @@
 # dbt-synapse
 
-custom [dbt](https://www.getdbt.com) adapter for [Azure Synapse](https://azure.microsoft.com/en-us/services/synapse-analytics/). Major credit due to [@mikaelene](https://github.com/mikaelene) and [his `dbt-sqlserver` custom adapter](https://github.com/mikaelene/dbt-sqlserver).
+[dbt](https://www.getdbt.com) adapter for Azure Synapse Dedicated SQL Pool (Azure Synapse Data Warehouse).
 
-## related packages
-To get additional functionality, check out:
-- [fishtown-analytics/dbt-external-tables](https://github.com/fishtown-analytics/dbt-external-tables) which allows for easy staging of blob sources defined in `YAML`, and
-- [dbt-msft/tsql-utils](https://github.com/dbt-msft/tsql-utils) enables `dbt-synapse` to use [dbt-utils](https://github.com/fishtown-analytics/dbt-utils): the much-loved, extremely-useful collection of dbt macros.
+The adapter supports dbt-core 0.18 or newer and follows the same versioning scheme.
+E.g. version 1.1.x of the adapter will be compatible with dbt-core 1.1.x.
 
-## major differences b/w `dbt-synapse` and `dbt-sqlserver`
-- macros use only Azure Synapse `T-SQL`. [Relevant GitHub issue](https://github.com/MicrosoftDocs/azure-docs/issues/55713)
-- use of [Create Table as Select (CTAS)](https://docs.microsoft.com/en-us/sql/t-sql/statements/create-table-as-select-azure-sql-data-warehouse?view=aps-pdw-2016-au7) means you don't need post-hooks to create indices (see Table Materializations section below for more info)
-- rewrite of snapshots because Synapse doesn't support `MERGE`.
+## Documentation
 
-## status & support
-as of now, only support for dbt `0.18.0`
+We've bundled all documentation on the dbt docs site:
 
-Passing all tests in [dbt-adapter-tests](https://github.com/fishtown-analytics/dbt-adapter-tests), except `test_dbt_ephemeral_data_tests`
+* [Profile setup & authentication](https://docs.getdbt.com/reference/warehouse-profiles/azuresynapse-profile)
+* [Adapter-specific configuration](https://docs.getdbt.com/reference/warehouse-profiles/azuresynapse-configs)
 
-### outstanding work:
--  `ephemeral` materializations (workaround for non-recursive CTEs) see [#25](https://github.com/dbt-msft/dbt-synapse/issues/25)
-- officially rename the adapter from `sqlserver` to `synapse` see [#40](https://github.com/swanderz/dbt-synapse/pull/6)
-- Make seed creation more fault-tolerant [#36](https://github.com/dbt-msft/dbt-synapse/issues/36)
+Join us on the [dbt Slack](https://getdbt.slack.com/archives/C01DRQ178LQ) to ask questions, get help, or to discuss the project.
 
 ## Installation
-Easiest install is to use pip (not yet registered on PyPI).
 
-First install [ODBC Driver version 17](https://www.microsoft.com/en-us/download/details.aspx?id=56567).
+This adapter requires the Microsoft ODBC driver to be installed:
+[Windows](https://docs.microsoft.com/nl-be/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver16#download-for-windows) |
+[macOS](https://docs.microsoft.com/nl-be/sql/connect/odbc/linux-mac/install-microsoft-odbc-driver-sql-server-macos?view=sql-server-ver16) |
+[Linux](https://docs.microsoft.com/nl-be/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-ver16)
 
-```bash
-pip install dbt-synapse
+<details><summary>Debian/Ubuntu</summary>
+<p>
+
+Make sure to install the ODBC headers:
+
+```shell
+sudo apt-get install -y unixodbc-dev
 ```
 
-## Authentication
+</p>
+</details>
 
-Please see the [Authentication section of dbt-sqlserver's README.md](https://github.com/dbt-msft/dbt-sqlserver#authentication)
+Latest version: ![PyPI](https://img.shields.io/pypi/v/dbt-synapse?label=latest%20stable&logo=pypi)
 
-## Table Materializations
-CTAS allows you to materialize tables with indices and distributions at creation time, which obviates the need for post-hooks to set indices.
-
-### Example
-You can also configure `index` and `dist` in `dbt_project.yml`.
-#### `models/stage/absence.sql
-```
-{{
-    config(
-        index='HEAP',
-        dist='ROUND_ROBIN'
-        )
-}}
-
-select *
-from ...
+```shell
+pip install -U dbt-synapse
 ```
 
-is turned into the relative form (minus `__dbt`'s `_backup` and `_tmp` tables)
+Latest pre-release: ![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/v/tag/dbt-msft/dbt-synapse?include_prereleases&label=latest%20pre-release&logo=pypi)
 
-```SQL
-  CREATE TABLE ajs_stg.absence_hours
-    WITH(
-      DISTRIBUTION = ROUND_ROBIN,
-      HEAP
-      )
-    AS (SELECT * FROM ajs_stg.absence_hours__dbt_tmp_temp_view)
+```shell
+pip install -U --pre dbt-synapse
 ```
-#### Indices
-- `CLUSTERED COLUMNSTORE INDEX` (default)
-- `HEAP`
-- `CLUSTERED INDEX ({COLUMN})`
-- `CLUSTERED COLUMNSTORE INDEX ORDER({{COLUMN}})` # see [docs](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/performance-tuning-ordered-cci) for performance suggestions
-  
-#### Distributions
-- `ROUND_ROBIN` (default)
-- `HASH({COLUMN})`
-- `REPLICATE`
 
-# Changelog
+## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md)
+See [the changelog](CHANGELOG.md)
+
+## Contributing
+
+[![Integration tests on Azure](https://github.com/dbt-msft/dbt-synapse/actions/workflows/integration-tests-azure.yml/badge.svg)](https://github.com/dbt-msft/dbt-sqlserver/actions/workflows/integration-tests-azure.yml)
+
+This adapter is community-maintained.
+You are welcome to contribute by creating issues, opening or reviewing pull requests or helping other users in Slack channel.
+If you're unsure how to get started, check out our [contributing guide](CONTRIBUTING.md).
+
+This adapter uses the [dbt-sqlserver](https://github.com/dbt-msft/dbt-sqlserver) adapter underneath so make sure to check out that repository as well.
+
+## License
+
+[![PyPI - License](https://img.shields.io/pypi/l/dbt-synapse)](https://github.com/dbt-msft/dbt-synapse/blob/master/LICENSE)
+
+## Code of Conduct
+
+This project and everyone involved is expected to follow the [dbt Code of Conduct](https://community.getdbt.com/code-of-conduct).
