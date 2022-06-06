@@ -6,12 +6,15 @@ import sys
 from setuptools import find_namespace_packages, setup
 from setuptools.command.install import install
 
+package_name = "dbt-synapse"
+authors_list = ["Nandan Hegde", "Chaerin Lee", "Alieu Sanneh", "Anders Swanson", "Sam Debruyn"]
+dbt_version = "1.1"
+dbt_sqlserver_requirement = "dbt-sqlserver>=1.1.0rc1,<1.2.0"
+description = """An Azure Synapse adapter plugin for dbt (data build tool)"""
+
 this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, "README.md")) as f:
     long_description = f.read()
-
-package_name = "dbt-synapse"
-authors_list = ["Nandan Hegde", "Chaerin Lee", "Alieu Sanneh", "Anders Swanson", "Sam Debruyn"]
 
 
 # get this from a separate file
@@ -26,9 +29,7 @@ def _dbt_synapse_version():
 
 
 package_version = _dbt_synapse_version()
-description = """An Azure Synapse adapter plugin for dbt (data build tool)"""
 
-dbt_version = "1.1"
 # the package version should be the dbt version, with maybe some things on the
 # ends of it. (0.18.1 vs 0.18.1a1, 0.18.1.1, ...)
 if not package_version.startswith(dbt_version):
@@ -65,7 +66,7 @@ setup(
     url="https://github.com/dbt-msft/dbt-synapse",
     packages=find_namespace_packages(include=["dbt", "dbt.*"]),
     include_package_data=True,
-    install_requires=["dbt-sqlserver>=1.1.0rc1,<1.2.0"],
+    install_requires=[dbt_sqlserver_requirement],
     cmdclass={
         "verify": VerifyVersionCommand,
     },

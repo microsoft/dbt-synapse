@@ -1,13 +1,19 @@
 # Development of the adapter
 
-Python 3.9 is used for developing the adapter. To get started, setup your environment as follows:
+The Synapse adapter uses the [dbt-sqlserver](https://github.com/dbt-msft/dbt-sqlserver) adapter underneath.
+This repository mostly contains a set of macros that override the behavior of dbt-sqlserver so that it works with Synapse.
 
-Create a virtual environment, pyenv is used in the example:
+Python 3.10 is used for developing the adapter. To get started, bootstrap your environment as follows:
+
+Create a virtual environment, [pyenv](https://github.com/pyenv/pyenv) is used in the example:
 
 ```shell
+pyenv install 3.7.13
+pyenv install 3.8.13
 pyenv install 3.9.12
-pyenv virtualenv 3.9.12 dbt-synapse
-pyenv activate dbt-synapse
+pyenv install 3.10.4
+pyenv virtualenv 3.10.4 dbt-synapse
+pyenv local dbt-synapse 3.9.12 3.8.13 3.7.13
 ```
 
 Install the development dependencies and pre-commit and get information about possible make commands:
@@ -17,31 +23,43 @@ make dev
 make help
 ```
 
+[Pre-commit](https://pre-commit.com/) helps us to maintain a consistent style and code quality across the entire project.
+After running `make dev`, pre-commit will automatically validate your commits and fix any formatting issues whenever possible.
+
 ## Testing
 
-### pytest-dbt-adapter
-
-The package [pytest-dbt-adapter](https://github.com/dbt-labs/dbt-adapter-tests) is used for running tests against the adapter.
-However, this is no longer the recommended way to test adapters and we should into replacing this with [the recommended way to test new adapter](https://docs.getdbt.com/docs/contributing/testing-a-new-adapter)
-
-### Tox
-
-Running the unit tests:
+The functional tests require a running Synapse Dedicated SQL Pool instance.
+You can configure the connection to this instance with the file `test.env` in the root of the project.
+You can use the provided `test.env.sample` as a base.
 
 ```shell
-make test
+cp test.env.sample test.env
+```
+
+We use tox to isolate the environment for testing and for making it possible to test in multiple environments.
+You can use the following commands to run the unit and the functional tests respectively:
+
+```shell
+make functional
+```
+
+This will start tox and test in all environments. If you only want to run the tests in a specific environment, you can use the following commands:
+
+```shell
+tox -e py310 -- -v tests/functional # will only functional run in Python 3.10
 ```
 
 ## CI/CD
 
-We use the Docker image from our [dbt-sqlserver](https://github.com/dbt-msft/dbt-sqlserver/blob/master/CONTRIBUTING.md) repo.
+We use Docker images that have all the things we need to test the adapter in the CI/CD workflows.
+The Dockerfile and image are part of the [dbt-sqlserver](https://github.com/dbt-msft/dbt-sqlserver) repository.
 
-There is a Circle CI workflow with jobs that run the following tasks:
+All CI/CD pipelines are using GitHub Actions. The following pipelines are available:
 
-* Run the unit tests
-* Use the adapter to connect to a SQL Server Docker container
-* Run the pytest-dbt-adapter specs against a SQL Server Docker container
-* Use the adapter to connect to an Azure SQL Database with various options
+* `integration-tests-azure`: runs the integration tests for Azure SQL Server.
+* `release-version`: publishes the adapter to PyPI.
+
+There is an additional [Pre-commit](https://pre-commit.ci/) pipeline that validates the code style.
 
 ### Azure integration tests
 
@@ -60,4 +78,8 @@ The following environment variables are available:
 ## Releasing a new version
 
 Make sure the version number is bumped in `__version__.py`. Then, create a git tag named `v<version>` and push it to GitHub.
-A CircleCI workflow will be triggered to build the package and push it to PyPI. 
+A GitHub Actions workflow will be triggered to build the package and push it to PyPI.
+
+Make sure that the dependency to dbt-sqlserver is bumped to a compatible version in `setup.py`.
+
+If you're releasing support for a new version of `dbt-core`, also bump the `dbt_version` in `setup.py`.
