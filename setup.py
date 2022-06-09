@@ -9,7 +9,7 @@ from setuptools.command.install import install
 package_name = "dbt-synapse"
 authors_list = ["Nandan Hegde", "Chaerin Lee", "Alieu Sanneh", "Anders Swanson", "Sam Debruyn"]
 dbt_version = "1.1"
-dbt_sqlserver_requirement = "dbt-sqlserver>=1.1.0rc1,<1.2.0"
+dbt_sqlserver_requirement = "dbt-sqlserver~=1.1.0"
 description = """An Azure Synapse adapter plugin for dbt (data build tool)"""
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
