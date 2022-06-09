@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.0
+
+- official release
+- see changes in [dbt-sqlserver v1.1.0](https://github.com/dbt-msft/dbt-sqlserver/releases/tag/v1.1.0)
+
 ## v1.1.0.rc1
 
 - Bump dependencies dbt-sqlserver and dbt-core to 1.1.0
