@@ -39,10 +39,10 @@ jobs:
           AZURE_TENANT_ID: ${{ secrets.DBT_AZURE_TENANT }}
           DBT_AZURE_RESOURCE_GROUP_NAME: ${{ secrets.DBT_AZURE_RESOURCE_GROUP_NAME }}
           DBT_AZURE_SUBSCRIPTION_ID: ${{ secrets.DBT_AZURE_SUBSCRIPTION_ID }}
-        run: python .github/synapse.py resume
+        run: python devops/synapse.py resume
 
       - name: Configure test users
-        run: sqlcmd -b -I -i devops/scripts/create_sql_users.sql
+        run: sqlcmd -b -I -i devops/create_sql_users.sql
         env:
           DBT_TEST_USER_1: DBT_TEST_USER_1
           DBT_TEST_USER_2: DBT_TEST_USER_2
@@ -76,5 +76,5 @@ jobs:
           AZURE_TENANT_ID: ${{ secrets.DBT_AZURE_TENANT }}
           DBT_AZURE_RESOURCE_GROUP_NAME: ${{ secrets.DBT_AZURE_RESOURCE_GROUP_NAME }}
           DBT_AZURE_SUBSCRIPTION_ID: ${{ secrets.DBT_AZURE_SUBSCRIPTION_ID }}
-        run: python .github/synapse.py pause
+        run: python devops/synapse.py pause
         if: always()

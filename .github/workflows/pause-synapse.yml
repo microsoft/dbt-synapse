@@ -27,4 +27,4 @@ jobs:
           AZURE_TENANT_ID: ${{ secrets.DBT_AZURE_TENANT }}
           DBT_AZURE_RESOURCE_GROUP_NAME: ${{ secrets.DBT_AZURE_RESOURCE_GROUP_NAME }}
           DBT_AZURE_SUBSCRIPTION_ID: ${{ secrets.DBT_AZURE_SUBSCRIPTION_ID }}
-        run: python .github/synapse.py pause
+        run: python devops/synapse.py pause
