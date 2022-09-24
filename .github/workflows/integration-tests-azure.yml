@@ -4,6 +4,8 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
+      - v*
+      - azure-testing
   pull_request_target:
     types: [labeled]
 
@@ -12,7 +14,7 @@ concurrency: dbt-synapse
 jobs:
   integration-tests-azure:
     name: Integration tests on Azure
-    if: contains(github.event.pull_request.labels.*.name, 'safe to test') || github.ref_name == 'master'
+    if: contains(github.event.pull_request.labels.*.name, 'safe to test') || github.ref_name == 'master' || github.ref_name == 'azure-testing'
     strategy:
       fail-fast: false
       max-parallel: 1
