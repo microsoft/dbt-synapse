@@ -1,7 +1,8 @@
 from dbt.adapters.base import AdapterPlugin
 
-from dbt.adapters.synapse.connections import SynapseConnectionManager, SynapseCredentials
-from dbt.adapters.synapse.impl import SynapseAdapter
+from dbt.adapters.synapse.synapse_adapter import SynapseAdapter
+from dbt.adapters.synapse.synapse_connection_manager import SynapseConnectionManager
+from dbt.adapters.synapse.synapse_credentials import SynapseCredentials
 from dbt.include import synapse
 
 Plugin = AdapterPlugin(
