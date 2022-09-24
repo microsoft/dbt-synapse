@@ -7,21 +7,23 @@ my_model_sql = """
 """
 
 cleanup_existing_sql = """
-{%- call statement('drop_existing', fetch_result=False) -%}
+{% macro cleanup_existing() %}
+    {%- call statement('drop_existing', fetch_result=False) -%}
 
-    if exists(
-        select *
-        from sys.database_principals
-        where name = '{{ env_var('DBT_TEST_AAD_PRINCIPAL_1') }}')
-    drop user {{ env_var('DBT_TEST_AAD_PRINCIPAL_1') }}
+        if exists(
+            select *
+            from sys.database_principals
+            where name = '{{ env_var('DBT_TEST_AAD_PRINCIPAL_1') }}')
+        drop user {{ env_var('DBT_TEST_AAD_PRINCIPAL_1') }}
 
-    if exists(
-        select *
-        from sys.database_principals
-        where name = '{{ env_var('DBT_TEST_AAD_PRINCIPAL_2') }}')
-    drop user {{ env_var('DBT_TEST_AAD_PRINCIPAL_2') }}
+        if exists(
+            select *
+            from sys.database_principals
+            where name = '{{ env_var('DBT_TEST_AAD_PRINCIPAL_2') }}')
+        drop user {{ env_var('DBT_TEST_AAD_PRINCIPAL_2') }}
 
-{%- endcall -%}
+    {%- endcall -%}
+{% endmacro %}
 """
 
 model_schema_single_user_yml = """
@@ -57,7 +59,6 @@ class BaseTestProvisionAzureSQL:
         run_dbt(["run"])
 
 
-@pytest.mark.only_with_profile("ci_azure_cli", "ci_azure_auto", "ci_azure_environment")
 class TestProvisionSingleUserAzureSQL(BaseTestProvisionAzureSQL):
     @pytest.fixture(scope="class")
     def models(self):
@@ -67,7 +68,6 @@ class TestProvisionSingleUserAzureSQL(BaseTestProvisionAzureSQL):
         }
 
 
-@pytest.mark.only_with_profile("ci_azure_cli", "ci_azure_auto", "ci_azure_environment")
 class TestProvisionMultipleUsersAzureSQL(BaseTestProvisionAzureSQL):
     @pytest.fixture(scope="class")
     def models(self):

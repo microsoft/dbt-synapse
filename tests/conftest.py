@@ -26,9 +26,10 @@ def _all_profiles_base():
     return {
         "type": "synapse",
         "driver": os.getenv("SYNAPSE_TEST_DRIVER", "ODBC Driver 18 for SQL Server"),
-        "port": 1433,
+        "port": int(os.getenv("SYNAPSE_TEST_PORT", "1433")),
         "encrypt": True,
         "trust_cert": True,
+        "auto_provision_aad_principals": True,
     }
 
 
@@ -48,7 +49,6 @@ def _profile_user():
         **_all_profiles_base(),
         **{
             "host": os.getenv("SYNAPSE_TEST_HOST"),
-            "port": int(os.getenv("SYNAPSE_TEST_PORT")),
             "user": os.getenv("SYNAPSE_TEST_USER"),
             "pass": os.getenv("SYNAPSE_TEST_PASS"),
             "database": os.getenv("SYNAPSE_TEST_DWH_NAME"),
