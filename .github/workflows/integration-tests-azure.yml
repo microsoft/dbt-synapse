@@ -48,7 +48,7 @@ jobs:
           AZURE_CLIENT_ID: ${{ secrets.DBT_AZURE_SP_NAME }}
           AZURE_CLIENT_SECRET: ${{ secrets.DBT_AZURE_SP_SECRET }}
           AZURE_TENANT_ID: ${{ secrets.DBT_AZURE_TENANT }}
-        run: pytest tests/functional --profile "ci_azure_auto"
+        run: pytest -ra -v tests/functional --profile "ci_azure_auto"
 
       - name: Pause server
         env:
