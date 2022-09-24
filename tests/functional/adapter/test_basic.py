@@ -9,6 +9,7 @@ from dbt.tests.adapter.basic.test_singular_tests import BaseSingularTests
 from dbt.tests.adapter.basic.test_singular_tests_ephemeral import BaseSingularTestsEphemeral
 from dbt.tests.adapter.basic.test_snapshot_check_cols import BaseSnapshotCheckCols
 from dbt.tests.adapter.basic.test_snapshot_timestamp import BaseSnapshotTimestamp
+from dbt.tests.adapter.basic.test_validate_connection import BaseValidateConnection
 
 
 class TestSimpleMaterializationsSynapse(BaseSimpleMaterializations):
@@ -48,5 +49,9 @@ class TestSnapshotTimestampSynapse(BaseSnapshotTimestamp):
     pass
 
 
-class TestBaseAdapterMethodSynapse(BaseAdapterMethod):
+class TestBaseCachingSynapse(BaseAdapterMethod):
+    pass
+
+
+class TestValidateConnectionSynapse(BaseValidateConnection):
     pass

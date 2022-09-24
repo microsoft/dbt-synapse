@@ -39,7 +39,7 @@ linecheck: ## Checks for all Python lines 100 characters or more
 .PHONY: functional
 functional: ## Runs functional tests.
 	@\
-	tox -- -v tests/functional
+	pytest -v tests/functional
 
 .PHONY: clean
 	@echo "cleaning repo"
