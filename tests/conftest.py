@@ -1,6 +1,7 @@
 import os
 
 import pytest
+from _pytest.fixtures import FixtureRequest
 
 pytest_plugins = ["dbt.tests.fixtures.project"]
 
@@ -24,8 +25,7 @@ def dbt_profile_target(request):
 def _all_profiles_base():
     return {
         "type": "synapse",
-        "threads": 1,
-        "driver": "ODBC Driver 17 for SQL Server",
+        "driver": os.getenv("SYNAPSE_TEST_DRIVER", "ODBC Driver 18 for SQL Server"),
         "port": 1433,
         "encrypt": True,
         "trust_cert": True,
@@ -47,7 +47,6 @@ def _profile_user():
     return {
         **_all_profiles_base(),
         **{
-            "driver": os.getenv("SYNAPSE_TEST_DRIVER"),
             "host": os.getenv("SYNAPSE_TEST_HOST"),
             "port": int(os.getenv("SYNAPSE_TEST_PORT")),
             "user": os.getenv("SYNAPSE_TEST_USER"),
@@ -58,9 +57,13 @@ def _profile_user():
 
 
 @pytest.fixture(autouse=True)
-def skip_by_profile_type(request):
+def skip_by_profile_type(request: FixtureRequest):
     profile_type = request.config.getoption("--profile")
+
     if request.node.get_closest_marker("skip_profile"):
-        for skip_profile_type in request.node.get_closest_marker("skip_profile").args:
-            if skip_profile_type == profile_type:
-                pytest.skip("Skipped on '{profile_type}' profile")
+        if profile_type in request.node.get_closest_marker("skip_profile").args:
+            pytest.skip(f"Skipped on '{profile_type}' profile")
+
+    if request.node.get_closest_marker("only_with_profile"):
+        if profile_type not in request.node.get_closest_marker("only_with_profile").args:
+            pytest.skip(f"Skipped on '{profile_type}' profile")
