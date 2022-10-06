@@ -10,7 +10,7 @@
 
    {{ synapse__drop_relation_script(relation) }}
 
-   EXEC('create view {{ tmp_relation.schema }}.{{ tmp_relation.identifier }} as
+   EXEC('create view [{{ tmp_relation.schema }}].[{{ tmp_relation.identifier }}] as
     {{ temp_view_sql }}
     ');
 
@@ -19,7 +19,7 @@
       DISTRIBUTION = {{dist}},
       {{index}}
       )
-    AS (SELECT * FROM {{ tmp_relation.schema }}.{{ tmp_relation.identifier }})
+    AS (SELECT * FROM [{{ tmp_relation.schema }}].[{{ tmp_relation.identifier }}])
 
    {{ synapse__drop_relation_script(tmp_relation) }}
 
