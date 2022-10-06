@@ -10,12 +10,12 @@ class TestIncrementalGrantsSynapse(BaseIncrementalGrants):
     pass
 
 
-@pytest.mark.skip(reason="Azure error messages inconsistent")
-class TestInvalidGrantsSynapse(BaseInvalidGrants):
-    # This test does not run on Azure since the error messages are inconsistent there.
-    # Tests have shown errors like "principal x could not be found"
-    # as well as "principal x could not be resolved"
-    pass
+class TestInvalidGrantsSQLServer(BaseInvalidGrants):
+    def grantee_does_not_exist_error(self):
+        return "Cannot find the user"
+
+    def privilege_does_not_exist_error(self):
+        return "Incorrect syntax near"
 
 
 class TestModelGrantsSynapse(BaseModelGrants):
