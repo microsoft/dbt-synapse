@@ -5,14 +5,13 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - master
       - v*
-      - azure-testing
   pull_request_target:
     types: [labeled]
 
 jobs:
   integration-tests-azure:
     name: Integration tests on Azure
-    if: contains(github.event.pull_request.labels.*.name, 'safe to test') || github.ref_name == 'master' || github.ref_name == 'azure-testing'
+    if: contains(github.event.pull_request.labels.*.name, 'safe to test') || github.ref_name == 'master' || startsWith(github.ref_name, 'v')
     strategy:
       max-parallel: 1
       matrix:
