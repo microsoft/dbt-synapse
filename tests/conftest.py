@@ -67,3 +67,8 @@ def skip_by_profile_type(request: FixtureRequest):
     if request.node.get_closest_marker("only_with_profile"):
         if profile_type not in request.node.get_closest_marker("only_with_profile").args:
             pytest.skip(f"Skipped on '{profile_type}' profile")
+
+
+@pytest.fixture(scope="class")
+def project_config_update():
+    return {"snapshots": {"test": {"index": "HEAP"}}, "models": {"test": {"index": "HEAP"}}}
