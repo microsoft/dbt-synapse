@@ -71,4 +71,9 @@ def skip_by_profile_type(request: FixtureRequest):
 
 @pytest.fixture(scope="class")
 def project_config_update():
-    return {"snapshots": {"test": {"index": "HEAP"}}, "models": {"test": {"index": "HEAP"}}}
+    return {
+        "snapshots": {"test": {"index": "HEAP"}},
+        "models": {"test": {"index": "HEAP"}},
+        "seeds": {"test": {"index": "HEAP"}},
+        "tests": {"test": {"index": "HEAP"}},
+    }
