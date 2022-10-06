@@ -42,7 +42,6 @@ def _profile_ci_azure_auto():
             "authentication": "auto",
             "host": f"{os.getenv('DBT_SYNAPSE_SERVER')}.sql.azuresynapse.net",
             "database": os.getenv("DBT_SYNAPSE_DB"),
-            "threads": 2,
         },
     }
 
