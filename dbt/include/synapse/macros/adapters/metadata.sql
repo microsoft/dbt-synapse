@@ -17,7 +17,7 @@
            else table_type
       end as table_type
 
-    from information_schema.tables
+    from INFORMATION_SCHEMA.TABLES
     where table_schema like '{{ schema_relation.schema }}'
       and table_catalog like '{{ schema_relation.database }}'
   {% endcall %}
