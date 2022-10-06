@@ -29,10 +29,4 @@ class TestSeedGrantsSynapse(BaseSeedGrants):
 class TestSnapshotGrantsSynapse(BaseSnapshotGrants):
     @pytest.fixture(scope="class")
     def project_config_update(self):
-        return {
-            "snapshots": {
-                "test": {
-                    "index": "HEAP"
-                }
-            }
-        }
+        return {"snapshots": {"test": {"index": "HEAP"}}}
