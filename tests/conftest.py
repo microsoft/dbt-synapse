@@ -18,6 +18,8 @@ def dbt_profile_target(request):
         return _profile_ci_azure_auto()
     if profile == "user":
         return _profile_user()
+    if profile == "user_azure":
+        return _profile_user_azure()
 
     raise ValueError(f"Unknown profile: {profile}")
 
@@ -29,6 +31,7 @@ def _all_profiles_base():
         "port": int(os.getenv("SYNAPSE_TEST_PORT", "1433")),
         "encrypt": True,
         "trust_cert": True,
+        "threads": 1,
     }
 
 
@@ -52,6 +55,17 @@ def _profile_user():
             "user": os.getenv("SYNAPSE_TEST_USER"),
             "pass": os.getenv("SYNAPSE_TEST_PASS"),
             "database": os.getenv("SYNAPSE_TEST_DWH_NAME"),
+        },
+    }
+
+
+def _profile_user_azure():
+    return {
+        **_all_profiles_base(),
+        **{
+            "host": os.getenv("SYNAPSE_TEST_HOST"),
+            "database": os.getenv("SYNAPSE_TEST_DWH_NAME"),
+            "authentication": "CLI",
         },
     }
 
