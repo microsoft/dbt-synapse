@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.2.0
+
+Make sure to read the changelog for [dbt-sqlserver 1.2.0](https://github.com/dbt-msft/dbt-sqlserver/releases/tag/v1.2.0).
+
+### Synapse-specific changes
+
+#### Fixes
+
+* Seeds with empty values are now correctly inserted as NULL instead of empty strings.
+
 ## v1.1.0
 
 - official release
