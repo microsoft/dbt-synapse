@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.0
+
+Make sure to read the changelog for [dbt-sqlserver 1.3.0](https://github.com/dbt-msft/dbt-sqlserver/releases/tag/v1.3.0).
+
+#### Features
+
+* Official compatibility with dbt-core 1.3.0. Python models are not supported in this version.
+
 ## v1.2.0
 
 Make sure to read the changelog for [dbt-sqlserver 1.2.0](https://github.com/dbt-msft/dbt-sqlserver/releases/tag/v1.2.0).
