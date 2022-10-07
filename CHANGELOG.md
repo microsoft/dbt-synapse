@@ -6,6 +6,10 @@ Make sure to read the changelog for [dbt-sqlserver 1.2.0](https://github.com/dbt
 
 ### Synapse-specific changes
 
+#### Features
+
+* Snapshots with the `merge` strategy now use Synapse's new [`MERGE` statement](https://learn.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=azure-sqldw-latest&preserve-view=true)
+
 #### Fixes
 
 * Seeds with empty values are now correctly inserted as NULL instead of empty strings.
