@@ -68,6 +68,9 @@ class TestSnapshotCheckColsSynapse(BaseSnapshotCheckCols):
     def project_config_update(self):
         return {
             "name": "snapshot_strategy_check_cols",
+            # ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]
+            # Merge statements with a WHEN NOT MATCHED [BY TARGET] clause must
+            # target a hash distributed table. (100087) (SQLExecDirectW)')
             "snapshots": {"snapshot_strategy_check_cols": {"dist": "HASH(id)"}},
         }
 
@@ -77,6 +80,9 @@ class TestSnapshotTimestampSynapse(BaseSnapshotTimestamp):
     def project_config_update(self):
         return {
             "name": "snapshot_strategy_timestamp",
+            # ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]
+            # Merge statements with a WHEN NOT MATCHED [BY TARGET] clause must
+            # target a hash distributed table. (100087) (SQLExecDirectW)')
             "snapshots": {"snapshot_strategy_timestamp": {"dist": "HASH(id)"}},
         }
 

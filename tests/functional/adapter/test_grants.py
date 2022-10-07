@@ -30,5 +30,8 @@ class TestSnapshotGrantsSynapse(BaseSnapshotGrants):
     @pytest.fixture(scope="class")
     def project_config_update(self):
         return {
+            # ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]
+            # Merge statements with a WHEN NOT MATCHED [BY TARGET] clause must
+            # target a hash distributed table. (100087) (SQLExecDirectW)')
             "snapshots": {"test": {"dist": "HASH(id)", "index": "HEAP"}},
         }
