@@ -64,11 +64,29 @@ class TestGenericTestsSynapse(BaseGenericTests):
 
 
 class TestSnapshotCheckColsSynapse(BaseSnapshotCheckCols):
-    pass
+    @pytest.fixture(scope="class")
+    def project_config_update(self):
+        return {
+            "name": "snapshot_strategy_check_cols",
+            "snapshots": {
+                "snapshot_strategy_check_cols": {
+                    "dist": "HASH(id)"
+                }
+            }
+        }
 
 
 class TestSnapshotTimestampSynapse(BaseSnapshotTimestamp):
-    pass
+    @pytest.fixture(scope="class")
+    def project_config_update(self):
+        return {
+            "name": "snapshot_strategy_timestamp",
+            "snapshots": {
+                "snapshot_strategy_timestamp": {
+                    "dist": "HASH(id)"
+                }
+            }
+        }
 
 
 class TestBaseCachingSynapse(BaseAdapterMethod):
