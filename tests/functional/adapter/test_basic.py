@@ -68,11 +68,7 @@ class TestSnapshotCheckColsSynapse(BaseSnapshotCheckCols):
     def project_config_update(self):
         return {
             "name": "snapshot_strategy_check_cols",
-            "snapshots": {
-                "snapshot_strategy_check_cols": {
-                    "dist": "HASH(id)"
-                }
-            }
+            "snapshots": {"snapshot_strategy_check_cols": {"dist": "HASH(id)"}},
         }
 
 
@@ -81,11 +77,7 @@ class TestSnapshotTimestampSynapse(BaseSnapshotTimestamp):
     def project_config_update(self):
         return {
             "name": "snapshot_strategy_timestamp",
-            "snapshots": {
-                "snapshot_strategy_timestamp": {
-                    "dist": "HASH(id)"
-                }
-            }
+            "snapshots": {"snapshot_strategy_timestamp": {"dist": "HASH(id)"}},
         }
 
 
