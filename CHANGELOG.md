@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.3.1
+
+Integer seed value set to 0 is ingested as a NULL. Bug fix to handle integer seed value when set to 0 [#136](https://github.com/dbt-msft/dbt-synapse/pull/136).
+
 ## v1.3.0
 
 Make sure to read the changelog for [dbt-sqlserver 1.3.0](https://github.com/dbt-msft/dbt-sqlserver/releases/tag/v1.3.0).
