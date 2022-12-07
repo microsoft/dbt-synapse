@@ -1,5 +1,5 @@
 default_language_version:
-  python: python3.9
+  python: python3.10
 repos:
   - repo: 'https://github.com/pre-commit/pre-commit-hooks'
     rev: v4.4.0
@@ -65,8 +65,8 @@ repos:
           - '--target-version=py39'
           - '--check'
           - '--diff'
-  - repo: 'https://gitlab.com/pycqa/flake8'
-    rev: 3.9.2
+  - repo: 'https://github.com/PyCQA/flake8'
+    rev: 6.0.0
     hooks:
       - id: flake8
         args:
