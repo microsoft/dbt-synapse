@@ -22,19 +22,25 @@
                     #}
 
                     {% set col_type = agate_table.columns[column].data_type | string %}
-                    {%- if not row[column] -%}
+                    {#
+                        None should result in NULL, If the value in the seed file is 0, the database entry should 0
+                    #}
+                    {%-if None == row[column]-%}
                         NULL
-                    {%- elif "text.Text" in col_type -%}
-                      '{{str_replace(row[column]) if row[column]}}'
+                    {%-elif (("text.Text" in col_type))-%}
+                        '{{str_replace(row[column])}}'
+                    {#
+                        else handles all other data types such as Date, DateTime, Int, Float (Numeric and Decimal is treated as float)
+                        int, float are implicit conversions
+                    #}
                     {% else %}
-                      '{{ row[column] if row[column] }}'
+                        '{{row[column]}}'
                     {%- endif -%}
                     {%- if not loop.last%},{%- endif -%}
                 {%- endfor -%}
                 {%- if not loop.last -%} {{' '+'union all'+'\n'}} {%- endif -%}
             {%- endfor -%}
         {% endset %}
-
         {% do adapter.add_query(sql, abridge_sql_log=True) %}
 
         {% if loop.index0 == 0 %}
