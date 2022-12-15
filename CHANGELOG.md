@@ -1,5 +1,59 @@
 # Changelog
 
+## v1.3.2
+
+You can now create seed tables with different distribution and index strategy by providing required confiuration in dbt_project.yml file. The default choice is REPLICATE disttribution and HEAP (no indexing). If you want to override this configuration, the following sample should help.
+
+```
+name: 'jaffle_shop'
+config-version: 2
+version: '0.1'
+profile: 'jaffle_shop'
+
+seeds:
+  jaffle_shop:
+    raw_customers_distribution: hash
+    raw_customers_hashDistributedColumn: last_name
+    raw_customers_index: ci
+    raw_customers_ciIndexColumns: id, first_name
+    raw_orders_distribution: replicate
+    raw_orders_index: heap
+    raw_payments_distribution: round_robin
+    raw_payments_index: cci
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+analysis-paths: ["analysis"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+    - "target"
+    - "dbt_modules"
+    - "logs"
+
+require-dbt-version: [">=1.0.0", "<2.0.0"]
+
+models:
+  jaffle_shop:
+      materialized: table
+      staging:
+        materialized: view
+```
+
+create a new dictionary "seeds:" at the root of indendation level. Add project name/profile name unders "seeds:" and right indendation with two spaces "jaffle_shop:". Add key value pairs under project "jaffle_shop" with two spaces right indendation as above. 
+
+To specify distribution, use {seed file name}_distribution as a key. Use replicate, round_robin, hash as a value. Example: *raw_customers_distribution: replicate*. The raw_customers seed table will be replicated a table.
+
+For hash distribution, the user need to provide has a column to distribute data on. Use {seed file name}_hashDistributedColumn as key and column name as a value. If column name has spaces, then enclose the column name in double quotes. Example: *raw_customers_hashDistributedColumn: last_name*
+
+**Note** Multi-column distribution is not supported in this release for seed tables.
+
+To specific index, use {seed file name}_index as a key and ci, heap, cci as a value. Example: *raw_customers_index: ci*. The raw_customers seed table will use heap index strategy.
+
+For clustered index, the user need to provide one or more columns to create clustered inde on. Use {seed file name}_ciIndexColumns as a key and comma seperated column names. Example: *raw_customers_ciIndexColumns: id, first_name*.
+
 ## v1.3.1
 
 Integer seed value set to 0 is ingested as a NULL. Bug fix to handle integer seed value when set to 0. [#136](https://github.com/dbt-msft/dbt-synapse/pull/136).
