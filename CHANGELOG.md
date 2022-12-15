@@ -42,17 +42,13 @@ models:
         materialized: view
 ```
 
-create a new dictionary "seeds:" at the root of indendation level. Add project name/profile name unders "seeds:" and right indendation with two spaces "jaffle_shop:". Add key value pairs under project "jaffle_shop" with two spaces right indendation as above. 
+Create a new dictionary "seeds:" at the root of indendation level and add project name/profile name  "jaffle_shop:" under "seeds:". Add key value pairs under project "jaffle_shop:" to provide distribution and index stratefies 
 
-To specify distribution, use {seed file name}_distribution as a key. Use replicate, round_robin, hash as a value. Example: *raw_customers_distribution: replicate*. The raw_customers seed table will be replicated a table.
+To specify distribution, use {seed file name}_distribution as a key. Use replicate, round_robin, hash as a value. Example: **raw_customers_distribution: replicate**. The raw_customers seed table will be replicated a table. For hash distribution, the user need to provide has a column to distribute data on. Use {seed file name}_hashDistributedColumn as key and column name as a value. If column name has spaces, then enclose the column name in double quotes. Example: **raw_customers_hashDistributedColumn: last_name**
 
-For hash distribution, the user need to provide has a column to distribute data on. Use {seed file name}_hashDistributedColumn as key and column name as a value. If column name has spaces, then enclose the column name in double quotes. Example: *raw_customers_hashDistributedColumn: last_name*
+To specific index, use {seed file name}_index as a key and ci, heap, cci as a value. Example: **raw_customers_index: ci**. The raw_customers seed table will use heap index strategy. For clustered index, the user need to provide one or more columns to create clustered inde on. Use {seed file name}_ciIndexColumns as a key and comma seperated column names. Example: **raw_customers_ciIndexColumns: id, first_name**.
 
 **Note** Multi-column distribution is not supported in this release for seed tables.
-
-To specific index, use {seed file name}_index as a key and ci, heap, cci as a value. Example: *raw_customers_index: ci*. The raw_customers seed table will use heap index strategy.
-
-For clustered index, the user need to provide one or more columns to create clustered inde on. Use {seed file name}_ciIndexColumns as a key and comma seperated column names. Example: *raw_customers_ciIndexColumns: id, first_name*.
 
 ## v1.3.1
 
