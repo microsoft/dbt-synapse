@@ -6,6 +6,18 @@
     {%- set column_override = model['config'].get('column_types', {}) -%}
     {%- set quote_seed_column = model['config'].get('quote_columns', None) -%}
 
+    {%-if model['config']['index'] is not defined -%}
+        {%- set index = 'HEAP' -%}
+    {% else %}
+        {%- set index = model['config']['index'] -%}
+    {% endif %}
+
+    {%-if model['config']['dist'] is not defined -%}
+        {%- set dist = 'REPLICATE' -%}
+    {% else %}
+        {%- set dist = model['config']['dist'] -%}
+    {% endif %}
+
     {% set sql %}
         create table {{ this.render() }} (
             {%- for col_name in agate_table.column_names -%}
@@ -15,82 +27,8 @@
                 {{ adapter.quote_seed_column(column_name, quote_seed_column) }} {{ type }} {%- if not loop.last -%}, {%- endif -%}
             {%- endfor -%}
         )
+        WITH (DISTRIBUTION = {{dist}}, {{index}})
     {% endset %}
-
-    {#
-        The seed table distribution property is defined using {seed file name}_distribution property.
-        Read the seed table distribution property provided in dbt project.yml file to get the distribution of a seed table.
-    #}
-    {% set seed_table_distribution = model['name']~'_distribution' %}
-
-    {#
-        If the {seed file name}_distribution value is not available or set to replicate,
-        then the distribution of a seed table will be set to REPLICATE
-    #}
-    {%-if model['config'][seed_table_distribution] is not defined or str_lower(model['config'][seed_table_distribution]) == 'replicate' -%}
-        {% set sql_distribution = 'REPLICATE'%}
-
-    {#
-        If the {seed file name}_distribution value is set to round_robin,
-        then the distribution of a seed table will be set to ROUND_ROBIN
-    #}
-    {%-elif str_lower(model['config'][seed_table_distribution]) == 'round_robin'  -%}
-        {% set sql_distribution = 'ROUND_ROBIN'%}
-
-    {# Consider the distribution of a seed table is hash #}
-    {% else %}
-        {% set seed_table_hashDistribution_columnName = model['name']~'_hashDistributedColumn' %}
-
-        {#
-            checking if distribution column info is defined or not using {seed file name}_hashDistributedColumn property.
-            If {seed file name}_hashDistributedColumn is not defined, default the distirbution to REPLICATE.
-            Note: Multi Column Distribution strategy is not available
-        #}
-        {%- if model['config'][seed_table_hashDistribution_columnName] is not defined -%}
-            {% set sql_distribution = 'REPLICATE' %}
-        {% else %}
-            {% set sql_distribution = 'HASH (' ~ model['config'][seed_table_hashDistribution_columnName] ~ ')' %}
-        {%- endif -%}
-    {%- endif -%}
-
-    {#
-        The seed table index property is defined using {seed file name}_index property.
-        Read the seed table index property provided in dbt project.yml file to get the index of a seed table.
-    #}
-    {% set seed_table_index = model['name']~'_index' %}
-
-    {#
-        If the {seed file name}_index value is not available or set to heap,
-        then the index of a seed table will be set to HEAP
-    #}
-    {%-if model['config'][seed_table_index] is not defined or str_lower(model['config'][seed_table_index]) == 'heap' -%}
-        {% set sql_index = 'HEAP'%}
-
-    {#
-        If the {seed file name}_index value is set to cci,
-        then the index of a seed table will be set to CLUSTERED COLUMNSTORE INDEX
-    #}
-    {%-elif str_lower(model['config'][seed_table_index]) == 'cci' -%}
-        {% set sql_index = 'CLUSTERED COLUMNSTORE INDEX' %}
-
-    {# Clustered Index #}
-    {% else %}
-
-        {% set seed_table_ci_columns = model['name']~'_ciIndexColumns' %}
-
-        {#
-            If the {seed file name}_ciIndexColumns value is not defined,
-            then the index of a seed table will default to HEAP
-        #}
-        {%- if model['config'][seed_table_ci_columns] is not defined -%}
-            {% set sql_index = 'HEAP'%}
-        {% else %}
-            {% set sql_index = 'CLUSTERED INDEX (' ~ model['config'][seed_table_ci_columns] ~ ')' %}
-        {%- endif -%}
-    {%- endif -%}
-
-    {# Combining SQL Text with Distribution and index provided in dbt project.yml file #}
-    {% set sql = sql ~ ' ' ~ 'WITH ( DISTRIBUTION = ' ~ sql_distribution ~ ', ' ~ sql_index ~ ')' %}
 
     {% call statement('_') -%}
         {{ sql }}

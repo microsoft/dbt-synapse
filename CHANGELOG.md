@@ -5,48 +5,19 @@
 You can now create seed tables with different distribution and index strategy by providing required confiuration in dbt_project.yml file [#76](https://github.com/dbt-msft/dbt-synapse/issues/76). The default choice is REPLICATE disttribution and HEAP (no indexing). If you want to override this configuration, the following sample should help.
 
 ```
-name: 'jaffle_shop'
-config-version: 2
-version: '0.1'
-profile: 'jaffle_shop'
-
 seeds:
   jaffle_shop:
-    raw_customers_distribution: hash
-    raw_customers_hashDistributedColumn: last_name
-    raw_customers_index: ci
-    raw_customers_ciIndexColumns: id, first_name
-    raw_orders_distribution: replicate
-    raw_orders_index: heap
-    raw_payments_distribution: round_robin
-    raw_payments_index: cci
-
-model-paths: ["models"]
-seed-paths: ["seeds"]
-test-paths: ["tests"]
-analysis-paths: ["analysis"]
-macro-paths: ["macros"]
-
-target-path: "target"
-clean-targets:
-    - "target"
-    - "dbt_modules"
-    - "logs"
-
-require-dbt-version: [">=1.0.0", "<2.0.0"]
-
-models:
-  jaffle_shop:
-      materialized: table
-      staging:
-        materialized: view
+    raw_customers:
+      index: HEAP
+      dist: REPLICATE
+    raw_payments:
+      dist: HASH(payment_method)
+      index: CLUSTERED INDEX(id,order_id)
 ```
 
-Create a new dictionary "seeds:" at the root of indendation level and add project name/profile name  "jaffle_shop:" under "seeds:". Add key value pairs under project "jaffle_shop:" to provide distribution and index stratefies 
+Create a new context "seeds:" at the root of indendation level followed by project name and seed name. In this case the project name is jaffle_shop and seeds are raw_customers and raw_payments. Provide index and distribution values using index and dist keys. Use replicate, round_robin, hash({column name}) as a value. Example: **dist: replicate**. The raw_customers seed table will be replicated a table. For hash distribution, the user need to provide the vaule HASH(payment_method). Example: **dist: hash(payment_method)**
 
-To specify distribution, use {seed file name}_distribution as a key. Use replicate, round_robin, hash as a value. Example: **raw_customers_distribution: replicate**. The raw_customers seed table will be replicated a table. For hash distribution, the user need to provide has a column to distribute data on. Use {seed file name}_hashDistributedColumn as key and column name as a value. If column name has spaces, then enclose the column name in double quotes. Example: **raw_customers_hashDistributedColumn: last_name**
-
-To specific index, use {seed file name}_index as a key and ci, heap, cci as a value. Example: **raw_customers_index: ci**. The raw_customers seed table will use heap index strategy. For clustered index, the user need to provide one or more columns to create clustered inde on. Use {seed file name}_ciIndexColumns as a key and comma seperated column names. Example: **raw_customers_ciIndexColumns: id, first_name**.
+To specific index, index as a key and CLUSTERED INDEX({Column1, Column2}), HEAP, CLUSTERED COLUMNSTORE INDEX as a value. Example: **index: HEAP**. The raw_customers seed table will use heap index strategy. For clustered index, the user need to provide one or more columns to create clustered index on. Example: **index: CLUSTERED INDEX(id,order_id)**.
 
 **Note** Multi-column distribution is not supported in this release for seed tables.
 
