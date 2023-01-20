@@ -1,3 +1,31 @@
+{#
+    synapse__create_csv_table handles distribution and indexing on
+    seed tables over-writing global project macro meterialization.
+#}
+{% macro synapse__create_csv_table(model, agate_table) %}
+    {%- set column_override = config.get('column_types', {}) -%}
+    {%- set quote_seed_column = config.get('quote_columns', None) -%}
+    {%- set index = config.get('index', "HEAP") -%}
+    {%- set dist = config.get('dist', "ROUND_ROBIN") -%}
+
+    {% set sql %}
+        create table {{ this.render() }} (
+            {%- for col_name in agate_table.column_names -%}
+                {%- set inferred_type = adapter.convert_type(agate_table, loop.index0) -%}
+                {%- set type = column_override.get(col_name, inferred_type) -%}
+                {%- set column_name = (col_name | string) -%}
+                {{ adapter.quote_seed_column(column_name, quote_seed_column) }} {{ type }} {%- if not loop.last -%}, {%- endif -%}
+            {%- endfor -%}
+        )
+        WITH (DISTRIBUTION = {{dist}}, {{index}})
+    {% endset %}
+
+    {% call statement('_') -%}
+        {{ sql }}
+    {%- endcall %}
+
+{% endmacro %}
+
 {% macro synapse__load_csv_rows(model, agate_table) %}
 
     {# Synapse does not support the normal Table Value Constructor #}
