@@ -3,20 +3,10 @@
     seed tables over-writing global project macro meterialization.
 #}
 {% macro synapse__create_csv_table(model, agate_table) %}
-    {%- set column_override = model['config'].get('column_types', {}) -%}
-    {%- set quote_seed_column = model['config'].get('quote_columns', None) -%}
-
-    {%-if model['config']['index'] is not defined -%}
-        {%- set index = 'HEAP' -%}
-    {% else %}
-        {%- set index = model['config']['index'] -%}
-    {% endif %}
-
-    {%-if model['config']['dist'] is not defined -%}
-        {%- set dist = 'REPLICATE' -%}
-    {% else %}
-        {%- set dist = model['config']['dist'] -%}
-    {% endif %}
+    {%- set column_override = config.get('column_types', {}) -%}
+    {%- set quote_seed_column = config.get('quote_columns', None) -%}
+    {%- set index = config.get('index', "HEAP") -%}
+    {%- set dist = config.get('dist', "ROUND_ROBIN") -%}
 
     {% set sql %}
         create table {{ this.render() }} (

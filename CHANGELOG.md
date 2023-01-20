@@ -7,17 +7,19 @@ You can now create seed tables with different distribution and index strategy by
 ```
 seeds:
   jaffle_shop:
+    index: HEAP
+    dist: ROUND_ROBIN
     raw_customers:
       index: HEAP
       dist: REPLICATE
     raw_payments:
       dist: HASH(payment_method)
-      index: CLUSTERED INDEX(id,order_id)
+      index: CLUSTERED INDEX(id,order_id)  
 ```
 
-Create a new context "seeds:" at the root of indendation level followed by project name and seed name. In this case the project name is jaffle_shop and seeds are raw_customers and raw_payments. Provide index and distribution values using index and dist keys. Use replicate, round_robin, hash({column name}) as a value. Example: **dist: replicate**. The raw_customers seed table will be replicated a table. For hash distribution, the user need to provide the vaule HASH(payment_method). Example: **dist: hash(payment_method)**
+Create a new context "seeds:" at the root followed by project name and seed name. In this case the project name is jaffle_shop and seeds are raw_customers and raw_payments. Provide index and distribution values using index and dist keys. Use replicate, round_robin, hash({column name}) as a value. Example: **dist: replicate**. The raw_customers seed table will be replicated a table. For hash distribution, the user need to provide the vaule HASH(payment_method). Example: **dist: hash(payment_method)**
 
-To specific index, index as a key and CLUSTERED INDEX({Column1, Column2}), HEAP, CLUSTERED COLUMNSTORE INDEX as a value. Example: **index: HEAP**. The raw_customers seed table will use heap index strategy. For clustered index, the user need to provide one or more columns to create clustered index on. Example: **index: CLUSTERED INDEX(id,order_id)**.
+To specific index, index as a key and CLUSTERED INDEX({Column1, Column2}), HEAP, CLUSTERED COLUMNSTORE INDEX as a value. Example: **index: HEAP**. The raw_customers seed table will use heap index strategy. For clustered index, the user need to provide one or more columns to create clustered index on. Example: **index: CLUSTERED INDEX(id,order_id)**. The default value of index and distribution can also be set for all seeds under project name.  
 
 **Note** Multi-column distribution is not supported in this release for seed tables.
 
