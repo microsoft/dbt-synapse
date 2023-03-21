@@ -116,13 +116,3 @@ declare @drop_remaining_indexes_last nvarchar(max) = (
 ); exec sp_executesql @drop_remaining_indexes_last;
 
 {%- endmacro %}
-
-
-{% macro create_clustered_index(columns, unique=False) -%}
-  {{ return(create_clustered_index(columns, unique=False)) }}
-{%- endmacro %}
-
-
-{% macro create_nonclustered_index(columns, includes=False) %}
-  {{ return(create_nonclustered_index(columns, includes=False)) }}
-{% endmacro %}
