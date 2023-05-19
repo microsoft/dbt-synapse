@@ -7,9 +7,16 @@ from setuptools import find_namespace_packages, setup
 from setuptools.command.install import install
 
 package_name = "dbt-synapse"
-authors_list = ["Nandan Hegde", "Chaerin Lee", "Alieu Sanneh", "Anders Swanson", "Sam Debruyn"]
-dbt_version = "1.3"
-dbt_sqlserver_requirement = "dbt-sqlserver~=1.3.0"
+authors_list = [
+    "Pradeep Srikakolapu",
+    "Nandan Hegde",
+    "Chaerin Lee",
+    "Alieu Sanneh",
+    "Anders Swanson",
+    "Sam Debruyn",
+]
+dbt_version = "1.4"
+dbt_sqlserver_requirement = "dbt-sqlserver~=1.4.0"
 description = """An Azure Synapse adapter plugin for dbt"""
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
@@ -80,5 +87,6 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
 )
