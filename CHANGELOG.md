@@ -1,5 +1,5 @@
 # Changelog
-
+## v1.4.0
 ## v1.3.2
 
 You can now create seed tables with different distribution and index strategy by providing required confiuration in dbt_project.yml file [#76](https://github.com/dbt-msft/dbt-synapse/issues/76). The default choice is REPLICATE disttribution and HEAP (no indexing). If you want to override this configuration, the following sample should help.
