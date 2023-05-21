@@ -60,6 +60,7 @@ class BaseTestProvisionAzureSQL:
         run_dbt(["run"])
 
 
+@pytest.mark.only_with_profile("ci_azure_cli", "ci_azure_environment")
 class TestProvisionSingleUserAzureSQL(BaseTestProvisionAzureSQL):
     @pytest.fixture(scope="class")
     def models(self):
@@ -69,6 +70,7 @@ class TestProvisionSingleUserAzureSQL(BaseTestProvisionAzureSQL):
         }
 
 
+@pytest.mark.only_with_profile("ci_azure_cli", "ci_azure_environment")
 class TestProvisionMultipleUsersAzureSQL(BaseTestProvisionAzureSQL):
     @pytest.fixture(scope="class")
     def models(self):
