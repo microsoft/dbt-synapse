@@ -1,6 +1,20 @@
 # Changelog
 ## v1.4.0
 
+#### Features
+
+* Support for [dbt-core 1.4](https://github.com/dbt-labs/dbt-core/releases/tag/v1.4.0)
+  * [Incremental predicates](https://docs.getdbt.com/docs/build/incremental-models#about-incremental_predicates)
+  * Add support for Python 3.11
+  * Replace deprecated exception functions
+  * Consolidate timestamp macros
+
+#### Under the hood
+
+* View https://github.com/dbt-msft/dbt-sqlserver/blob/v1.4.latest/CHANGELOG.md#v140 for latest bugfixes in dbt-sqlserver adapter.
+* Added all available tests as of dbt 1.4.6
+
+**Full Changelog**: https://github.com/microsoft/dbt-synapse/compare/v1.3.2...v1.4.0
 
 ## v1.3.2
 
