@@ -19,7 +19,6 @@
         )
         WITH (DISTRIBUTION = {{dist}}, {{index}})
     {% endset %}
-
     {% call statement('_') -%}
         {{ sql }}
     {%- endcall %}
@@ -29,8 +28,8 @@
 {% macro synapse__load_csv_rows(model, agate_table) %}
 
     {# Synapse does not support the normal Table Value Constructor #}
-
-    {% set batch_size = get_batch_size() %}
+    --
+    {% set batch_size = get_batch_size()  %}
 
     {% set cols_sql = get_seed_column_quoted_csv(model, agate_table.column_names) %}
 
