@@ -1,4 +1,9 @@
 # Changelog
+## v1.7.0
+
+#### Under the hood
+* Switch dependency from dbt-sqlserver to dbt-fabric
+
 ## v1.4.0
 
 #### Features

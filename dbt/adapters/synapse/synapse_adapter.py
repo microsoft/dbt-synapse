@@ -1,7 +1,7 @@
-from dbt.adapters.sqlserver import SQLServerAdapter
+from dbt.adapters.fabric import FabricAdapter
 
 from dbt.adapters.synapse.synapse_connection_manager import SynapseConnectionManager
 
 
-class SynapseAdapter(SQLServerAdapter):
+class SynapseAdapter(FabricAdapter):
     ConnectionManager = SynapseConnectionManager
