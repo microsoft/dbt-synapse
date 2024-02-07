@@ -1,5 +1,5 @@
 # Changelog
-## v1.7.0
+## v1.4.1rc1
 
 #### Under the hood
 * Switch dependency from dbt-sqlserver to dbt-fabric (per https://github.com/dbt-msft/dbt-sqlserver/issues/441)
