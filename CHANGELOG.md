@@ -1,4 +1,9 @@
 # Changelog
+## v1.7.4rc1
+
+* Support for [dbt-core 1.7](https://github.com/dbt-labs/dbt-core/releases/tag/v1.7.0)
+
+
 ## v1.4.0
 
 #### Features

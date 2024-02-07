@@ -15,7 +15,7 @@ authors_list = [
     "Anders Swanson",
     "Sam Debruyn",
 ]
-dbt_version = "1.4"
+dbt_version = "1.7"
 dbt_sqlserver_requirement = "dbt-sqlserver~=1.4.0"
 description = """An Azure Synapse adapter plugin for dbt"""
 
