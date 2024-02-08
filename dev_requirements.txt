@@ -4,7 +4,7 @@ wheel==0.40.0
 pre-commit==2.21.0;python_version<"3.8"
 pre-commit==3.3.1;python_version>="3.8"
 pytest-dotenv==0.5.2
-dbt-tests-adapter~=1.4.9
+dbt-tests-adapter~=1.6.9
 pyodbc==4.0.39 --no-binary :all:  # if Windows, remove
 aiohttp==3.8.3
 azure-mgmt-synapse==2.0.0
