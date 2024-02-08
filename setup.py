@@ -15,7 +15,7 @@ authors_list = [
     "Anders Swanson",
     "Sam Debruyn",
 ]
-dbt_version = "1.5.0rc1"
+dbt_version = "1.5"
 dbt_fabric_requirement = "dbt-fabric~=1.5.0"
 description = """An Azure Synapse adapter plugin for dbt"""
 
