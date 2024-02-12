@@ -3,6 +3,7 @@
 
 #### Under the hood
 * Switch dependency from dbt-sqlserver to dbt-fabric (per https://github.com/dbt-msft/dbt-sqlserver/issues/441)
+  * if Windows, remove `pyodbc==4.0.39 --no-binary :all:` in dev_requirements.txt
 
 ## v1.4.0
 
