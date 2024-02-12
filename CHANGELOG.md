@@ -1,4 +1,9 @@
 # Changelog
+### v1.6.0
+
+## Features
+* Added tests related to dbt-debug to test --connection parameter
+
 ## v1.4.1rc1
 
 #### Under the hood
