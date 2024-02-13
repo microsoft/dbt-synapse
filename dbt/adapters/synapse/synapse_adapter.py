@@ -9,11 +9,13 @@ from dbt.contracts.graph.nodes import ColumnLevelConstraint, ConstraintType
 from dbt.events.functions import fire_event
 from dbt.events.types import SchemaCreation
 
+from dbt.adapters.synapse.synapse_column import SynapseColumn
 from dbt.adapters.synapse.synapse_connection_manager import SynapseConnectionManager
 
 
 class SynapseAdapter(FabricAdapter):
     ConnectionManager = SynapseConnectionManager
+    Column = SynapseColumn
 
     def create_schema(self, relation: BaseRelation) -> None:
         relation = relation.without_identifier()
