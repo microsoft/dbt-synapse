@@ -5,16 +5,21 @@
 {% endmacro %}
 
 {% macro synapse__drop_relation_script(relation) -%}
-  {% if relation.type == 'view' -%}
+  {% if relation.type == 'view' or relation.type == 'materialized_view' -%}
     {% set object_id_type = 'V' %}
   {% elif relation.type == 'table'%}
     {% set object_id_type = 'U' %}
   {%- else -%} invalid target name
   {% endif %}
+
   if object_id ('{{ relation.include(database=False) }}','{{ object_id_type }}') is not null
+  {% if relation.type == 'view' or relation.type == 'table' -%}
     begin
     drop {{ relation.type }} {{ relation.include(database=False) }}
     end
+  {% elif relation.type == 'materialized_view' %}
+    alter materialized view {{ relation.include(database=False)}} disable
+  {% endif %}
 {% endmacro %}
 
 
@@ -37,6 +42,6 @@
 
 {% macro synapse__truncate_relation(relation) %}
     {% call statement('truncate_relation') -%}
-        truncate table {{ relation }}
+      truncate table {{ relation }}
     {%- endcall %}
 {% endmacro %}
