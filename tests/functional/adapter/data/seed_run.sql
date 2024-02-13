@@ -1,7 +1,5 @@
-if object_id ('{schema}.on_run_hook','V') is not null
-begin
-drop table {schema}.on_run_hook
-end
+if object_id ('{schema}.on_run_hook') is not null
+    drop table {schema}.on_run_hook;
 
 create table {schema}.on_run_hook
 (
@@ -20,4 +18,4 @@ create table {schema}.on_run_hook
 WITH(
     DISTRIBUTION = ROUND_ROBIN,
     HEAP
-)
+);
