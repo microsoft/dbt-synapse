@@ -1,8 +1,13 @@
 # Changelog
-## v1.7.4rc1
+## v1.7.0rc1
 
 * Support for [dbt-core 1.7](https://github.com/dbt-labs/dbt-core/releases/tag/v1.7.0)
 
+## v1.4.1rc1
+
+#### Under the hood
+* Switch dependency from dbt-sqlserver to dbt-fabric (per https://github.com/dbt-msft/dbt-sqlserver/issues/441)
+  * if Windows, remove `pyodbc==4.0.39 --no-binary :all:` in dev_requirements.txt
 
 ## v1.4.0
 
