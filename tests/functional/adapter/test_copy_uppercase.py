@@ -1,5 +1,4 @@
 import pytest
-from conftest import _profile_ci_azure_auto, _profile_user, _profile_user_azure
 from dbt.tests.adapter.simple_copy.fixtures import (
     _MODELS__ADVANCED_INCREMENTAL,
     _MODELS__COMPOUND_SORT,
@@ -14,17 +13,6 @@ from dbt.tests.adapter.simple_copy.fixtures import (
     _SEEDS__SEED_INITIAL,
 )
 from dbt.tests.util import check_relations_equal, run_dbt
-
-
-def dbt_profile_target(request):
-    profile = request.config.getoption("--profile")
-
-    if profile == "ci_azure_auto":
-        return _profile_ci_azure_auto()
-    if profile == "user":
-        return _profile_user()
-    if profile == "user_azure":
-        return _profile_user_azure()
 
 
 class TestSimpleCopyUppercase:
