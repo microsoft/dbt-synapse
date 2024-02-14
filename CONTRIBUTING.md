@@ -16,7 +16,7 @@ pyenv activate dbt-synapse
 Install the development dependencies and pre-commit and get information about possible make commands:
 
 ```shell
-make dev  # if Windows, remove `pyodbc==4.0.39 --no-binary :all:` in dev_requirements.txt
+make dev  # for Mac users, add `pyodbc==4.0.39 --no-binary :all:` in dev_requirements.txt before running `make dev`
 make help
 ```
 
