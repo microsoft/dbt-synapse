@@ -62,6 +62,17 @@ class TestMaterializedViewsBasicSynapse(MaterializedViewBasic):
         }
         return check_relation_types(project.adapter, expected)
 
-    @pytest.mark.skip(reason="rename materialized view not supported")
     def test_materialized_view_create_idempotent(self, project, my_materialized_view):
-        pass
+        # setup creates it once; verify it's there and run once
+        expected = {
+            # sys.objects has no type "materialized view", it's type "view"
+            "my_materialized_view": "view",
+        }
+        check_relation_types(project.adapter, expected)
+
+        run_dbt(["run", "--models", my_materialized_view.identifier])
+        expected = {
+            # sys.objects has no type "materialized view", it's type "view"
+            "my_materialized_view": "view",
+        }
+        check_relation_types(project.adapter, expected)

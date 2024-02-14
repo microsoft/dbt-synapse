@@ -13,12 +13,14 @@
   {% endif %}
 
   if object_id ('{{ relation.include(database=False) }}','{{ object_id_type }}') is not null
-  {% if relation.type == 'view' or relation.type == 'table' -%}
+  {% if relation.type == 'view' or relation.type == 'materialized_view' -%}
+    begin
+    drop view {{ relation.include(database=False) }}
+    end
+  {% elif relation.type == 'table' %}
     begin
     drop {{ relation.type }} {{ relation.include(database=False) }}
     end
-  {% elif relation.type == 'materialized_view' %}
-    alter materialized view {{ relation.include(database=False)}} disable
   {% endif %}
 {% endmacro %}
 
