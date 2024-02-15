@@ -24,9 +24,16 @@
   {% endif %}
 {% endmacro %}
 
-
 {% macro synapse__rename_relation(from_relation, to_relation) -%}
-  {% call statement('rename_relation') -%}
+  {# dbt needs this 'call' macro, but it overwrites other SQL when reused in other macros #}
+  {# so '_script' macro is reuseable script, for other macros to combine with more SQL #}
+
+  {% call statement('rename_relation') %}
+    {{ synapse__rename_relation_script(from_relation, to_relation) }}
+  {%- endcall %}
+{% endmacro %}
+
+{% macro synapse__rename_relation_script(from_relation, to_relation) -%}
   -- drop all object types with to_relation.identifier name, to avoid error "new name already in use...duplicate...not permitted"
   if object_id ('{{ to_relation.include(database=False) }}','V') is not null
     begin
@@ -39,7 +46,6 @@
     end
 
   rename object {{ from_relation.include(database=False) }} to {{ to_relation.identifier }}
-  {%- endcall %}
 {% endmacro %}
 
 {% macro synapse__truncate_relation(relation) %}
