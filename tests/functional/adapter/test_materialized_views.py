@@ -1,6 +1,13 @@
 import pytest
 from dbt.tests.adapter.materialized_view.basic import MaterializedViewBasic
-from dbt.tests.util import check_relation_types, get_model_file, run_dbt, set_model_file
+from dbt.tests.util import (
+    assert_message_in_logs,
+    check_relation_types,
+    get_model_file,
+    run_dbt,
+    run_dbt_and_capture,
+    set_model_file,
+)
 
 MY_TABLE = """
 {{ config(
@@ -76,3 +83,84 @@ class TestMaterializedViewsBasicSynapse(MaterializedViewBasic):
             "my_materialized_view": "view",
         }
         check_relation_types(project.adapter, expected)
+
+    def test_materialized_view_full_refresh(self, project, my_materialized_view):
+        _, logs = run_dbt_and_capture(
+            ["--debug", "run", "--models", my_materialized_view.identifier, "--full-refresh"]
+        )
+        expected = {
+            # sys.objects has no type "materialized view", it's type "view"
+            "my_materialized_view": "view",
+        }
+        check_relation_types(project.adapter, expected)
+        assert_message_in_logs(f"Applying REPLACE to: {my_materialized_view}", logs)
+
+    def test_materialized_view_replaces_table(self, project, my_table):
+        run_dbt(["run", "--models", my_table.identifier])
+        expected = {
+            "my_table": "table",
+        }
+        check_relation_types(project.adapter, expected)
+
+        self.swap_table_to_materialized_view(project, my_table)
+
+        run_dbt(["run", "--models", my_table.identifier])
+        expected = {
+            # sys.objects has no type "materialized view", it's type "view"
+            "my_table": "view",
+        }
+        check_relation_types(project.adapter, expected)
+
+    def test_materialized_view_replaces_view(self, project, my_view):
+        run_dbt(["run", "--models", my_view.identifier])
+        expected = {
+            "my_view": "view",
+        }
+        check_relation_types(project.adapter, expected)
+
+        self.swap_view_to_materialized_view(project, my_view)
+
+        run_dbt(["run", "--models", my_view.identifier])
+        expected = {
+            # sys.objects has no type "materialized view", it's type "view"
+            "my_view": "view",
+        }
+        check_relation_types(project.adapter, expected)
+
+    def test_table_replaces_materialized_view(self, project, my_materialized_view):
+        run_dbt(["run", "--models", my_materialized_view.identifier])
+        expected = {
+            # sys.objects has no type "materialized view", it's type "view"
+            "my_materialized_view": "view",
+        }
+        check_relation_types(project.adapter, expected)
+
+        self.swap_materialized_view_to_table(project, my_materialized_view)
+
+        run_dbt(["run", "--models", my_materialized_view.identifier])
+        expected = {
+            "my_materialized_view": "table",
+        }
+        check_relation_types(project.adapter, expected)
+
+    def test_view_replaces_materialized_view(self, project, my_materialized_view):
+        run_dbt(["run", "--models", my_materialized_view.identifier])
+        expected = {
+            # sys.objects has no type "materialized view", it's type "view"
+            "my_materialized_view": "view",
+        }
+        check_relation_types(project.adapter, expected)
+
+        self.swap_materialized_view_to_view(project, my_materialized_view)
+
+        run_dbt(["run", "--models", my_materialized_view.identifier])
+        expected = {
+            "my_materialized_view": "view",
+        }
+        check_relation_types(project.adapter, expected)
+
+    @pytest.mark.skip(reason="Synapse materialized view is always updated")
+    def test_materialized_view_only_updates_after_refresh(
+        self, project, my_materialized_view, my_seed
+    ):
+        pass
