@@ -62,7 +62,7 @@ where id = 1
 """
 
 
-class TestNewProjectSQLServer:
+class TestNewProjectSynapse:
     @pytest.fixture(scope="class")
     def project_config_update(self):
         return {"name": "my_new_project"}
