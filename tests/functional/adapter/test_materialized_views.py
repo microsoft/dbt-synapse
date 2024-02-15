@@ -144,6 +144,7 @@ class TestMaterializedViewsBasicSynapse(MaterializedViewBasic):
         check_relation_types(project.adapter, expected)
 
     def test_view_replaces_materialized_view(self, project, my_materialized_view):
+        self.swap_table_to_materialized_view(project, my_materialized_view)  # hotfix
         run_dbt(["run", "--models", my_materialized_view.identifier])
         expected = {
             # sys.objects has no type "materialized view", it's type "view"
