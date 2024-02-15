@@ -2,6 +2,18 @@
 ## v1.7.0rc1
 
 * Support for [dbt-core 1.7](https://github.com/dbt-labs/dbt-core/releases/tag/v1.7.0)
+  * Decouple `get_catalog` macro (marco override test is skipped as it is not covering the behavior)
+  * implement custom `date_spine` and `generate_series` macro logic for synapse to match nested-CTE limitation
+  * Add UTF-8-BOM CSV and exclude from precommit format override
+  * New/extended adapter test zones
+    - get_last_relation_modified
+    - date_spine
+    - generate_series
+    - get_intervals_between
+    - get_powers_of_two
+    - store_test_failures
+    - dbt_clone (same target and state)
+    - seed
 
 ## v1.4.1rc1
 
