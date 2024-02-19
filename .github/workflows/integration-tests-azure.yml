@@ -10,7 +10,12 @@ on:  # yamllint disable-line rule:truthy
       - master
 
 jobs:
-  build-me:
+  integration-tests-azure:
+    name: Integration tests on Azure
+    strategy:
+      matrix:
+        python_version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        msodbc_version: ["17", "18"]
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -19,13 +24,6 @@ jobs:
       packages: none
       pull-requests: write
       security-events: write
-  integration-tests-azure:
-    name: Integration tests on Azure
-    strategy:
-      matrix:
-        python_version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
-        msodbc_version: ["17", "18"]
-    runs-on: ubuntu-latest
     container:
       image: ghcr.io/dbt-msft/dbt-sqlserver:CI-${{ matrix.python_version }}-msodbc${{ matrix.msodbc_version }}
     steps:
