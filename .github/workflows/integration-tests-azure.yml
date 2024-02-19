@@ -25,7 +25,7 @@ jobs:
       pull-requests: write
       security-events: write
     container:
-      image: ghcr.io/dbt-msft/dbt-sqlserver:CI-${{ matrix.python_version }}-msodbc${{ matrix.msodbc_version }}
+      image: ghcr.io/microsoft/dbt-fabric:CI-${{ matrix.python_version }}-msodbc${{ matrix.msodbc_version }}
     steps:
       - uses: actions/checkout@v3
 
