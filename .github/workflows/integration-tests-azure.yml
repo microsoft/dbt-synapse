@@ -10,6 +10,15 @@ on:  # yamllint disable-line rule:truthy
       - master
 
 jobs:
+  build-me:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      deployments: read
+      packages: none
+      pull-requests: write
+      security-events: write
   integration-tests-azure:
     name: Integration tests on Azure
     strategy:
