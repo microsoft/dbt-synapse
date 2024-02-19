@@ -17,8 +17,15 @@ jobs:
         python_version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
         msodbc_version: ["17", "18"]
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      deployments: read
+      packages: none
+      pull-requests: write
+      security-events: write
     container:
-      image: ghcr.io/dbt-msft/dbt-sqlserver:CI-${{ matrix.python_version }}-msodbc${{ matrix.msodbc_version }}
+      image: ghcr.io/microsoft/dbt-fabric:CI-${{ matrix.python_version }}-msodbc${{ matrix.msodbc_version }}
     steps:
       - uses: actions/checkout@v3
 
