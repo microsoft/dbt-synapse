@@ -14,13 +14,44 @@
     - store_test_failures
     - dbt_clone (same target and state)
     - seed
+## v1.6.0rc1
+
+* Support for [dbt-core 1.6](https://github.com/dbt-labs/dbt-core/releases/tag/v1.6.0)
+
+#### Breaking Changes
+* Dropped support for Python 3.7 ([#7082](https://github.com/dbt-labs/dbt-core/issues/7082https://github.com/dbt-labs/dbt-core/issues/7082))
+
+## Features
+* Add support for materialized views ([#6911](https://github.com/dbt-labs/dbt-core/issues/6911))
+  * important note! unlike [dbt's materialized view](https://docs.getdbt.com/docs/build/materializations), [Synapse's materialized view](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-materialized-view-as-select-transact-sql?view=azure-sqldw-latest&context=%2Fazure%2Fsynapse-analytics%2Fcontext%2Fcontext) must be created using aggregation and/or "GROUP BY"! 
+* ~~dbt clone ([#7258](https://github.com/dbt-labs/dbt-core/issues/7258)~~ Synapse does not support CLONE)
+* Revamp dbt debug ([#7104](https://github.com/dbt-labs/dbt-core/issues/7104))
+* Added new adapter zone tests
+  - constraints
+  - null_compare
+  - validate_sql
+  - equals
+  - dbt_clone
+
+## v.1.5.0rc1
+
+* Support for [dbt-core 1.5](https://github.com/dbt-labs/dbt-core/releases/tag/v1.5.0)
+  * Add support for model contracts by adapting `create_table_as` and `create_view_as` macros
+  * Define supported constraints in `CONSTRAINT_SUPPORT` Adapter class.
+  * Persist docs via [extended properties](https://github.com/dbt-msft/dbt-sqlserver/issues/134) is [not supported](https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16) in Synapse
+  * Add adapter tests zones
+    - caching
+    - column_types
+    - constraints
+    - hooks
+    - simple_copy
 
 ## v1.4.1rc1
 
 #### Under the hood
-* Switch dependency from dbt-sqlserver to dbt-fabric (per https://github.com/dbt-msft/dbt-sqlserver/issues/441)
+* Switch dependency from dbt-sqlserver to dbt-fabric [#441](https://github.com/dbt-msft/dbt-sqlserver/issues/441)
   * for Mac users, before running `make dev`, add `pyodbc==4.0.39 --no-binary :all:` in dev_requirements.txt
-  * about pyodbc "Symbol not found: _SQLAllocHandle" error https://stackoverflow.com/questions/66731036/unable-to-import-pyodbc-on-apple-silicon-symbol-not-found-sqlallochandle
+  * [Stackoverflow](https://stackoverflow.com/questions/66731036/unable-to-import-pyodbc-on-apple-silicon-symbol-not-found-sqlallochandle) about pyodbc "Symbol not found: _SQLAllocHandle" error
 
 ## v1.4.0
 
