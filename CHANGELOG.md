@@ -2,9 +2,9 @@
 ## v1.4.1rc1
 
 #### Under the hood
-* Switch dependency from dbt-sqlserver to dbt-fabric (per https://github.com/dbt-msft/dbt-sqlserver/issues/441)
+* Switch dependency from dbt-sqlserver to dbt-fabric [#441](https://github.com/dbt-msft/dbt-sqlserver/issues/441)
   * for Mac users, before running `make dev`, add `pyodbc==4.0.39 --no-binary :all:` in dev_requirements.txt
-  * about pyodbc "Symbol not found: _SQLAllocHandle" error https://stackoverflow.com/questions/66731036/unable-to-import-pyodbc-on-apple-silicon-symbol-not-found-sqlallochandle
+  * [Stackoverflow](https://stackoverflow.com/questions/66731036/unable-to-import-pyodbc-on-apple-silicon-symbol-not-found-sqlallochandle) about pyodbc "Symbol not found: _SQLAllocHandle" error
 
 ## v1.4.0
 
