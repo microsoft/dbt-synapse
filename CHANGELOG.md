@@ -11,6 +11,12 @@
   * important note! unlike [dbt's materialized view](https://docs.getdbt.com/docs/build/materializations), [Synapse's materialized view](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-materialized-view-as-select-transact-sql?view=azure-sqldw-latest&context=%2Fazure%2Fsynapse-analytics%2Fcontext%2Fcontext) must be created using aggregation and/or "GROUP BY"! 
 * ~~dbt clone ([#7258](https://github.com/dbt-labs/dbt-core/issues/7258)~~ Synapse does not support CLONE)
 * Revamp dbt debug ([#7104](https://github.com/dbt-labs/dbt-core/issues/7104))
+* Added new adapter zone tests
+  - constraints
+  - null_compare
+  - validate_sql
+  - equals
+  - dbt_clone
 
 ## v.1.5.0rc1
 
