@@ -1,4 +1,17 @@
 # Changelog
+## v.1.5.0rc1
+
+* Support for [dbt-core 1.5](https://github.com/dbt-labs/dbt-core/releases/tag/v1.5.0)
+  * Add support for model contracts by adapting `create_table_as` and `create_view_as` macros
+  * Define supported constraints in `CONSTRAINT_SUPPORT` Adapter class.
+  * Persist docs via [extended properties](https://github.com/dbt-msft/dbt-sqlserver/issues/134) is [not supported](https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16) in Synapse
+  * Add adapter tests zones
+    - caching
+    - column_types
+    - constraints
+    - hooks
+    - simple_copy
+
 ## v1.4.1rc1
 
 #### Under the hood

@@ -13,7 +13,7 @@ class TestIncrementalGrantsSynapse(BaseIncrementalGrants):
     pass
 
 
-class TestInvalidGrantsSQLServer(BaseInvalidGrants):
+class TestInvalidGrantsSynapse(BaseInvalidGrants):
     def grantee_does_not_exist_error(self):
         return "Cannot find the user"
 
