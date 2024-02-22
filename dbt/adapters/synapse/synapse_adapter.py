@@ -70,7 +70,7 @@ class SynapseAdapter(FabricAdapter):
         rendered_column_constraints = []
 
         for v in raw_columns.values():
-            rendered_column_constraint = [f"{v['name']} {v['data_type']}"]
+            rendered_column_constraint = [f"[{v['name']}] {v['data_type']}"]
             for con in v.get("constraints", None):
                 constraint = cls._parse_column_constraint(con)
                 c = cls.process_parsed_constraint(constraint, cls.render_column_constraint)

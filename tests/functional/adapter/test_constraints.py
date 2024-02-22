@@ -12,12 +12,14 @@ from dbt.tests.adapter.constraints.fixtures import (
     my_model_view_wrong_name_sql,
     my_model_view_wrong_order_sql,
     my_model_with_nulls_sql,
+    my_model_with_quoted_column_name_sql,
     my_model_wrong_name_sql,
     my_model_wrong_order_depends_on_fk_sql,
     my_model_wrong_order_sql,
 )
 from dbt.tests.adapter.constraints.test_constraints import (
     BaseConstraintsRuntimeDdlEnforcement,
+    BaseContractSqlHeader,
     BaseModelConstraintsRuntimeEnforcement,
 )
 from dbt.tests.util import (
@@ -246,6 +248,77 @@ models:
           - type: not_null
 """
 
+model_contract_header_schema_yml = """
+version: 2
+models:
+  - name: my_model_contract_sql_header
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: column_name
+        data_type: int
+"""
+
+
+# no current_timezone() in Synapse
+my_model_contract_sql_header_sql = """
+{{
+  config(
+    materialized = "table"
+  )
+}}
+
+{% call set_sql_header(config) %}
+set session time zone 'Asia/Kolkata';
+{%- endcall %}
+select datepart(tzoffset, sysdatetimeoffset()) as column_name
+"""
+
+my_model_incremental_contract_sql_header_sql = """
+{{
+  config(
+    materialized = "incremental",
+    on_schema_change="append_new_columns"
+  )
+}}
+
+{% call set_sql_header(config) %}
+set session time zone 'Asia/Kolkata';
+{%- endcall %}
+select datepart(tzoffset, sysdatetimeoffset()) as column_name
+"""
+
+model_quoted_column_schema_yml = """
+version: 2
+models:
+  - name: my_model
+    config:
+      contract:
+        enforced: true
+      materialized: table
+    constraints:
+      - type: check
+        # this one is the on the user
+        expression: ("from" = 'blue')
+        columns: [ '"from"' ]
+    columns:
+      - name: id
+        data_type: integer
+        description: hello
+        constraints:
+          - type: not_null
+        tests:
+          - unique
+      - name: from  # reserved word
+        quote: true
+        data_type: varchar(100)
+        constraints:
+          - type: not_null
+      - name: date_day
+        data_type: varchar(100)
+"""
+
 
 class BaseConstraintsColumnsEqual:
     """
@@ -395,7 +468,7 @@ class BaseConstraintsRuntimeDdlEnforcement(BaseConstraintsRuntimeDdlEnforcement)
         if object_id <model_identifier> is not null begin drop table <model_identifier> end
         exec('create view <model_identifier> as -- depends_on: <foreign_key_model_identifier>
         select ''blue'' as color,1 as id,''2019-01-01'' as date_day;');
-        create table <model_identifier>(id int not null,color varchar(100),date_day varchar(100))
+        create table <model_identifier>([id] int not null,[color] varchar(100),[date_day] varchar(100))
         with(distribution = round_robin,heap)
         insert into <model_identifier>([id],[color],[date_day])
         select [id],[color],[date_day] from <model_identifier>
@@ -435,7 +508,7 @@ class BaseModelConstraintsRuntimeEnforcement(BaseModelConstraintsRuntimeEnforcem
         if object_id <model_identifier> is not null begin drop table <model_identifier> end
         exec('create view <model_identifier> as -- depends_on: <foreign_key_model_identifier>
         select ''blue'' as color,1 as id,''2019-01-01'' as date_day;');
-        create table <model_identifier>(id int not null,color varchar(100),date_day varchar(100))
+        create table <model_identifier>([id] int not null,[color] varchar(100),[date_day] varchar(100))
         with(distribution = round_robin,heap)
         alter table <model_identifier> add constraint <model_identifier>
         primary key nonclustered(id)not enforced;
@@ -548,6 +621,46 @@ class BaseIncrementalConstraintsRollback(BaseConstraintsRollback):
         return my_model_incremental_with_nulls_sql
 
 
+class BaseTableContractSqlHeader(BaseContractSqlHeader):
+    @pytest.fixture(scope="class")
+    def models(self):
+        return {
+            "my_model_contract_sql_header.sql": my_model_contract_sql_header_sql,
+            "constraints_schema.yml": model_contract_header_schema_yml,
+        }
+
+
+class BaseIncrementalContractSqlHeader(BaseContractSqlHeader):
+    @pytest.fixture(scope="class")
+    def models(self):
+        return {
+            "my_model_contract_sql_header.sql": my_model_incremental_contract_sql_header_sql,
+            "constraints_schema.yml": model_contract_header_schema_yml,
+        }
+
+
+class BaseConstraintQuotedColumn(BaseConstraintsRuntimeDdlEnforcement):
+    @pytest.fixture(scope="class")
+    def models(self):
+        return {
+            "my_model.sql": my_model_with_quoted_column_name_sql,
+            "constraints_schema.yml": model_quoted_column_schema_yml,
+        }
+
+    @pytest.fixture(scope="class")
+    def expected_sql(self):
+        return """
+        if object_id <model_identifier> is not null begin drop view <model_identifier> end
+        if object_id <model_identifier> is not null begin drop table <model_identifier> end
+        exec(\'create view <model_identifier> as select \'\'blue\'\' as "from",1 as id,\'\'2019-01-01\'\' as date_day;\');
+        create table <model_identifier>([id] integer not null,[from] varchar(100)not null,[date_day] varchar(100))
+        with(distribution = round_robin,heap)
+        insert into <model_identifier>([id],[from],[date_day])
+        select [id],[from],[date_day] from <model_identifier>
+        if object_id <model_identifier> is not null begin drop view <model_identifier> end
+        """
+
+
 class TestTableConstraintsRuntimeDdlEnforcementSynapse(BaseConstraintsRuntimeDdlEnforcement):
     pass
 
@@ -579,4 +692,16 @@ class TestTableConstraintsRollbackSynapse(BaseConstraintsRollback):
 
 
 class TestIncrementalConstraintsRollbackSynapse(BaseIncrementalConstraintsRollback):
+    pass
+
+
+class TestTableContractSqlHeaderSynapse(BaseTableContractSqlHeader):
+    pass
+
+
+class TestIncrementalContractSqlHeaderSynapse(BaseIncrementalContractSqlHeader):
+    pass
+
+
+class TestConstraintQuotedColumnSynapse(BaseConstraintQuotedColumn):
     pass
