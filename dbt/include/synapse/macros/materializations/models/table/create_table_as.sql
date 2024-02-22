@@ -31,7 +31,6 @@
                 {{ "["~column~"]" }}{{ ", " if not loop.last }}
             {% endfor %}
         {%endset%}
-        {{ synapse__build_model_constraints(relation) }}
 
         INSERT INTO [{{relation.schema}}].[{{relation.identifier}}]
         ({{listColumns}}) SELECT {{listColumns}} FROM [{{tmp_relation.schema}}].[{{tmp_relation.identifier}}]

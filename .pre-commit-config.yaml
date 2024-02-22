@@ -18,6 +18,7 @@ repos:
       - id: check-merge-conflict
       - id: no-commit-to-branch
       - id: fix-byte-order-marker
+        exclude: ^tests/functional/adapter/data/seed_bom.csv
       - id: mixed-line-ending
       - id: check-docstring-first
   - repo: 'https://github.com/adrienverge/yamllint'

@@ -1,4 +1,25 @@
 # Changelog
+## v1.7.0rc1
+
+## Features
+
+* Support for [dbt-core 1.7](https://github.com/dbt-labs/dbt-core/releases/tag/v1.7.0)
+  * implement custom `date_spine` and `generate_series` macro logic for synapse to match nested-CTE limitation
+
+#### Under the hood
+
+  * Decouple `get_catalog` macro (marco override test is skipped as it is not covering the behavior)
+  * Add UTF-8-BOM CSV and exclude from precommit format override
+  * New/extended adapter test zones
+    - get_last_relation_modified
+    - date_spine
+    - generate_series
+    - get_intervals_between
+    - get_powers_of_two
+    - store_test_failures
+    - dbt_clone (same target and state)
+    - seed
+
 ## v1.6.0rc1
 
 * Support for [dbt-core 1.6](https://github.com/dbt-labs/dbt-core/releases/tag/v1.6.0)
@@ -20,8 +41,13 @@
 
 ## v.1.5.0rc1
 
+## Features
+
 * Support for [dbt-core 1.5](https://github.com/dbt-labs/dbt-core/releases/tag/v1.5.0)
   * Add support for model contracts by adapting `create_table_as` and `create_view_as` macros
+
+#### Under the hood
+
   * Define supported constraints in `CONSTRAINT_SUPPORT` Adapter class.
   * Persist docs via [extended properties](https://github.com/dbt-msft/dbt-sqlserver/issues/134) is [not supported](https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16) in Synapse
   * Add adapter tests zones

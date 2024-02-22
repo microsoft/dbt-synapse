@@ -42,7 +42,8 @@ group by i.id
 def drop_cascade(project, test_model_identifier):
     # SYNAPSE HAS NO "DROP SCHEMA...CASCADE"
     # so drop all test materializations, to allow drop my_seed
-    # "my_materialized_view" always created in setup(), so always need to be dropped before my_seed
+    # "my_materialized_view" and its backup always created in setup(), 
+    # so always need to be dropped before my_seed
     for identifier in ["my_materialized_view", test_model_identifier]:
         project.run_sql(
             f"""
@@ -54,6 +55,16 @@ def drop_cascade(project, test_model_identifier):
         if object_id ('"{project.test_schema}"."{identifier}"','U') is not null
             begin
             drop table "{project.test_schema}"."{identifier}"
+            end
+
+        if object_id ('"{project.test_schema}"."{identifier}__dbt_backup"','V') is not null
+            begin
+            drop view "{project.test_schema}"."{identifier}__dbt_backup"
+            end
+
+        if object_id ('"{project.test_schema}"."{identifier}__dbt_backup"','U') is not null
+            begin
+            drop table "{project.test_schema}"."{identifier}__dbt_backup"
             end
         """
         )
