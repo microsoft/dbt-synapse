@@ -5,22 +5,26 @@
 {% endmacro %}
 
 {% macro synapse__drop_relation_script(relation) -%}
+  {% if relation is not none %}
   {% if relation.type == 'view' or relation.type == 'materialized_view' -%}
     {% set object_id_type = 'V' %}
   {% elif relation.type == 'table'%}
     {% set object_id_type = 'U' %}
   {%- else -%} invalid target name
   {% endif %}
-
-  if object_id ('{{ relation.include(database=False) }}','{{ object_id_type }}') is not null
-  {% if relation.type == 'view' or relation.type == 'materialized_view' -%}
-    begin
-    drop view {{ relation.include(database=False) }}
-    end
-  {% elif relation.type == 'table' %}
-    begin
-    drop {{ relation.type }} {{ relation.include(database=False) }}
-    end
+    if object_id ('{{ relation.include(database=False) }}','{{ object_id_type }}') is not null
+    {% if relation.type == 'view' or relation.type == 'materialized_view' -%}
+      begin
+      drop view {{ relation.include(database=False) }}
+      end
+    {% elif relation.type == 'table' %}
+      begin
+      drop {{ relation.type }} {{ relation.include(database=False) }}
+      end
+    {% endif %}
+  {% else %}
+    -- no object to drop
+    select 1 as nothing
   {% endif %}
 {% endmacro %}
 
