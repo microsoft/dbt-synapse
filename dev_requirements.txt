@@ -1,7 +1,7 @@
 pytest==8.0.0
 twine==5.0.0
 wheel==0.42.0
-pre-commit==3.5.0
+pre-commit==3.6.2
 pytest-dotenv==0.5.2
 dbt-tests-adapter~=1.7.4
 aiohttp==3.8.3
