@@ -20,7 +20,23 @@
 
 {% macro synapse__rename_relation(from_relation, to_relation) -%}
   {% call statement('rename_relation') -%}
+  -- drop all object types with to_relation.identifier name, to avoid error "new name already in use...duplicate...not permitted"
+  if object_id ('{{ to_relation.include(database=False) }}','V') is not null
+    begin
+    drop view {{ to_relation.include(database=False) }}
+    end
 
-    rename object {{ from_relation.include(database=False) }} to {{ to_relation.identifier }}
+  if object_id ('{{ to_relation.include(database=False) }}','U') is not null
+    begin
+    drop table {{ to_relation.include(database=False) }}
+    end
+
+  rename object {{ from_relation.include(database=False) }} to {{ to_relation.identifier }}
   {%- endcall %}
+{% endmacro %}
+
+{% macro synapse__truncate_relation(relation) %}
+    {% call statement('truncate_relation') -%}
+        truncate table {{ relation }}
+    {%- endcall %}
 {% endmacro %}

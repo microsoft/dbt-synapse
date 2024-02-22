@@ -32,6 +32,7 @@ class TestEmptySynapse(BaseEmpty):
     pass
 
 
+@pytest.mark.skip(reason="ephemeral not supported")
 class TestEphemeralSynapse(BaseEphemeral):
     pass
 

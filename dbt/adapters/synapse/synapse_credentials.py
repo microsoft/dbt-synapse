@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from dbt.adapters.sqlserver import SQLServerCredentials
+from dbt.adapters.fabric import FabricCredentials
 
 
 @dataclass
-class SynapseCredentials(SQLServerCredentials):
+class SynapseCredentials(FabricCredentials):
     @property
     def type(self):
         return "synapse"

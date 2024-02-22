@@ -1,6 +1,6 @@
-from dbt.adapters.sqlserver import SQLServerConnectionManager
+from dbt.adapters.fabric import FabricConnectionManager
 
 
-class SynapseConnectionManager(SQLServerConnectionManager):
+class SynapseConnectionManager(FabricConnectionManager):
     TYPE = "synapse"
     TOKEN = None
