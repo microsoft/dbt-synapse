@@ -5,9 +5,9 @@ from dbt.adapters.base.relation import BaseRelation
 from dbt.adapters.cache import _make_ref_key_dict
 from dbt.adapters.fabric import FabricAdapter
 from dbt.adapters.sql.impl import CREATE_SCHEMA_MACRO_NAME
-from dbt.contracts.graph.nodes import ColumnLevelConstraint, ConstraintType
-from dbt.events.functions import fire_event
 from dbt.events.types import SchemaCreation
+from dbt_common.contracts.constraints import ColumnLevelConstraint, ConstraintType
+from dbt_common.events.functions import fire_event
 
 from dbt.adapters.synapse.synapse_column import SynapseColumn
 from dbt.adapters.synapse.synapse_connection_manager import SynapseConnectionManager
