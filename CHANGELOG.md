@@ -1,4 +1,10 @@
 # Changelog
+
+## v1.4.1
+
+- Official release
+- See changes in [dbt-synapse v1.4.1rc1](https://github.com/microsoft/dbt-synapse/releases/tag/v1.4.1rc1)
+
 ## v1.4.1rc1
 
 #### Under the hood
