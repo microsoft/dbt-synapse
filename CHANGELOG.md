@@ -1,4 +1,8 @@
 # Changelog
+## v1.4.1
+
+* Official release
+
 ## v1.4.1rc1
 
 #### Under the hood
