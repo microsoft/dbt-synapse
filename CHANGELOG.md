@@ -13,7 +13,7 @@ Supporting dbt-core 1.8.0
     - from pytest~=7.4. to pytest~=8.0.1
     - from twine~=4.0.2 to twine~=5.0.0
     - from pre-commit~=3.5.0 to pre-commit~=3.6.2
-    - specify commit SHA of dbt-core and dbt-adapters in dev_requirements.txt, to fix make dev
+    - specify commit SHA of dbt-core and dbt-adapters in dev_requirements.txt, to fix `make dev`
 
 * Inherit [dbt-fabric v1.8.0rc2](https://github.com/microsoft/dbt-fabric/blob/v1.8.0rc2/setup.py) - Bump adapter packages
     - from pyodbc>=4.0.35,<5.1.0" to pyodbc>=4.0.35,<5.2.0
