@@ -21,7 +21,7 @@ Supporting dbt-core 1.8.0
 > From now on, Apple-silicon users don't have to locally build pyodbc, because M1, M2 binaries is included in pyodbc from 5.1.0 onwards!
 
 ## Under the hood
-* Fix failing test tests/functional/adapter/test_query_comment.py::TestMacroArgsQueryComments::test_matches_comment to use correct dbt_version, see [dbt-core](https://github.com/dbt-labs/dbt-core/blob/main/tests/functional/adapter/query_comment/test_query_comment.py)
+* Fix failing test `tests/functional/adapter/test_query_comment.py::TestMacroArgsQueryComments::test_matches_comment` to use correct dbt_version, see [dbt-core](https://github.com/dbt-labs/dbt-core/blob/main/tests/functional/adapter/query_comment/test_query_comment.py)
 
 ## v1.7.0
 
