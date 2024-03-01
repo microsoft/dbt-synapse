@@ -1,5 +1,5 @@
 import pytest
-from dbt.tests.adapter.dbt_show.test_dbt_show import (
+from dbt.tests.adapter.dbt_show.fixtures import (
     models__sample_model,
     models__sql_header,
     seeds__sample_seed,

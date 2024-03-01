@@ -1,4 +1,24 @@
 # Changelog
+### v1.8.0rc1
+
+## Features
+
+Supporting dbt-core 1.8.0
+
+## Enhancements
+
+[Decouple imports](https://github.com/dbt-labs/dbt-adapters/discussions/87) to common dbt core and dbt adapter interface packages for future maintainability and extensibility.
+
+* Bump dev requirements
+    - from pytest~=7.4. to pytest~=8.0.1
+    - from twine~=4.0.2 to twine~=5.0.0
+    - from pre-commit~=3.5.0 to pre-commit~=3.6.2
+
+* Inherit [dbt-fabric v1.8.0rc2](https://github.com/microsoft/dbt-fabric/blob/v1.8.0rc2/setup.py) - Bump adapter packages
+    - from pyodbc>=4.0.35,<5.1.0" to pyodbc>=4.0.35,<5.2.0
+
+> From now on, Apple-silicon users don't have to locally build pyodbc, because M1, M2 binaries is included in pyodbc from 5.1.0 onwards!
+
 ## v1.7.0
 
 * Official release
