@@ -15,8 +15,8 @@ authors_list = [
     "Anders Swanson",
     "Sam Debruyn",
 ]
-dbt_version = "1.7"
-dbt_fabric_requirement = "dbt-fabric~=1.7.4"
+dbt_version = "1.8"
+dbt_fabric_requirement = "dbt-fabric~=1.8.0rc2"
 description = """An Azure Synapse adapter plugin for dbt"""
 
 this_directory = os.path.abspath(os.path.dirname(__file__))

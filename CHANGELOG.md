@@ -1,4 +1,32 @@
 # Changelog
+### v1.8.0rc1
+
+## Features
+
+Supporting dbt-core 1.8.0
+
+## Enhancements
+
+[Decouple imports](https://github.com/dbt-labs/dbt-adapters/discussions/87) to common dbt core and dbt adapter interface packages for future maintainability and extensibility.
+
+* Bump dev requirements
+    - from pytest~=7.4. to pytest~=8.0.1
+    - from twine~=4.0.2 to twine~=5.0.0
+    - from pre-commit~=3.5.0 to pre-commit~=3.6.2
+    - specify commit SHA of dbt-core and dbt-adapters in dev_requirements.txt, to fix `make dev`
+
+* Inherit [dbt-fabric v1.8.0rc2](https://github.com/microsoft/dbt-fabric/blob/v1.8.0rc2/setup.py) - Bump adapter packages
+    - from pyodbc>=4.0.35,<5.1.0" to pyodbc>=4.0.35,<5.2.0
+
+> From now on, Apple-silicon users don't have to locally build pyodbc, because M1, M2 binaries is included in pyodbc from 5.1.0 onwards!
+
+## Under the hood
+* Fix failing test `tests/functional/adapter/test_query_comment.py::TestMacroArgsQueryComments::test_matches_comment` to use correct dbt_version, see [dbt-core](https://github.com/dbt-labs/dbt-core/blob/main/tests/functional/adapter/query_comment/test_query_comment.py)
+
+## v1.7.0
+
+* Official release
+
 ## v1.7.0rc1
 
 ## Features
@@ -20,6 +48,10 @@
     - dbt_clone (same target and state)
     - seed
 
+## v1.6.0
+
+* Official release
+
 ## v1.6.0rc1
 
 * Support for [dbt-core 1.6](https://github.com/dbt-labs/dbt-core/releases/tag/v1.6.0)
@@ -39,6 +71,10 @@
   - equals
   - dbt_clone
 
+## v1.5.0
+
+* Official release
+
 ## v.1.5.0rc1
 
 ## Features
@@ -56,6 +92,10 @@
     - constraints
     - hooks
     - simple_copy
+
+## v1.4.1
+
+* Official release
 
 ## v1.4.1rc1
 
