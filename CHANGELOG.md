@@ -1,4 +1,8 @@
 # Changelog
+## v1.7.0
+
+* Official release
+
 ## v1.7.0rc1
 
 ## Features
@@ -20,6 +24,10 @@
     - dbt_clone (same target and state)
     - seed
 
+## v1.6.0
+
+* Official release
+
 ## v1.6.0rc1
 
 * Support for [dbt-core 1.6](https://github.com/dbt-labs/dbt-core/releases/tag/v1.6.0)
@@ -39,6 +47,10 @@
   - equals
   - dbt_clone
 
+## v1.5.0
+
+* Official release
+
 ## v.1.5.0rc1
 
 ## Features
@@ -56,6 +68,10 @@
     - constraints
     - hooks
     - simple_copy
+
+## v1.4.1
+
+* Official release
 
 ## v1.4.1rc1
 
