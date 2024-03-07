@@ -4,9 +4,9 @@
 
   {% set contract_config = config.get('contract') %}
 
-    {{exceptions.warn("Model contracts cannot be enforced by <adapter>!")}}
 
   {% if contract_config.enforced %}
+      {{ exceptions.warn("Model contracts cannot be enforced by <adapter>!" }}
       {{ get_assert_columns_equivalent(sql) }}
   {%- endif %}
 
