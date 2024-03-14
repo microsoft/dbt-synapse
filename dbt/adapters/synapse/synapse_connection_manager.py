@@ -221,8 +221,8 @@ class SynapseConnectionManager(FabricConnectionManager):
         elif credentials.windows_login:
             con_str.append("trusted_connection=Yes")
         elif credentials.authentication == "sql":
-            con_str.append(f"UID={{{credentials.client_id}}}")
-            con_str.append(f"PWD={{{credentials.client_secret}}}")
+            con_str.append(f"UID={{{credentials.UID}}}")
+            con_str.append(f"PWD={{{credentials.PWD}}}")
 
         # https://docs.microsoft.com/en-us/sql/relational-databases/native-client/features/using-encryption-without-validation?view=sql-server-ver15
         assert credentials.encrypt is not None
