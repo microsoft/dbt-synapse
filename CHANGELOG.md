@@ -4,7 +4,7 @@
 #### Under the hood
 
   * Allow connection to synapse using `authentication: sql` and `user: sqladminuser` in `profiles.yml`
-    - see ([#28](https://github.com/microsoft/dbt-synapse/issues/218))
+    - see ([#218](https://github.com/microsoft/dbt-synapse/issues/218))
 
 ## v1.7.0
 
