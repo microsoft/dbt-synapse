@@ -1,4 +1,11 @@
 # Changelog
+## v1.7.1rc1
+
+#### Under the hood
+
+  * Allow connection to synapse using `authentication: sql` and `user: sqladminuser` in `profiles.yml`
+    - see ([#218](https://github.com/microsoft/dbt-synapse/issues/218))
+
 ## v1.7.0
 
 * Official release
