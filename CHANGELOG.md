@@ -1,5 +1,5 @@
 # Changelog
-## v1.7.1rc1
+## v1.7.1
 
 #### Under the hood
 
