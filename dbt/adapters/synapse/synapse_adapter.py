@@ -1,6 +1,8 @@
 from enum import Enum
+import re
 from typing import Any, Dict, List, Optional
 
+from dbt.adapters.base.meta import available
 from dbt.adapters.base.relation import BaseRelation
 from dbt.adapters.cache import _make_ref_key_dict
 from dbt.adapters.events.types import SchemaCreation
@@ -79,3 +81,18 @@ class SynapseAdapter(FabricAdapter):
             rendered_column_constraints.append(" ".join(rendered_column_constraint))
 
         return rendered_column_constraints
+    
+    @available
+    def add_top_to_sql(cls, sql, limit):
+        # Use a regular expression to replace the last occurrence of 'SELECT'
+        # NOTE
+        # attempted having this return a jinja-sql string with a {{ limit }}
+        # that is rendered later, but couldn't get that to work...
+        # it involved double-double curlies which is messy
+        # `f"SELECT TOP {{{{ limit }}}}"`
+        return re.sub(
+             # the last occurrence of 'SELECT'
+            r'(SELECT)(?!.*\1)',
+            f"SELECT TOP { limit }",
+            sql # the SQL query
+        )
