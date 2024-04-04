@@ -3,10 +3,11 @@
   {{ sql_header }}
   {%- endif -%}
   {%- if limit is not none -%}
-  {{ get_limit_subquery_sql(compiled_code, limit) }}
-  {%- else -%}
-  {{ compiled_code }}
+    {%- set warn = "--limit is ignored. Synapse doesn't support the implementation" -%}
+    {{ log(warn, info=True) }}
   {%- endif -%}
+  {{ compiled_code }}
+  
 {% endmacro %}
 
 {% macro get_limit_subquery_sql(sql, limit) %}
