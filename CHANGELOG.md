@@ -1,11 +1,18 @@
 # Changelog
-### v1.8.0rc1
 
-## Features
+## v1.8.0rc2
+
+### What's Changed
+
+- disable `--limit` flag for `dbt show` @dataders in https://github.com/microsoft/dbt-synapse/pull/232
+
+## v1.8.0rc1
+
+### Features
 
 Supporting dbt-core 1.8.0
 
-## Enhancements
+### Enhancements
 
 [Decouple imports](https://github.com/dbt-labs/dbt-adapters/discussions/87) to common dbt core and dbt adapter interface packages for future maintainability and extensibility.
 
@@ -20,7 +27,7 @@ Supporting dbt-core 1.8.0
 
 > From now on, Apple-silicon users don't have to locally build pyodbc, because M1, M2 binaries is included in pyodbc from 5.1.0 onwards!
 
-## Under the hood
+### Under the hood
 * Fix failing test `tests/functional/adapter/test_query_comment.py::TestMacroArgsQueryComments::test_matches_comment` to use correct dbt_version, see [dbt-core](https://github.com/dbt-labs/dbt-core/blob/main/tests/functional/adapter/query_comment/test_query_comment.py)
 
 ## v1.7.0
@@ -29,12 +36,12 @@ Supporting dbt-core 1.8.0
 
 ## v1.7.0rc1
 
-## Features
+### Features
 
 * Support for [dbt-core 1.7](https://github.com/dbt-labs/dbt-core/releases/tag/v1.7.0)
   * implement custom `date_spine` and `generate_series` macro logic for synapse to match nested-CTE limitation
 
-#### Under the hood
+### Under the hood
 
   * Decouple `get_catalog` macro (marco override test is skipped as it is not covering the behavior)
   * Add UTF-8-BOM CSV and exclude from precommit format override
@@ -56,10 +63,10 @@ Supporting dbt-core 1.8.0
 
 * Support for [dbt-core 1.6](https://github.com/dbt-labs/dbt-core/releases/tag/v1.6.0)
 
-#### Breaking Changes
+### Breaking Changes
 * Dropped support for Python 3.7 ([#7082](https://github.com/dbt-labs/dbt-core/issues/7082https://github.com/dbt-labs/dbt-core/issues/7082))
 
-## Features
+### Features
 * Add support for materialized views ([#6911](https://github.com/dbt-labs/dbt-core/issues/6911))
   * important note! unlike [dbt's materialized view](https://docs.getdbt.com/docs/build/materializations), [Synapse's materialized view](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-materialized-view-as-select-transact-sql?view=azure-sqldw-latest&context=%2Fazure%2Fsynapse-analytics%2Fcontext%2Fcontext) must be created using aggregation and/or "GROUP BY"! 
 * ~~dbt clone ([#7258](https://github.com/dbt-labs/dbt-core/issues/7258)~~ Synapse does not support CLONE)
