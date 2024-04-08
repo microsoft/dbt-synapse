@@ -1,7 +1,14 @@
 # Changelog
+
+## v1.7.2
+
+### Under the hood
+
+* Backport #230 which disables `dbt show`'s `--limit` argument.
+
 ## v1.7.1
 
-#### Under the hood
+### Under the hood
 
   * Allow connection to synapse using `authentication: sql` and `user: sqladminuser` in `profiles.yml`
     - see ([#218](https://github.com/microsoft/dbt-synapse/issues/218))
