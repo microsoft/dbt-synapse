@@ -13,6 +13,8 @@ jobs:
   integration-tests-azure:
     name: Integration tests on Azure
     strategy:
+      fail-fast: true
+      max-parallel: 1
       matrix:
         python_version: ["3.8", "3.9", "3.10", "3.11"]
         msodbc_version: ["17", "18"]
