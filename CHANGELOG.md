@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.7.3
+
+### Under the hood
+
+* Backport #235 which actually disables `dbt show`'s `--limit` argument.
+
 ## v1.7.2
 
 ### Under the hood
