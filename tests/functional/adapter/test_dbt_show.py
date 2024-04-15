@@ -66,5 +66,6 @@ class TestShowSqlHeaderSynapse(BaseShowSqlHeader):
     pass
 
 
-class TestShowLimitSynapse(BaseShowLimit):
-    pass
+# Disabled because dbt-synapse doesn't support the `--limit` flag
+# class TestShowLimitSynapse(BaseShowLimit):
+#     pass
