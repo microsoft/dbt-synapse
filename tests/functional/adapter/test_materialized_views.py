@@ -80,6 +80,7 @@ def drop_cascade(project, test_model_identifier):
     # finally drop schema can proceed in setup function
 
 
+@pytest.mark.skip(reason="Synapse materialized view temporarily broken")
 class TestMaterializedViewsBasicSynapse(MaterializedViewBasic):
     @pytest.fixture(scope="class", autouse=True)
     def models(self):
