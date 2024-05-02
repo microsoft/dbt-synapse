@@ -11,11 +11,13 @@ from dbt_common.events.functions import fire_event
 
 from dbt.adapters.synapse.synapse_column import SynapseColumn
 from dbt.adapters.synapse.synapse_connection_manager import SynapseConnectionManager
+from dbt.adapters.synapse.synapse_relation import SynapseRelation
 
 
 class SynapseAdapter(FabricAdapter):
     ConnectionManager = SynapseConnectionManager
     Column = SynapseColumn
+    Relation = SynapseRelation
 
     def create_schema(self, relation: BaseRelation) -> None:
         relation = relation.without_identifier()
