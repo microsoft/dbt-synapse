@@ -8,6 +8,7 @@ class SynapseRelationType(StrEnum):
     Table = "table"
     View = "view"
     CTE = "cte"
+    MaterializedView = "materialized_view"
 
 
 class SynapseIncludePolicy(Policy):
