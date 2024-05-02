@@ -11,7 +11,7 @@ class SynapseRelationType(StrEnum):
 
 
 class SynapseIncludePolicy(Policy):
-    database: bool = True
+    database: bool = False
     schema: bool = True
     identifier: bool = True
 
