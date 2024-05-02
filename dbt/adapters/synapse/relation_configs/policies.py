@@ -11,6 +11,7 @@ class SynapseRelationType(StrEnum):
     MaterializedView = "materialized_view"
 
 
+@dataclass
 class SynapseIncludePolicy(Policy):
     database: bool = False
     schema: bool = True
