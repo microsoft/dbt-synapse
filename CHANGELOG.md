@@ -1,16 +1,23 @@
 # Changelog
 
-### v1.8.0rc2
+## v1.8.0rc3
 
-- fix for [#239](https://github.com/microsoft/dbt-synapse/issues/239)
+* reduce CI parallelism by @dataders in https://github.com/microsoft/dbt-synapse/pull/237
+* [bug] disable `--limit` on `show` (again) by @dataders in https://github.com/microsoft/dbt-synapse/pull/235
+* correct exclude of database by @dataders in https://github.com/microsoft/dbt-synapse/pull/241
+* pin to dbt-fabric==1.8.2 due to bug in dbt-fabric
 
-### v1.8.0rc1
+## v1.8.0rc2
 
-## Features
+* ignore limit altogether by @dataders in https://github.com/microsoft/dbt-synapse/pull/230
+
+## v1.8.0rc1
+
+### Features
 
 Supporting dbt-core 1.8.0
 
-## Enhancements
+### Enhancements
 
 [Decouple imports](https://github.com/dbt-labs/dbt-adapters/discussions/87) to common dbt core and dbt adapter interface packages for future maintainability and extensibility.
 
