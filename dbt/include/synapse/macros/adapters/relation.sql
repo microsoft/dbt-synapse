@@ -12,14 +12,14 @@
     {% set object_id_type = 'U' %}
   {%- else -%} invalid target name
   {% endif %}
-    if object_id ('{{ relation.include(database=False) }}','{{ object_id_type }}') is not null
+    if object_id ('{{ relation }}','{{ object_id_type }}') is not null
     {% if relation.type == 'view' or relation.type == 'materialized_view' -%}
       begin
-      drop view {{ relation.include(database=False) }}
+      drop view {{ relation }}
       end
     {% elif relation.type == 'table' %}
       begin
-      drop {{ relation.type }} {{ relation.include(database=False) }}
+      drop {{ relation.type }} {{ relation }}
       end
     {% endif %}
   {% else %}
@@ -39,17 +39,17 @@
 
 {% macro synapse__rename_relation_script(from_relation, to_relation) -%}
   -- drop all object types with to_relation.identifier name, to avoid error "new name already in use...duplicate...not permitted"
-  if object_id ('{{ to_relation.include(database=False) }}','V') is not null
+  if object_id ('{{ to_relation }}','V') is not null
     begin
-    drop view {{ to_relation.include(database=False) }}
+    drop view {{ to_relation }}
     end
 
-  if object_id ('{{ to_relation.include(database=False) }}','U') is not null
+  if object_id ('{{ to_relation }}','U') is not null
     begin
-    drop table {{ to_relation.include(database=False) }}
+    drop table {{ to_relation }}
     end
 
-  rename object {{ from_relation.include(database=False) }} to {{ to_relation.identifier }}
+  rename object {{ from_relation }} to {{ to_relation.identifier }}
 {% endmacro %}
 
 {% macro synapse__truncate_relation(relation) %}
