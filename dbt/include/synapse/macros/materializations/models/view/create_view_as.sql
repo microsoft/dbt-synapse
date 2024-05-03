@@ -10,6 +10,6 @@
       {{ get_assert_columns_equivalent(sql) }}
   {%- endif %}
 
-  EXEC('create view {{ relation.include(database=False) }} as {{ temp_view_sql }};');
+  EXEC('create view {{ relation }} as {{ temp_view_sql }};');
 
 {% endmacro %}
