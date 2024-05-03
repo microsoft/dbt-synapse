@@ -1,4 +1,9 @@
 # Changelog
+
+### v1.8.0rc2
+
+- fix for [#239](https://github.com/microsoft/dbt-synapse/issues/239)
+
 ### v1.8.0rc1
 
 ## Features

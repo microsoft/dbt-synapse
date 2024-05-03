@@ -1,10 +1,3 @@
-{% macro ref(model_name) %}
-
-    {% do return(builtins.ref(model_name).include(database=false)) %}
-
-{% endmacro %}
-
-
 {% macro synapse__get_replace_materialized_view_as_sql(relation, sql, existing_relation, backup_relation, intermediate_relation) %}
     {# Synapse does not have ALTER...RENAME function, so use synapse__rename_relation_script #}
 

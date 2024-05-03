@@ -12,6 +12,6 @@
   {# loop through user_provided_columns to create DDL with data types and constraints #}
     {%- set raw_model_constraints = adapter.render_raw_model_constraints(raw_constraints=model['constraints']) -%}
     {% for c in raw_model_constraints -%}
-        alter table {{ relation.include(database=False) }} {{c}};
+        alter table {{ relation }} {{c}};
     {% endfor -%}
 {% endmacro %}
