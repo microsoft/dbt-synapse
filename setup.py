@@ -16,7 +16,7 @@ authors_list = [
     "Sam Debruyn",
 ]
 dbt_version = "1.8"
-dbt_fabric_requirement = "dbt-fabric==1.8.4"
+#dbt_fabric_requirement = "dbt-fabric==1.8.4"
 description = """An Azure Synapse adapter plugin for dbt"""
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
@@ -73,7 +73,7 @@ setup(
     url="https://github.com/dbt-msft/dbt-synapse",
     packages=find_namespace_packages(include=["dbt", "dbt.*"]),
     include_package_data=True,
-    install_requires=[dbt_fabric_requirement],
+    #install_requires=[dbt_fabric_requirement],
     cmdclass={
         "verify": VerifyVersionCommand,
     },

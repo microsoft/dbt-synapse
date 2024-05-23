@@ -4,6 +4,7 @@ git+https://github.com/dbt-labs/dbt-core.git@v1.8.0#egg=dbt-core&subdirectory=co
 git+https://github.com/dbt-labs/dbt-adapters.git
 git+https://github.com/dbt-labs/dbt-adapters.git#subdirectory=dbt-tests-adapter
 git+https://github.com/dbt-labs/dbt-common.git
+git+https://github.com/microsoft/dbt-fabric.git@v1.8.6
 
 pytest==8.0.1
 twine==5.0.0
