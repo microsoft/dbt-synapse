@@ -1,30 +1,12 @@
-{% macro synapse__drop_relation(relation) -%}
-  {% call statement('drop_relation', auto_begin=False) -%}
-    {{ synapse__drop_relation_script(relation) }}
-  {%- endcall %}
-{% endmacro %}
-
-{% macro synapse__drop_relation_script(relation) -%}
-  {% if relation is not none %}
+{% macro synapse__get_drop_sql(relation) -%}
   {% if relation.type == 'view' or relation.type == 'materialized_view' -%}
     {% set object_id_type = 'V' %}
   {% elif relation.type == 'table'%}
     {% set object_id_type = 'U' %}
   {%- else -%} invalid target name
   {% endif %}
-    if object_id ('{{ relation }}','{{ object_id_type }}') is not null
-    {% if relation.type == 'view' or relation.type == 'materialized_view' -%}
-      begin
-      drop view {{ relation }}
-      end
-    {% elif relation.type == 'table' %}
-      begin
-      drop {{ relation.type }} {{ relation }}
-      end
-    {% endif %}
-  {% else %}
-    -- no object to drop
-    select 1 as nothing
+  if object_id ('{{ relation }}','{{ object_id_type }}') is not null
+    drop {{ relation.type }} {{ relation }}
   {% endif %}
 {% endmacro %}
 

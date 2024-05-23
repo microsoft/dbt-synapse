@@ -9,6 +9,7 @@
 
 {% macro synapse__create_schema_with_authorization(relation, schema_authorization) -%}
   {% call statement('create_schema') -%}
+    
     IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '{{ relation.schema }}')
     BEGIN
     EXEC('CREATE SCHEMA [{{ relation.schema }}] AUTHORIZATION [{{ schema_authorization }}]')
