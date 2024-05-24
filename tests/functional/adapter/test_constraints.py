@@ -648,29 +648,34 @@ class BaseConstraintQuotedColumn(BaseConstraintsRuntimeDdlEnforcement):
     @pytest.fixture(scope="class")
     def expected_sql(self):
         return """
-        if object_id <model_identifier> is not null begin drop view <model_identifier> end
-        if object_id <model_identifier> is not null begin drop table <model_identifier> end
-        exec(\'create view <model_identifier> as select \'\'blue\'\' as "from",1 as id,\'\'2019-01-01\'\' as date_day;\');
-        create table <model_identifier>([id] int not null,[from] varchar(100)not null,[date_day] varchar(100))
-        with(distribution = round_robin,heap)
-        insert into <model_identifier>([id],[from],[date_day])
-        select [id],[from],[date_day] from <model_identifier>
-        if object_id <model_identifier> is not null begin drop view <model_identifier> end
+        exec(\'create view <model_identifier> as select \'\'blue\'\' as "from",1 as id,\'\'2019-01-01\'\' as date_day;\'); create table <model_identifier>([id] int not null,[from] varchar(100)not null,[date_day] varchar(100))with(distribution = round_robin,heap)insert into <model_identifier>([id],[from],[date_day])select [id],[from],[date_day] from <model_identifier>
         """
 
 
 class TestTableConstraintsRuntimeDdlEnforcementSynapse(BaseConstraintsRuntimeDdlEnforcement):
-    pass
+    @pytest.fixture(scope="class")
+    def expected_sql(self):
+        return """
+        exec('create view <model_identifier> as -- depends_on: <foreign_key_model_identifier> select ''blue'' as color,1 as id,''2019-01-01'' as date_day;'); create table <model_identifier>([id] int not null,[color] varchar(100),[date_day] varchar(100))with(distribution = round_robin,heap)insert into <model_identifier>([id],[color],[date_day])select [id],[color],[date_day] from <model_identifier>
+        """
 
 
 class TestIncrementalConstraintsRuntimeDdlEnforcementSynapse(
     BaseIncrementalConstraintsRuntimeDdlEnforcement
 ):
-    pass
+    @pytest.fixture(scope="class")
+    def expected_sql(self):
+        return """
+        exec('create view <model_identifier> as -- depends_on: <foreign_key_model_identifier> select ''blue'' as color,1 as id,''2019-01-01'' as date_day;'); create table <model_identifier>([id] int not null,[color] varchar(100),[date_day] varchar(100))with(distribution = round_robin,heap)insert into <model_identifier>([id],[color],[date_day])select [id],[color],[date_day] from <model_identifier>
+        """
 
 
 class TestModelConstraintsRuntimeEnforcementSynapse(BaseModelConstraintsRuntimeEnforcement):
-    pass
+    @pytest.fixture(scope="class")
+    def expected_sql(self):
+        return """
+        exec('create view <model_identifier> as -- depends_on: <foreign_key_model_identifier> select ''blue'' as color,1 as id,''2019-01-01'' as date_day;'); create table <model_identifier>([id] int not null,[color] varchar(100),[date_day] varchar(100))with(distribution = round_robin,heap)insert into <model_identifier>([id],[color],[date_day])select [id],[color],[date_day] from <model_identifier>
+        """
 
 
 class TestTableConstraintsColumnsEqualSynapse(BaseTableConstraintsColumnsEqual):

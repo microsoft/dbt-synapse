@@ -20,11 +20,10 @@ class TestMacroQueryCommentsSynapse(BaseMacroQueryComments):
 
 
 class TestMacroArgsQueryCommentsSynapse(BaseMacroArgsQueryComments):
-    def test_matches_comment(self, project) -> bool:
+    def test_matches_comment(self, project):
         logs = self.run_get_json()
         expected_dct = {
             "app": "dbt++",
-            "dbt_version": dbt_version,
             "macro_version": "0.1.0",
             "message": f"blah: {project.adapter.config.target_name}",
         }
