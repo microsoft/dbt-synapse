@@ -26,7 +26,7 @@
                                                identifier=row[1],
                                                type=row[3]
                                                ) -%}
-    {% do drop_relation(schema_relation) %}
+    {% do adapter.drop_relation(schema_relation) %}
   {%- endfor %}
 
   {% call statement('drop_schema') -%}

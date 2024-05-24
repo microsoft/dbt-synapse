@@ -32,8 +32,9 @@
     they return none
 
     -- drop the temp relations if they exist already in the database
-    {{ synapse__drop_relation(preexisting_backup_relation) }}
-    {{ synapse__drop_relation(preexisting_intermediate_relation) }}
+    {% do adapter.drop_relation(preexisting_backup_relation) %}
+    {% do adapter.drop_relation(preexisting_intermediate_relation) %}
+    
 
     {{ run_hooks(pre_hooks, inside_transaction=False) }}
 
@@ -43,8 +44,9 @@
 {% macro materialized_view_teardown(backup_relation, intermediate_relation, post_hooks) %}
 
     -- drop the temp relations if they exist to leave the database clean for the next run
-    {{ synapse__drop_relation_script(backup_relation) }}
-    {{ synapse__drop_relation_script(intermediate_relation) }}
+
+    {% do adapter.drop_relation(backup_relation) %}
+    {% do adapter.drop_relation(intermediate_relation) %}
 
     {{ run_hooks(post_hooks, inside_transaction=False) }}
 

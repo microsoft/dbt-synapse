@@ -6,9 +6,8 @@
    type='view')-%}
    {%- set temp_view_sql = sql.replace("'", "''") -%}
 
-   {{ synapse__drop_relation_script(tmp_relation) }}
-
-   {{ synapse__drop_relation_script(relation) }}
+    {% do adapter.drop_relation(tmp_relation) %}
+    {% do adapter.drop_relation(relation) %}
 
    {{ synapse__create_view_as(tmp_relation, sql) }}
 
@@ -39,6 +38,6 @@
         EXEC('CREATE TABLE [{{relation.database}}].[{{relation.schema}}].[{{relation.identifier}}]WITH(DISTRIBUTION = {{dist}},{{index}}) AS (SELECT * FROM [{{tmp_relation.database}}].[{{tmp_relation.schema}}].[{{tmp_relation.identifier}}]);');
     {% endif %}
 
-   {{ synapse__drop_relation_script(tmp_relation) }}
+   {% do adapter.drop_relation(tmp_relation) %}
 
 {% endmacro %}

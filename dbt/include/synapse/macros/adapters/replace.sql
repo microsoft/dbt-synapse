@@ -26,23 +26,24 @@
         {{ get_create_intermediate_sql(target_relation, sql) }};
         {{ get_create_backup_sql(existing_relation) }};
         {{ get_rename_intermediate_sql(target_relation) }};
-        {{ synapse__drop_relation(existing_relation) }}
+        {% do adapter.drop_relation(existing_relation) %}
 
     {# /* create target_relation as an intermediate relation, then swap it out with the existing one without using a backup */ #}
     {%- elif target_relation.can_be_renamed -%}
         {{ get_create_intermediate_sql(target_relation, sql) }};
-        {{ synapse__drop_relation(existing_relation) }};
+        {% do adapter.drop_relation(existing_relation) %}
         {{ get_rename_intermediate_sql(target_relation) }}
 
     {# /* create target_relation in place by first backing up the existing relation */ #}
     {%- elif existing_relation.can_be_renamed -%}
         {{ get_create_backup_sql(existing_relation) }};
         {{ get_create_sql(target_relation, sql) }};
-        {{ synapse__drop_relation(existing_relation) }}
+        {% do adapter.drop_relation(existing_relation) %}
 
     {# /* no renaming is allowed, so just drop and create */ #}
     {%- else -%}
         {{ synapse__drop_relation(existing_relation) }};
+        {% do adapter.drop_relation(existing_relation) %}
         {{ get_create_sql(target_relation, sql) }}
 
     {%- endif -%}

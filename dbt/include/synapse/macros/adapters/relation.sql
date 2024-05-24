@@ -7,7 +7,6 @@
   {% endif %}
   if object_id ('{{ relation }}','{{ object_id_type }}') is not null
     drop {{ relation.type }} {{ relation }}
-  {% endif %}
 {% endmacro %}
 
 {% macro synapse__rename_relation(from_relation, to_relation) -%}
