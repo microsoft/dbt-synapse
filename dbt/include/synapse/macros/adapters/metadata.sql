@@ -9,7 +9,7 @@
   {{ return(load_result('list_schemas').table) }}
 {% endmacro %}
 
-{# {% macro synapse__list_relations_without_caching(schema_relation) %}
+{% macro synapse__list_relations_without_caching(schema_relation) %}
   {% call statement('list_relations_without_caching', fetch_result=True) -%}
     {{ get_use_database_sql(schema_relation.database) }}
     select
@@ -45,4 +45,4 @@
     and table_name like '{{ schema_relation.identifier }}'
   {% endcall %}
   {{ return(load_result('list_relations_without_caching').table) }}
-{% endmacro %} #}
+{% endmacro %}
