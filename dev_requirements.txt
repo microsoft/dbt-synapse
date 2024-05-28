@@ -4,7 +4,7 @@ git+https://github.com/dbt-labs/dbt-core.git@v1.8.0#egg=dbt-core&subdirectory=co
 git+https://github.com/dbt-labs/dbt-adapters.git
 git+https://github.com/dbt-labs/dbt-adapters.git#subdirectory=dbt-tests-adapter
 git+https://github.com/dbt-labs/dbt-common.git
-git+https://github.com/microsoft/dbt-fabric.git@v1.8.6
+#git+https://github.com/microsoft/dbt-fabric.git@v1.8.6
 
 pytest==8.0.1
 twine==5.0.0
@@ -13,7 +13,8 @@ pre-commit==3.5.0;python_version<"3.9"
 pre-commit==3.6.2;python_version>="3.9"
 pytest-dotenv==0.5.2
 aiohttp==3.8.3
-azure-mgmt-synapse==2.0.0
+#azure-mgmt-synapse==2.0.0
 flaky==3.7.0
 pytest-xdist==3.5.0
 -e .
+-e /mnt/c/users/pvenkat/repos/dbt-fabric
