@@ -1,6 +1,10 @@
 {%- macro synapse__get_use_database_sql(database) -%}
 {%- endmacro -%}
 
+{%- macro default__get_use_database_sql(database) -%}
+  {{ return('') }}
+{%- endmacro -%}
+
 {% macro synapse__list_schemas(database) %}
   {% call statement('list_schemas', fetch_result=True, auto_begin=False) -%}
     select  name as [schema]
