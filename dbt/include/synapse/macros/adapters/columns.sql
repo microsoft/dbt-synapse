@@ -7,7 +7,7 @@
       path={"identifier": relation.identifier.replace("#", "") ~ '_tmp_tbl_hack'},
       type='table')-%}
 
-    {% do  drop_relation(tmp_tbl_hack) %}
+    {% do adapter.drop_relation(tmp_tbl_hack) %}
     {% set sql_create %}
         CREATE TABLE {{ tmp_tbl_hack }}
         WITH(
@@ -23,7 +23,7 @@
     {% call statement() -%} {{ sql_create }} {%- endcall %}
 
     {% set output = get_columns_in_relation(tmp_tbl_hack) %}
-    {% do  drop_relation(tmp_tbl_hack) %}
+    {% do adapter.drop_relation(tmp_tbl_hack) %}
     {{ return(output) }}
   {% endif %}
 

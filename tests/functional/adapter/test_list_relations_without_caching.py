@@ -37,6 +37,10 @@ MACROS__VALIDATE__SYNAPSE__LIST_RELATIONS_WITHOUT_CACHING = """
 
     {% set relation_list_result = load_result('list_relations_without_caching').table %}
     {% set n_relations = relation_list_result | length %}
+    {{ log("relations list result: "~ relation_list_result)}}
+    {% for relation in relation_list_result %}
+        {{ log("relation name: " ~ relation['name']) }}
+    {% endfor %}
     {{ log("n_relations: " ~ n_relations) }}
 {% endmacro %}
 """
