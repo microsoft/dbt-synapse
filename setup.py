@@ -70,7 +70,7 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     author=", ".join(authors_list),
-    url="https://github.com/dbt-msft/dbt-synapse",
+    url="https://github.com/microsoft/dbt-synapse",
     packages=find_namespace_packages(include=["dbt", "dbt.*"]),
     include_package_data=True,
     install_requires=[dbt_fabric_requirement],

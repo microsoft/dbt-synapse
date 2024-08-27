@@ -7,7 +7,7 @@ pytest_plugins = ["dbt.tests.fixtures.project"]
 
 
 def pytest_addoption(parser):
-    parser.addoption("--profile", action="store", default="user_azure", type=str)
+    parser.addoption("--profile", action="store", default="user", type=str)
 
 
 @pytest.fixture(scope="class")
@@ -54,6 +54,7 @@ def _profile_user():
             "user": os.getenv("SYNAPSE_TEST_USER"),
             "pass": os.getenv("SYNAPSE_TEST_PASS"),
             "database": os.getenv("SYNAPSE_TEST_DWH_NAME"),
+            "authentication": "sql",
         },
     }
 
