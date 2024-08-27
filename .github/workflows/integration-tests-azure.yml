@@ -1,13 +1,11 @@
 ---
 name: Integration tests on Azure
 on:  # yamllint disable-line rule:truthy
-  push:
-    branches:
-      - master
-      - v*
+
   pull_request:
     branches:
       - master
+      - v*
 
 jobs:
   integration-tests-azure:
@@ -50,4 +48,4 @@ jobs:
           DBT_TEST_AAD_PRINCIPAL_1: DBT_TEST_AAD_PRINCIPAL_1
           DBT_TEST_AAD_PRINCIPAL_2: DBT_TEST_AAD_PRINCIPAL_2
           SYNAPSE_TEST_DRIVER: 'ODBC Driver ${{ matrix.msodbc_version }} for SQL Server'
-        run: pytest -r a -v -x tests/functional --profile "ci_azure_auto"
+        run: pytest -r a -vv -x tests/functional --profile "ci_azure_auto"
