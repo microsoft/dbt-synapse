@@ -19,7 +19,7 @@ class TestDocsGenerateSynapse(BaseDocsGenerate):
     def expected_catalog(self, project):
         return base_expected_catalog(
             project,
-            role="dbo",
+            role="dbt-synapse-ci",
             id_type="int",
             text_type="varchar",
             time_type="datetime2",
@@ -34,7 +34,7 @@ class TestDocsGenReferencesSynapse(BaseDocsGenReferences):
     def expected_catalog(self, project):
         return expected_references_catalog(
             project,
-            role="dbo",
+            role="dbt-synapse-ci",
             id_type="int",
             text_type="varchar",
             time_type="datetime2",
