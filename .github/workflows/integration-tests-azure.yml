@@ -45,7 +45,5 @@ jobs:
           DBT_TEST_USER_1: DBT_TEST_USER_1
           DBT_TEST_USER_2: DBT_TEST_USER_2
           DBT_TEST_USER_3: DBT_TEST_USER_3
-          DBT_TEST_AAD_PRINCIPAL_1: DBT_TEST_AAD_PRINCIPAL_1
-          DBT_TEST_AAD_PRINCIPAL_2: DBT_TEST_AAD_PRINCIPAL_2
           SYNAPSE_TEST_DRIVER: 'ODBC Driver ${{ matrix.msodbc_version }} for SQL Server'
         run: pytest -r a -vv -x tests/functional --profile "ci_azure_auto"
