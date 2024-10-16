@@ -17,3 +17,11 @@ class SynapseRelation(BaseRelation):
     def get_relation_type(cls) -> Type[SynapseRelationType]:
         return SynapseRelationType
 
+    def render_limited(self) -> str:
+        rendered = self.render()
+        if self.limit is None:
+            return rendered
+        elif self.limit == 0:
+            return f"(select top(0) * from {rendered} where false) _dbt_limit_subq"
+        else:
+            return f"(select top({self.limit}) * from {rendered}) _dbt_limit_subq"
