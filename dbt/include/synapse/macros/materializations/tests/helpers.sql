@@ -1,14 +1,15 @@
 {% macro synapse__get_test_sql(main_sql, fail_calc, warn_if, error_if, limit) -%}
+  {% set target_schema = var('synapse_test_schema', generate_schema_name() ) %}
 
   -- Create target schema in synapse db if it does not
-  IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '{{ target.schema }}')
+  IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '{{ target_schema }}')
   BEGIN
-    EXEC('CREATE SCHEMA [{{ target.schema }}]')
+    EXEC('CREATE SCHEMA [{{ target_schema }}]')
   END
 
   {% if main_sql.strip().lower().startswith('with') %}
     {% set testview %}
-      {{ target.schema }}.testview_{{ range(1300, 19000) | random }}
+      {{ target_schema }}.testview_{{ range(1300, 19000) | random }}
     {% endset %}
 
     {% set sql = main_sql.replace("'", "''")%}
