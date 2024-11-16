@@ -57,7 +57,7 @@ This adapter is managed by Microsoft.
 You are welcome to contribute by creating issues, opening or reviewing pull requests or helping other users in Slack channel.
 If you're unsure how to get started, check out our [contributing guide](CONTRIBUTING.md).
 
-This adapter uses the [dbt-sqlserver](https://github.com/dbt-msft/dbt-sqlserver) adapter underneath so make sure to check out that repository as well.
+This adapter uses the [dbt-fabric](https://github.com/microsoft/dbt-fabric) adapter underneath so make sure to check out that repository as well.
 
 ## License
 
