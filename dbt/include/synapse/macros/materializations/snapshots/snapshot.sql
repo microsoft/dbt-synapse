@@ -59,9 +59,6 @@
       {{ dropTempTable }}
   {%- endcall %}
 {% endmacro %}
-
-
-
 {% materialization snapshot, adapter='synapse' %}
 
   {%- set config = model['config'] -%}
