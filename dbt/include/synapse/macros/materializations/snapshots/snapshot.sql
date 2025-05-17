@@ -60,7 +60,32 @@
   {%- endcall %}
 {% endmacro %}
 {% materialization snapshot, adapter='synapse' %}
-
+  {# 
+    Synapse-specific snapshot materialization.
+    
+    Purpose:
+    This materialization is designed to handle snapshotting in Azure Synapse Analytics. 
+    It manages the creation of temporary tables, the application of snapshot strategies, 
+    and the finalization of the target table.
+    
+    Configuration Options:
+    - `strategy`: The snapshot strategy to use (e.g., 'timestamp', 'check').
+    - `unique_key`: The unique key for identifying records in the snapshot.
+    - `grants`: Permissions to apply to the target table after creation.
+    
+    Usage Example:
+    Configure the snapshot in your model file:
+    ```
+    {{
+        config(
+            materialized='snapshot',
+            strategy='timestamp',
+            unique_key='id',
+            grants=[{'role': 'db_owner', 'privileges': ['select']}]
+        )
+    }}
+    ```
+  #}
   {%- set config = model['config'] -%}
   {%- set target_table = model.get('alias', model.get('name')) -%}
   {%- set strategy_name = config.get('strategy') -%}
