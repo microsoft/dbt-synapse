@@ -1,7 +1,7 @@
 # Development of the adapter
 
-The Synapse adapter uses the [dbt-sqlserver](https://github.com/dbt-msft/dbt-sqlserver) adapter underneath.
-This repository mostly contains a set of macros that override the behavior of dbt-sqlserver so that it works with Synapse.
+The Synapse adapter uses the [dbt-fabric](https://github.com/microsoft/dbt-fabric) adapter underneath.
+This repository mostly contains a set of macros that override the behavior of dbt-fabric so that it works with Synapse.
 
 Python 3.10 is used for developing the adapter. To get started, bootstrap your environment as follows:
 
@@ -68,6 +68,6 @@ The following environment variables are available:
 Make sure the version number is bumped in `__version__.py`. Then, create a git tag named `v<version>` and push it to GitHub.
 A GitHub Actions workflow will be triggered to build the package and push it to PyPI.
 
-Make sure that the dependency to dbt-sqlserver is bumped to a compatible version in `setup.py`.
+Make sure that the dependency to dbt-fabric is bumped to a compatible version in `setup.py`.
 
 If you're releasing support for a new version of `dbt-core`, also bump the `dbt_version` in `setup.py`.
