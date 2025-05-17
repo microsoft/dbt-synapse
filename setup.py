@@ -15,7 +15,6 @@ authors_list = [
     "Anders Swanson",
     "Sam Debruyn",
 ]
-dbt_version = "1.8"
 dbt_fabric_requirement = "dbt-fabric>=1.8.6,<2.0"
 description = """An Azure Synapse adapter plugin for dbt"""
 
@@ -36,15 +35,6 @@ def _dbt_synapse_version():
 
 
 package_version = _dbt_synapse_version()
-
-# the package version should be the dbt version, with maybe some things on the
-# ends of it. (0.18.1 vs 0.18.1a1, 0.18.1.1, ...)
-if not package_version.startswith(dbt_version):
-    raise ValueError(
-        f"Invalid setup.py: package_version={package_version} must start with "
-        f"dbt_version={dbt_version}"
-    )
-
 
 class VerifyVersionCommand(install):
     """Custom command to verify that the git tag matches our version"""
