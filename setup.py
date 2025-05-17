@@ -15,7 +15,7 @@ authors_list = [
     "Anders Swanson",
     "Sam Debruyn",
 ]
-dbt_fabric_requirement = "dbt-fabric>=1.8.6,<2.0"
+dbt_fabric_requirement = "dbt-fabric>=1.8.0, <1.9.0"
 description = """An Azure Synapse adapter plugin for dbt"""
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
@@ -35,6 +35,7 @@ def _dbt_synapse_version():
 
 
 package_version = _dbt_synapse_version()
+
 
 class VerifyVersionCommand(install):
     """Custom command to verify that the git tag matches our version"""
