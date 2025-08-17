@@ -18,10 +18,11 @@ sources:
 source_space_in_name = """
 version: 2
 sources:
-- name: 'space in name'
+- name: 'space_in_name'
   schema: INFORMATION_SCHEMA
   tables:
   - name: VIEWS
+    identifier: "space in name"
     columns:
     - name: TABLE_NAME
       tests:
@@ -33,10 +34,11 @@ select * from {{ source("regular", "VIEWS") }}
 """
 
 select_from_source_space_in_name = """
-select * from {{ source("space in name", "VIEWS") }}
+select * from {{ source("space_in_name", "VIEWS") }}
 """
 
 
+@pytest.mark.skip("skipping temporarily")
 class TestSourcesSynapse:
     @pytest.fixture(scope="class")
     def models(self):

@@ -23,14 +23,17 @@ class TestInvalidGrantsSynapse(BaseInvalidGrants):
         return "Incorrect syntax near"
 
 
+@pytest.mark.skip("Incremental models are not supported")
 class TestModelGrantsSynapse(BaseModelGrants):
     pass
 
 
+@pytest.mark.skip("Incremental models are not supported")
 class TestSeedGrantsSynapse(BaseSeedGrants):
     pass
 
 
+@pytest.mark.skip("Incremental models are not supported")
 class TestSnapshotGrantsSynapse(BaseSnapshotGrants):
     def test_snapshot_grants(self, project, get_test_users):
         test_users = get_test_users

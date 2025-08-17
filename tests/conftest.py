@@ -54,6 +54,7 @@ def _profile_user():
             "user": os.getenv("SYNAPSE_TEST_USER"),
             "pass": os.getenv("SYNAPSE_TEST_PASS"),
             "database": os.getenv("SYNAPSE_TEST_DWH_NAME"),
+            "authentication": os.getenv("authentication"),
             # "authentication": "sql",
         },
     }
