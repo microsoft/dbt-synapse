@@ -6,6 +6,7 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - master
       - v*
+      - b*
 
 jobs:
   integration-tests-azure:
