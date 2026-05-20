@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.8.5
+
+* Widen `dbt-fabric` requirement to `>=1.8.0,<1.10` by @colin-rogers-dbt in https://github.com/microsoft/dbt-synapse/pull/276
+
 ## v1.8.0rc3
 
 * reduce CI parallelism by @dataders in https://github.com/microsoft/dbt-synapse/pull/237
