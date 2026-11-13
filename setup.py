@@ -15,7 +15,7 @@ authors_list = [
     "Anders Swanson",
     "Sam Debruyn",
 ]
-dbt_fabric_requirement = "dbt-fabric>=1.8.0,<1.10"
+dbt_fabric_requirement = "dbt-fabric>=1.12.0,<1.13"
 description = """An Azure Synapse adapter plugin for dbt"""
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
@@ -74,9 +74,8 @@ setup(
         "Operating System :: Microsoft :: Windows",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX :: Linux",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ],
 )
