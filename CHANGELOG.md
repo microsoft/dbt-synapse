@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+* Support dbt-fabric 1.12 and dbt-core 1.12, closing [#272](https://github.com/microsoft/dbt-synapse/issues/272).
+* Connect with mssql-python through dbt-fabric's connection manager instead of pyodbc. The ODBC driver is no longer required, and the `driver` and `port` profile settings are ignored. SQL logins (`authentication: sql`) still work.
+* Turn off mssql-python connection pooling: from 1.17, returning a pooled connection resets its isolation level, which dedicated SQL pools reject.
+* Don't send `BEGIN TRANSACTION`, which dbt-fabric 1.12 now does; dedicated SQL pools don't allow DDL inside a user-defined transaction.
+* Update existing views with `ALTER VIEW` instead of renaming them, since dedicated SQL pools can't rename views. This also keeps their permissions.
+* Add unit tests for the connection manager.
+
 ## v1.8.0rc3
 
 * reduce CI parallelism by @dataders in https://github.com/microsoft/dbt-synapse/pull/237

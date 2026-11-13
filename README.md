@@ -16,22 +16,9 @@ Join us on the [dbt Slack](https://getdbt.slack.com/archives/C01DRQ178LQ) to ask
 
 ## Installation
 
-This adapter requires the Microsoft ODBC driver to be installed:
-[Windows](https://docs.microsoft.com/nl-be/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver16#download-for-windows) |
-[macOS](https://docs.microsoft.com/nl-be/sql/connect/odbc/linux-mac/install-microsoft-odbc-driver-sql-server-macos?view=sql-server-ver16) |
-[Linux](https://docs.microsoft.com/nl-be/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-ver16)
-
-<details><summary>Debian/Ubuntu</summary>
-<p>
-
-Make sure to install the ODBC headers as well as the driver linked above:
-
-```shell
-sudo apt-get install -y unixodbc-dev
-```
-
-</p>
-</details>
+The adapter connects with [mssql-python](https://github.com/microsoft/mssql-python), the same driver
+dbt-fabric uses, so it doesn't need a separately installed ODBC driver. The `driver` and `port`
+profile settings are no longer used.
 
 Latest version: ![PyPI](https://img.shields.io/pypi/v/dbt-synapse?label=latest%20stable&logo=pypi)
 
